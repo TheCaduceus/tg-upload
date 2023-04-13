@@ -1,6 +1,6 @@
 <div align="center">
 <h1>📦tg-upload</h1>
-<b>An open-source python program to upload files/folder to Telegram effortlessly.</b>
+<b>An open-source Python program to upload files/folder to Telegram effortlessly.</b>
 </div>
 
 ## ⚙️Installation
@@ -140,13 +140,13 @@ python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 - 2GB for bots & freemium users.
 - 4GB for premium users.
 
-**3.Thumbnail:**
+**2.Thumbnail:**
 
 - Only JPEG format.
 - Size should be 200 KB or below.
 - Width & height should not be more than 320 pixels.
 
-**2.Caption:**
+**3.Caption:**
 
 - 1024 characters for all files & media.
 
