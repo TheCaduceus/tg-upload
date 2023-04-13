@@ -103,6 +103,17 @@ Behaviour flags controls the behaviour of transmission.
 --no_warn - Don't show warning messages.
 ```
 
+**4.MISC FLAGS:**
+
+Flags that does not fit in above categories are listed in this category:
+
+```
+-h, --help - To get help message as well as availabe options.
+--device_model - Overwrite device model before starting client, by default 'tg-upload', can be anything like your name or 'My Device'.
+--system_version - Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.
+--version - Display current tg-upload & dependencies version.
+```
+
 ## 🕹️ How to use?
 **1.Create a Telegram app:**
 
@@ -133,6 +144,13 @@ Upload files/folder:
 python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 ```
 
+Check versions:
+
+```
+python tg-upload.py --version
+```
+
+
 ## 🪧 Limits
 
 **1.File size:**
@@ -149,6 +167,11 @@ python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 **3.Caption:**
 
 - 1024 characters for all files & media.
+
+## ⛑️ Need help!
+
+- Ask questions or doubts [here](https://t.me/DrDiscussion).
+- Send a [personal message](https://t.me/TheCaduceusHere) to developer.
 
 ## ❤️ Credits & Thanks
 
