@@ -22,6 +22,7 @@ brew install python@3.10 git
 For Termux:
 ```
 pkg install python -y
+pkg install git -y
 ```
 
 **2.Download Repository:**
@@ -105,7 +106,7 @@ Behaviour flags controls the behaviour of transmission.
 ## 🕹️ How to use?
 **1.Create a Telegram app:**
 
-Go to [My Telegram](https://my.telegram.org/apps) and create an app and get its **API_ID** & **API_HASH** and save it somewhere securely and treat them as you bank password.
+Go to [My Telegram](https://my.telegram.org/apps) and create an app and get its **API_ID** & **API_HASH** and save it somewhere securely and treat them as your bank password.
 
 **2.Login in tg-upload:**
 
