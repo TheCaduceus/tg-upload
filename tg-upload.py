@@ -17,7 +17,7 @@ parser.add_argument("--api_hash", help="Telegram API HASH required to create new
 parser.add_argument("--phone", help="Phone number (international format) required to login as user.")
 parser.add_argument("--hide_pswd", action="store_true", help="Hide 2FA password using getpass.")
 parser.add_argument("--bot", help="Telegram bot token required to login as bot.")
-parser.add_argument("--login_string", help="Session string to login without auth & creating an session file.")
+parser.add_argument("--login_string", help="Session string to login without auth & creating a session file.")
 parser.add_argument("--export_string", action="store_true", help="Generate & display session string using existing session file.")
 parser.add_argument("--login_only", action="store_true", help="Exit immediately after authorization process.")
 
