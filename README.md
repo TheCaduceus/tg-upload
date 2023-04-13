@@ -1,6 +1,6 @@
 <div align="center">
 <h1>📦tg-upload</h1>
-<b>An open-source python program to upload files/folder to Telegram effortlessly.</b>
+<b>An open-source Python program to upload files/folder to Telegram effortlessly.</b>
 </div>
 
 ## ⚙️Installation
@@ -22,6 +22,7 @@ brew install python@3.10 git
 For Termux:
 ```
 pkg install python -y
+pkg install git -y
 ```
 
 **2.Download Repository:**
@@ -102,10 +103,21 @@ Behaviour flags controls the behaviour of transmission.
 --no_warn - Don't show warning messages.
 ```
 
+**4.MISC FLAGS:**
+
+Flags that does not fit in above categories are listed in this category:
+
+```
+-h, --help - To get help message as well as availabe options.
+--device_model - Overwrite device model before starting client, by default 'tg-upload', can be anything like your name or 'My Device'.
+--system_version - Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.
+--version - Display current tg-upload & dependencies version.
+```
+
 ## 🕹️ How to use?
 **1.Create a Telegram app:**
 
-Go to [My Telegram](https://my.telegram.org/apps) and create an app and get its **API_ID** & **API_HASH** and save it somewhere securely and treat them as you bank password.
+Go to [My Telegram](https://my.telegram.org/apps) and create an app and get its **API_ID** & **API_HASH** and save it somewhere securely and treat them as your bank password.
 
 **2.Login in tg-upload:**
 
@@ -132,6 +144,13 @@ Upload files/folder:
 python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 ```
 
+Check versions:
+
+```
+python tg-upload.py --version
+```
+
+
 ## 🪧 Limits
 
 **1.File size:**
@@ -139,15 +158,20 @@ python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 - 2GB for bots & freemium users.
 - 4GB for premium users.
 
-**3.Thumbnail:**
+**2.Thumbnail:**
 
 - Only JPEG format.
 - Size should be 200 KB or below.
 - Width & height should not be more than 320 pixels.
 
-**2.Caption:**
+**3.Caption:**
 
 - 1024 characters for all files & media.
+
+## ⛑️ Need help!
+
+- Ask questions or doubts [here](https://t.me/DrDiscussion).
+- Send a [personal message](https://t.me/TheCaduceusHere) to developer.
 
 ## ❤️ Credits & Thanks
 

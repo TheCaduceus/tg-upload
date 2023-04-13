@@ -1,6 +1,8 @@
 from pyrogram import Client
 from pathlib import Path, PurePath
 from sys import version_info as py_ver
+from pkg_resources import get_distribution as get_dist
+from time import time
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -17,7 +19,7 @@ parser.add_argument("--api_hash", help="Telegram API HASH required to create new
 parser.add_argument("--phone", help="Phone number (international format) required to login as user.")
 parser.add_argument("--hide_pswd", action="store_true", help="Hide 2FA password using getpass.")
 parser.add_argument("--bot", help="Telegram bot token required to login as bot.")
-parser.add_argument("--login_string", help="Session string to login without auth & creating an session file.")
+parser.add_argument("--login_string", help="Session string to login without auth & creating a session file.")
 parser.add_argument("--export_string", action="store_true", help="Generate & display session string using existing session file.")
 parser.add_argument("--login_only", action="store_true", help="Exit immediately after authorization process.")
 
@@ -45,10 +47,18 @@ parser.add_argument("--silent", action="store_true", help="Send files silently t
 parser.add_argument("--recursive", action="store_true", help="Upload files recursively if path is a folder.")
 parser.add_argument("--prefix", help="Add given prefix text to each filename (prefix + filename) before upload.")
 parser.add_argument("--no_warn", action="store_true", help="Don't show warning messages.")
+
+# MISC FLAGS
+parser.add_argument("--device_model", help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
+parser.add_argument("--system_version", help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
+parser.add_argument("--version", action="version", help="Display current tg-upload version.", version=f"tg-upload: 1.0.1\nPython: {py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram: {get_dist('pyrogram').version}\nTgCrypto: {get_dist('tgcrypto').version}")
 args = parser.parse_args()
 
+
 def upload_progress(current,total):
-  print(f"\rUP: [{filename}] - {current/total*100:.2f}%", end="")
+  elapsed_time = time() - start_time
+  upload_speed = current / elapsed_time / 1024 / 1024
+  print(f"\rUP: [{filename}] - {current/total*100:.2f}% | {upload_speed:.2f}MB/s", end="")
 
 def get_chatid(raw_id):
   raw_id = raw_id.lstrip()
@@ -76,9 +86,9 @@ if args.phone:
     api_hash=args.api_hash,
     phone_number=args.phone,
     hide_password=args.hide_pswd,
-    app_version="1.0.0",
-    device_model="tg-upload",
-    system_version=f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"
+    app_version="1.0.1",
+    device_model=args.device_model or "tg-upload",
+    system_version=args.system_version or f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"
   )
 elif args.bot:
   client = Client(
@@ -104,6 +114,7 @@ with client:
     exit("Error: Path is not provided.")
 
   chat_id = get_chatid(args.chat_id) if args.chat_id else "me"
+  start_time = time()
 
   if args.as_photo:
     if Path(args.path).is_file():
