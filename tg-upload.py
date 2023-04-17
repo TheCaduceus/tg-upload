@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(
 
 # CONNECTIVITY FLAGS
 parser.add_argument("--ipv6", action="store_true", help="Connect Telegram using device's IPv6. By default IPv4")
-parser.add_argument("--proxy", action="store_true", help="Use proxy to connect Telegram.")
+parser.add_argument("--proxy", help="Proxy name (in proxy.json) to use for connecting Telegram.")
 
 # LOGIN FLAGS
 parser.add_argument("-p","--profile", required=True, help="Name of your new/existing session.")
@@ -61,12 +61,16 @@ parser.add_argument("-v","--version", action="version", help="Display current tg
 args = parser.parse_args()
 
 if args.proxy:
-  if Path("proxy.json").exists():
-    print("Loading proxy...")
-    with open("proxy.json", "r") as proxy:
-      args.proxy = json_load(proxy)
-  else:
+  if not Path("proxy.json").exists():
     raise FileNotFoundError("Not found: proxy.json [file].")
+  with open("proxy.json", "r") as proxy:
+    try:
+      proxy_json = json_load(proxy)[args.proxy]
+      print(f"Connecting to {args.proxy}...")
+    except KeyError:
+      exit(f"Error: Unable to load {args.proxy}, please check proxy.json and ensure that everything is in correct format.")
+else:
+  proxy_json = None
 
 def upload_progress(current,total):
   elapsed_time = time() - start_time
@@ -104,7 +108,7 @@ if args.phone:
     system_version=args.system_version or f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}",
     ipv6=args.ipv6,
     in_memory=args.tmp_session,
-    proxy=args.proxy
+    proxy=proxy_json
   )
 elif args.bot:
   client = Client(
@@ -114,20 +118,20 @@ elif args.bot:
     bot_token=args.bot,
     ipv6=args.ipv6,
     in_memory=args.tmp_session,
-    proxy=args.proxy
+    proxy=proxy_json
   )
 elif args.login_string:
   client = Client(
     args.profile,
     session_string=args.login_string,
     ipv6=args.ipv6,
-    proxy=args.proxy
+    proxy=proxy_json
   )
 else:
   client = Client(
     args.profile,
     ipv6=args.ipv6,
-    proxy=args.proxy
+    proxy=proxy_json
   )
 
 with client:
