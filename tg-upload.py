@@ -166,6 +166,9 @@ with client:
         else:
           print(f"[Dir] -> {filename}")
   elif args.as_video:
+    if not args.width or not args.height:
+      args.width = 1280
+      args.height = 552
     if Path(args.path).is_file():
       try:
         filename = args.filename or PurePath(args.path).name
@@ -173,7 +176,7 @@ with client:
           filename = args.prefix + filename
         if args.replace:
           filename = filename.replace(args.replace[0], args.replace[1])
-        client.send_video(chat_id, args.path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=args.width, height=args.height, thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
+        client.send_video(chat_id, args.path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
         print(f"An error occured!\n{error_code}")
@@ -186,7 +189,7 @@ with client:
               filename = args.prefix + filename
             if args.replace:
               filename = filename.replace(args.replace[0], args.replace[1])
-            client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=args.width, height=args.height, thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
+            client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
             print(f"An error occured!\n{error_code}")
