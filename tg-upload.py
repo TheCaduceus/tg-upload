@@ -42,6 +42,7 @@ parser.add_argument("--as_video", action="store_true", help="Send given file as 
 parser.add_argument("--as_audio", action="store_true", help="Send given file as audio.")
 parser.add_argument("--as_voice", action="store_true", help="Send given file as voice.")
 parser.add_argument("--as_video_note", action="store_true", help="Send given file as video note.")
+parser.add_argument("--replace", nargs=2, type=str, help="Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.")
 parser.add_argument("--disable_stream", action="store_false", help="Disable streaming for given video.")
 parser.add_argument("-b","--spoiler", action="store_true", help="Send media with spoiler animation.")
 parser.add_argument("-d","--delete_on_done", action="store_true",help="Delete the given file after task completion.")
@@ -170,6 +171,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_video(chat_id, args.path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=args.width, height=args.height, thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -181,6 +184,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=args.width, height=args.height, thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -193,6 +198,8 @@ with client:
         filename= args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_audio(chat_id, args.path, progress=upload_progress, caption=args.caption, performer=args.artist, title=args.title, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -204,6 +211,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, performer=args.artist, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -216,6 +225,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_voice(chat_id. args.path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -227,6 +238,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -239,6 +252,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_video_note(chat_id, args.path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -250,6 +265,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video_note(chat_id, _path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -262,6 +279,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_document(chat_id, args.path, progress=upload_progress, caption=args.caption, force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -273,6 +292,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_document(chat_id, _path, progress=upload_progress, caption=args.caption, force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
