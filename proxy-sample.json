@@ -1,0 +1,25 @@
+{
+  "proxy1": {
+    "scheme": "socks5",
+    "hostname": "192.168.1.1",
+    "port": 8080,
+    "username": "",
+    "password": ""
+  },
+  
+  "proxy2": {
+    "scheme": "",
+    "hostname": "",
+    "port": 1234,
+    "username": "",
+    "password": ""
+  },
+
+  "proxy3": {
+    "scheme": "",
+    "hostname": "",
+    "port": 80,
+    "username": "",
+    "password": ""
+  }
+}

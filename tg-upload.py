@@ -3,17 +3,22 @@ from pathlib import Path, PurePath
 from sys import version_info as py_ver
 from pkg_resources import get_distribution as get_dist
 from time import time
+from json import load as json_load
 import argparse
 
 parser = argparse.ArgumentParser(
   prog="tg-upload.py",
   usage="To perform any task listed below, you will need to create or use a new/existing session.\nEach new/existing session can be accessed by its name provided using the --profile flag.\n\nYou don't need to provide API_ID, API_HASH, phone number or bot token etc to perform any task again & again!\nOnce you successfully login & created a session then you just need to provide its name using --profile flag and you will be logged in without any authentication flow (until you terminate the session using Telegram).",
-  description="A program to upload files/folder to Telegram.",
+  description="An open-source Python program to upload files/folder to Telegram effortlessly.",
   epilog="An open-source program developed by Dr.Caduceus (GitHub.com/TheCaduceus)"
   )
 
+# CONNECTIVITY FLAGS
+parser.add_argument("--ipv6", action="store_true", help="Connect Telegram using device's IPv6. By default IPv4")
+parser.add_argument("--proxy", help="Proxy name (in proxy.json) to use for connecting Telegram.")
+
 # LOGIN FLAGS
-parser.add_argument("--profile", required=True, help="Name of your new/existing session.")
+parser.add_argument("-p","--profile", required=True, help="Name of your new/existing session.")
 parser.add_argument("--api_id", type=int, help="Telegram API ID required to create new session.")
 parser.add_argument("--api_hash", help="Telegram API HASH required to create new session.")
 parser.add_argument("--phone", help="Phone number (international format) required to login as user.")
@@ -21,39 +26,52 @@ parser.add_argument("--hide_pswd", action="store_true", help="Hide 2FA password 
 parser.add_argument("--bot", help="Telegram bot token required to login as bot.")
 parser.add_argument("--login_string", help="Session string to login without auth & creating a session file.")
 parser.add_argument("--export_string", action="store_true", help="Generate & display session string using existing session file.")
+parser.add_argument("--tmp_session", action="store_true", help="Don't create session file for this login.")
 parser.add_argument("--login_only", action="store_true", help="Exit immediately after authorization process.")
 
 # FILE FLAGS
-parser.add_argument("--path", help="Path to the file or folder to upload.")
-parser.add_argument("--filename", help="To upload data with custom name.")
-parser.add_argument("--thumb", help="Path of thumbnail image (JPEG format) to be attached with given file.")
-parser.add_argument("--caption", help="Caption text to be attached with file(s), markdown & HTML formatting allowed.")
+parser.add_argument("-l","--path", help="Path to the file or folder to upload.")
+parser.add_argument("-n","--filename", help="To upload data with custom name.")
+parser.add_argument("-i","--thumb", help="Path of thumbnail image (JPEG format) to be attached with given file.")
+parser.add_argument("-z","--caption", help="Caption text to be attached with file(s), markdown & HTML formatting allowed.")
 
 # BEHAVIOUR FLAGS
-parser.add_argument("--chat_id", help="Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.")
+parser.add_argument("-c","--chat_id", help="Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.")
 parser.add_argument("--as_photo", action="store_true", help="Send given file as picture.")
 parser.add_argument("--as_video", action="store_true", help="Send given file as video.")
 parser.add_argument("--as_audio", action="store_true", help="Send given file as audio.")
 parser.add_argument("--as_voice", action="store_true", help="Send given file as voice.")
 parser.add_argument("--as_video_note", action="store_true", help="Send given file as video note.")
+parser.add_argument("--replace", nargs=2, type=str, help="Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.")
 parser.add_argument("--disable_stream", action="store_false", help="Disable streaming for given video.")
-parser.add_argument("--spoiler", action="store_true", help="Send media with spoiler animation.")
-parser.add_argument("--delete_on_done", action="store_true",help="Delete the given file after task completion.")
-parser.add_argument("--width", help="Set custom width for video.")
-parser.add_argument("--height", help="Set custom height for video.")
-parser.add_argument("--artist", help="Set artist name of given audio file.")
-parser.add_argument("--title", help="Set title of given audio file")
-parser.add_argument("--silent", action="store_true", help="Send files silently to given chat.")
-parser.add_argument("--recursive", action="store_true", help="Upload files recursively if path is a folder.")
+parser.add_argument("-b","--spoiler", action="store_true", help="Send media with spoiler animation.")
+parser.add_argument("-d","--delete_on_done", action="store_true",help="Delete the given file after task completion.")
+parser.add_argument("-w","--width", help="Set custom width for video.")
+parser.add_argument("-e","--height", help="Set custom height for video.")
+parser.add_argument("-a","--artist", help="Set artist name of given audio file.")
+parser.add_argument("-t","--title", help="Set title of given audio file")
+parser.add_argument("-s","--silent", action="store_true", help="Send files silently to given chat.")
+parser.add_argument("-r","--recursive", action="store_true", help="Upload files recursively if path is a folder.")
 parser.add_argument("--prefix", help="Add given prefix text to each filename (prefix + filename) before upload.")
 parser.add_argument("--no_warn", action="store_true", help="Don't show warning messages.")
 
 # MISC FLAGS
 parser.add_argument("--device_model", help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
 parser.add_argument("--system_version", help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
-parser.add_argument("--version", action="version", help="Display current tg-upload version.", version=f"tg-upload: 1.0.1\nPython: {py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram: {get_dist('pyrogram').version}\nTgCrypto: {get_dist('tgcrypto').version}")
+parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload: 1.0.2\nPython: {py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram: {get_dist('pyrogram').version}\nTgCrypto: {get_dist('tgcrypto').version}")
 args = parser.parse_args()
 
+if args.proxy:
+  if not Path("proxy.json").exists():
+    raise FileNotFoundError("Not found: proxy.json [file].")
+  with open("proxy.json", "r") as proxy:
+    try:
+      proxy_json = json_load(proxy)[args.proxy]
+      print(f"Connecting to {args.proxy}...")
+    except KeyError:
+      exit(f"Error: Unable to load {args.proxy}, please check proxy.json and ensure that everything is in correct format.")
+else:
+  proxy_json = None
 
 def upload_progress(current,total):
   elapsed_time = time() - start_time
@@ -86,24 +104,36 @@ if args.phone:
     api_hash=args.api_hash,
     phone_number=args.phone,
     hide_password=args.hide_pswd,
-    app_version="1.0.1",
+    app_version="1.0.2",
     device_model=args.device_model or "tg-upload",
-    system_version=args.system_version or f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"
+    system_version=args.system_version or f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}",
+    ipv6=args.ipv6,
+    in_memory=args.tmp_session,
+    proxy=proxy_json
   )
 elif args.bot:
   client = Client(
     args.profile,
     api_id=args.api_id,
     api_hash=args.api_hash,
-    bot_token=args.bot
+    bot_token=args.bot,
+    ipv6=args.ipv6,
+    in_memory=args.tmp_session,
+    proxy=proxy_json
   )
 elif args.login_string:
   client = Client(
     args.profile,
-    session_string=args.login_string
+    session_string=args.login_string,
+    ipv6=args.ipv6,
+    proxy=proxy_json
   )
 else:
-  client = Client(args.profile)
+  client = Client(
+    args.profile,
+    ipv6=args.ipv6,
+    proxy=proxy_json
+  )
 
 with client:
   if args.login_only:
@@ -141,6 +171,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_video(chat_id, args.path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=args.width, height=args.height, thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -152,6 +184,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, has_spoiler=args.spoiler, width=args.width, height=args.height, thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -164,6 +198,8 @@ with client:
         filename= args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_audio(chat_id, args.path, progress=upload_progress, caption=args.caption, performer=args.artist, title=args.title, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -175,6 +211,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, performer=args.artist, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -187,6 +225,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_voice(chat_id. args.path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -198,6 +238,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video(chat_id, _path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -210,6 +252,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_video_note(chat_id, args.path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -221,6 +265,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_video_note(chat_id, _path, progress=upload_progress, caption=args.caption, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -233,6 +279,8 @@ with client:
         filename = args.filename or PurePath(args.path).name
         if args.prefix:
           filename = args.prefix + filename
+        if args.replace:
+          filename = filename.replace(args.replace[0], args.replace[1])
         client.send_document(chat_id, args.path, progress=upload_progress, caption=args.caption, force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -244,6 +292,8 @@ with client:
             filename = PurePath(_path).name
             if args.prefix:
               filename = args.prefix + filename
+            if args.replace:
+              filename = filename.replace(args.replace[0], args.replace[1])
             client.send_document(chat_id, _path, progress=upload_progress, caption=args.caption, force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
