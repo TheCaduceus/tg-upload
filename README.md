@@ -96,7 +96,7 @@ python tg-upload.py --help
 
 Connectivity flags controls how the program should establish connection to Telegram servers, helpful for those uses proxies to bypass ban imposed on Telegram by their ISP (or for increasing transfer speed) or for those prefer IPv6 to establish connection.
 
-Learn here, how to configure proxies?
+Learn [here](#htu-4), how to configure proxies?
 
 ```
 --ipv6 - Connect Telegram using device's IPv6. By default IPv4.
