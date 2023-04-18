@@ -148,6 +148,7 @@ Behaviour flags controls the behaviour of transmission.
 --as_audio - Send given file as audio.
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
+--replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
 -d,--delete_on_done - Delete the given file after task completion.
