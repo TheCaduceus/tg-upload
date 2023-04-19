@@ -244,6 +244,12 @@ tg-upload provides variables that user can place in file's caption to make it dy
 * `{file_size_gb}` - Size of file in GB.
 
 Additionally, we can also limit number of decimals places to be shown in file size, like to limit number of decimals places to 2 we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
+<div align="center">
+
+![dynamic-caption-1](https://user-images.githubusercontent.com/87380104/233124265-a4427be6-b6cd-461a-b479-dcad599e970d.png)
+
+</div>
+Just like a plan text, you can also apply same formatting on variables, just make sure you put all formatting tags outside of {} brackets to prevent any error.
 
 One variable can be called multiple times in same caption and user must prevent writing any other keyword between {} otherwise tg-upload will raise KeyError indicating that given variable is not yet defined.
 
@@ -267,7 +273,7 @@ We can make & save our static & dynamic caption format in 'caption.json' with a 
 
 2.When needed, just mention the caption template name using `--capjson` flag.
 
-I already provided some general caption templates to make your work easy! :)
+Just like `--caption` flag, caption template also supports formatting using HTML or markdown. I already provided some general caption templates to make your work easy! :)
 
 <a name="htu-6"></a>
 
