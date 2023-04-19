@@ -1,0 +1,16 @@
+{
+  "caption1": {
+    "text": "**File Name:**\n{file_name}\n**File Format:**\n`{file_format}`\n**File Size:**\n`{file_size_mb:.2f}MB`\n**SHA256:**\n`{file_sha256}`\n**MD5:\n`{file_md5}`**",
+    "description": "A caption template showing basic file information."
+  },
+
+  "caption2": {
+    "text": "{file_name}'s sha256:\n`{file_sha256}`",
+    "description": "A caption template showing filename & file's SHA256."
+  },
+
+  "caption3": {
+    "text": "{file_name}{file_format}",
+    "description": "A caption template only showing filename with file format."
+  }
+}
