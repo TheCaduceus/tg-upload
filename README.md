@@ -19,7 +19,9 @@
   * [Get API ID & HASH](#htu-1)
   * [Authorization](#htu-2)
   * [Get Started](#htu-3)
-  * [Using Proxy](#htu-4)
+  * [Dynamic Caption](#htu-4)
+  * [Caption Templates](#htu-5)
+  * [Using Proxy](#htu-6)
 * [**🪧 Limits**](#limits)
   * [File Size](#l-1)
   * [Thumbnail](#l-2)
@@ -137,6 +139,8 @@ File flags are used to provide information about file/folder.
 -n,--filename - To upload data with custom name.
 -i,--thumb - Path of thumbnail image (JPEG format) to be attached with given file.
 -z,--caption - Caption text to be attached with file(s), markdown & HTML formatting allowed.
+--duration - Duration of sent media in seconds.
+--capjson - Caption name (in caption.json) to attach with given file(s).
 ```
 
 <a name="flag-4"></a>
@@ -152,6 +156,7 @@ Behaviour flags controls the behaviour of transmission.
 --as_audio - Send given file as audio.
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
+--split - Split files in given bytes and upload.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
@@ -202,7 +207,7 @@ now from next time whenever you need to perform any task, you just need to pass 
 
 <a name="htu-3"></a>
 
-**3.Get started:**
+**3.Get Started:**
 
 Hooray! now you are all set to use tg-upload. You can try out some sample commands that will help you to get started quickly:
 
@@ -226,7 +231,47 @@ python tg-upload.py -v
 
 <a name="htu-4"></a>
 
-**4.Using proxy:**
+**4.Dynamic Caption:**
+
+tg-upload provides variables that user can place in file's caption to make it dynamic, this variables are automtically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:
+* `{file_name}` - Name of file without its format.
+* `{file_format}` - Format of given file including '.'.
+* `{file_sha256}` - Given file's SHA256.
+* `{file_md5}` - Given file's MD5.
+* `{file_size_b}` - Size of file in byte.
+* `{file_size_kb}` - Size of file in KB.
+* `{file_size_mb}` - Size of file in MB.
+* `{file_size_gb}` - Size of file in GB.
+
+Additionally, we can also limit number of decimals places to be shown in file size, like to limit number of decimals places to 2 we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
+
+One variable can be called multiple times in same caption and user must prevent writing any other keyword between {} otherwise tg-upload will raise KeyError indicating that given variable is not yet defined.
+
+<a name="htu-5"></a>
+
+**5.Caption Templates:**
+
+We can make & save our static & dynamic caption format in 'caption.json' with a name (required) and description (optional) so we don't have to write it again.
+
+1.Open 'caption.json' file and edit it as following:
+
+```json
+{
+  "captionTemplateName": {
+    "text" : "main caption text",
+    "description" : "An optional description to make recall easy."
+  },
+  ...more caption templates 
+}
+```
+
+2.When needed, just mention the caption template name using `--capjson` flag.
+
+I already provided some general caption templates to make your work easy! :)
+
+<a name="htu-6"></a>
+
+**6.Using Proxy:**
 
 Using proxy is completely optional step and can be used to bypass ban imposed by local authorities or for increasing transfer speed:
 
@@ -243,8 +288,7 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
     "username": "proxyUsername", # optional, omit or keep empty if not required.
     "password": "proxyPassword" # optional, omit or keep empty if not required.
   },
-
-  ... more proxies
+  ...more proxies
 }
 ```
 
