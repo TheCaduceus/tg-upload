@@ -31,23 +31,25 @@
 <a name="installation"></a>
 
 ## ⚙️ Installation
-
+Git installation is optional if you prefer downloading stable releases zips of tg-upload using [releases](https://github.com/TheCaduceus/tg-upload/releases) section.
 <a name="i-1"></a>
 
 **1.Install Python & Git:**
 
+Prefer Python 3.11 for faster execution speed.
+
 For Windows:
 ```
-winget install python3.10
+winget install Python.Python.3.11
 winget install Git.Git
 ```
 For Linux:
 ```
-sudo apt-get update && sudo apt-get install -y python3.10 git pip
+sudo apt-get update && sudo apt-get install -y python3.11 git pip
 ```
 For MacOS:
 ```
-brew install python@3.10 git
+brew install python@3.11 git
 ```
 For Termux:
 ```
@@ -75,6 +77,8 @@ cd tg-upload
 
 **4.Install requirements:**
 
+If your device already have required dependencies installed, then verify if their version and the version mentioned in 'requirements.txt' are same otherwise upgrade them. You can see their version by using tg-upload's `-v` flag.
+
 ```
 pip install -r requirements.txt
 ```
@@ -82,7 +86,7 @@ pip install -r requirements.txt
 **5.Run the program:**
 
 ```
-python tg-upload.py --help
+python tg-upload.py -h
 ```
 
 <a name="options"></a>
