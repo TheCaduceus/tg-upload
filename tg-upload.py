@@ -64,7 +64,7 @@ parser.add_argument("--no_warn", action="store_true", help="Don't show warning m
 # MISC FLAGS
 parser.add_argument("--device_model", help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
 parser.add_argument("--system_version", help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
-parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload: 1.0.3\nPython: {py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram: {get_dist('pyrogram').version}\nTgCrypto: {get_dist('tgcrypto').version}")
+parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload: 1.0.4\nPython: {py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram: {get_dist('pyrogram').version}\nTgCrypto: {get_dist('tgcrypto').version}")
 args = parser.parse_args()
 
 def file_hash(file_path, caption_text):
@@ -200,7 +200,7 @@ if args.phone:
     api_hash=args.api_hash,
     phone_number=args.phone,
     hide_password=args.hide_pswd,
-    app_version="1.0.3",
+    app_version="1.0.4",
     device_model=args.device_model or "tg-upload",
     system_version=args.system_version or f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}",
     ipv6=args.ipv6,
@@ -352,7 +352,7 @@ with client:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5 = file_hash(args.path, caption)
         start_time = time()
-        client.send_voice(chat_id. args.path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), disable_notification=args.silent)
+        client.send_voice(chat_id. args.path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
         print(f"An error occured!\n{error_code}")
@@ -368,7 +368,7 @@ with client:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5 = file_hash(_path, caption)
             start_time = time()
-            client.send_video(chat_id, _path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), disable_notification=args.silent)
+            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
             print(f"An error occured!\n{error_code}")
@@ -382,7 +382,6 @@ with client:
           filename = args.prefix + filename
         if args.replace:
           filename = filename.replace(args.replace[0], args.replace[1])
-        file_size, file_sha256, file_md5 = file_hash(args.path, caption)
         start_time = time()
         client.send_video_note(chat_id, args.path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
@@ -398,7 +397,6 @@ with client:
               filename = args.prefix + filename
             if args.replace:
               filename = filename.replace(args.replace[0], args.replace[1])
-            file_size, file_sha256, file_md5 = file_hash(_path, caption)
             start_time = time()
             client.send_video_note(chat_id, _path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
