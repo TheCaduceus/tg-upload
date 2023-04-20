@@ -400,6 +400,7 @@ with client:
             Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
         else:
           file_size, file_sha256, file_md5 = file_hash(args.path, caption)
+          start_time = time()
           client.send_document(chat_id, args.path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
