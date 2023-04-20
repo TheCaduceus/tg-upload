@@ -131,8 +131,6 @@ def file_hash(file_path, caption_text):
 
   return file_size, file_sha256, file_md5
 
-
-
 def split_file(file_path, chunk_size, file_name):
 
   file_size = Path(file_path).stat().st_size
@@ -145,6 +143,8 @@ def split_file(file_path, chunk_size, file_name):
       chunk_file_path = f"tmp/{chunk_file_name}"
       with open(chunk_file_path, 'wb') as cf:
         cf.write(f.read(chunk_size))
+      progress = (i + 1) / num_chunks * 100
+      print(f"\rSPLIT: [{file_name}] - {progress:.2f}%", end="")
       yield chunk_file_path, chunk_file_name
 
 def upload_progress(current,total):
@@ -218,7 +218,6 @@ with client:
     exit("Error: Path is not provided.")
 
   chat_id = get_chatid(args.chat_id) if args.chat_id else "me"
-  start_time = time()
 
   if args.capjson:
     if not Path("caption.json").exists():
@@ -238,6 +237,7 @@ with client:
       try:
         filename = PurePath(args.path).name
         file_size, file_sha256, file_md5 = file_hash(args.path, caption)
+        start_time = time()
         client.send_photo(chat_id, args.path, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -249,6 +249,7 @@ with client:
         if Path(_path).is_file():
           try:
             file_size, file_sha256, file_md5 = file_hash(_path, caption)
+            start_time = time()
             client.send_photo(chat_id, _path, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -264,6 +265,7 @@ with client:
         if args.replace:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5 = file_hash(args.path, caption)
+        start_time = time()
         client.send_video(chat_id, args.path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -279,6 +281,7 @@ with client:
             if args.replace:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5 = file_hash(_path, caption)
+            start_time = time()
             client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -294,6 +297,7 @@ with client:
         if args.replace:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5 = file_hash(args.path, caption)
+        start_time = time()
         client.send_audio(chat_id, args.path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), performer=args.artist, title=args.title, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -309,6 +313,7 @@ with client:
             if args.replace:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5 = file_hash(_path, caption)
+            start_time = time()
             client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), performer=args.artist, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -324,6 +329,7 @@ with client:
         if args.replace:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5 = file_hash(args.path, caption)
+        start_time = time()
         client.send_voice(chat_id. args.path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -339,6 +345,7 @@ with client:
             if args.replace:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5 = file_hash(_path, caption)
+            start_time = time()
             client.send_video(chat_id, _path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -354,6 +361,7 @@ with client:
         if args.replace:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5 = file_hash(args.path, caption)
+        start_time = time()
         client.send_video_note(chat_id, args.path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
@@ -369,6 +377,7 @@ with client:
             if args.replace:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5 = file_hash(_path, caption)
+            start_time = time()
             client.send_video_note(chat_id, _path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
@@ -386,6 +395,7 @@ with client:
         if args.split and Path(args.path).stat().st_size > args.split:
           for _splitted_file, filename in split_file(args.path, args.split, filename):
             file_size, file_sha256, file_md5 = file_hash(_splitted_file, caption)
+            start_time = time()
             client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
             Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
         else:
@@ -407,10 +417,12 @@ with client:
             if args.split and Path(_path).stat().st_size > args.split:
               for _splitted_file, filename in split_file(_path, args.split, filename):
                 file_size, file_sha256, file_md5 = file_hash(_splitted_file, caption)
+                start_time = time()
                 client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
                 Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
             else:
               file_size, file_sha256, file_md5 = file_hash(_path, caption)
+              start_time = time()
               client.send_document(chat_id, _path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
               Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
