@@ -157,6 +157,7 @@ Behaviour flags controls the behaviour of transmission.
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
 --split - Split files in given bytes and upload.
+--combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
