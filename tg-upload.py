@@ -167,9 +167,8 @@ if args.api_id and args.api_hash:
   elif not args.phone and not args.bot:
     if not Path(f"{args.profile}.session").exists():
       raise ValueError ("Given profile is not yet initialized! provide phone number or bot token to initialize.")
-elif not args.api_id or not args.api_hash:
-  if not Path(f'{args.profile}.session').exists() and not args.login_string:
-    raise ValueError("Given profile is not yet initialized! provide API_ID and API_HASH to initialize.")
+elif not Path(f'{args.profile}.session').exists() and not args.login_string:
+  raise ValueError("Given profile is not yet initialized! provide API_ID and API_HASH to initialize.")
 
 if args.phone:
   client = Client(
@@ -384,48 +383,47 @@ with client:
             print(f"An error occured!\n{error_code}")
         else:
           print(f"[Dir] -> {filename}")
-  else:
-    if Path(args.path).is_file():
-      try:
-        filename = args.filename or PurePath(args.path).name
-        if args.prefix:
-          filename = args.prefix + filename
-        if args.replace:
-          filename = filename.replace(args.replace[0], args.replace[1])
-        if args.split and Path(args.path).stat().st_size > args.split:
-          for _splitted_file, filename in split_file(args.path, args.split, filename):
-            file_size, file_sha256, file_md5 = file_hash(_splitted_file, caption)
-            start_time = time()
-            client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
-            Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
-        else:
-          file_size, file_sha256, file_md5 = file_hash(args.path, caption)
-          client.send_document(chat_id, args.path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
-        Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
-      except Exception as error_code:
-        print(f"An error occured!\n{error_code}")
-    elif Path(args.path).is_dir():
-      print("discovering paths...")
-      for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
-        if Path(_path).is_file():
-          try:
-            filename = PurePath(_path).name
-            if args.prefix:
-              filename = args.prefix + filename
-            if args.replace:
-              filename = filename.replace(args.replace[0], args.replace[1])
-            if args.split and Path(_path).stat().st_size > args.split:
-              for _splitted_file, filename in split_file(_path, args.split, filename):
-                file_size, file_sha256, file_md5 = file_hash(_splitted_file, caption)
-                start_time = time()
-                client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
-                Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
-            else:
-              file_size, file_sha256, file_md5 = file_hash(_path, caption)
+  elif Path(args.path).is_file():
+    try:
+      filename = args.filename or PurePath(args.path).name
+      if args.prefix:
+        filename = args.prefix + filename
+      if args.replace:
+        filename = filename.replace(args.replace[0], args.replace[1])
+      if args.split and Path(args.path).stat().st_size > args.split:
+        for _splitted_file, filename in split_file(args.path, args.split, filename):
+          file_size, file_sha256, file_md5 = file_hash(_splitted_file, caption)
+          start_time = time()
+          client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+          Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
+      else:
+        file_size, file_sha256, file_md5 = file_hash(args.path, caption)
+        client.send_document(chat_id, args.path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+      Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
+    except Exception as error_code:
+      print(f"An error occured!\n{error_code}")
+  elif Path(args.path).is_dir():
+    print("discovering paths...")
+    for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
+      if Path(_path).is_file():
+        try:
+          filename = PurePath(_path).name
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          if args.split and Path(_path).stat().st_size > args.split:
+            for _splitted_file, filename in split_file(_path, args.split, filename):
+              file_size, file_sha256, file_md5 = file_hash(_splitted_file, caption)
               start_time = time()
-              client.send_document(chat_id, _path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
-              Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
-          except Exception as error_code:
-            print(f"An error occured!\n{error_code}")
-        else:
-          print(f"[Dir] -> {filename}")
+              client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+              Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
+          else:
+            file_size, file_sha256, file_md5 = file_hash(_path, caption)
+            start_time = time()
+            client.send_document(chat_id, _path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / 1024 * 1024 * 1024, file_sha256 = file_sha256, file_md5 = file_md5), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+            Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
+        except Exception as error_code:
+          print(f"An error occured!\n{error_code}")
+      else:
+        print(f"[Dir] -> {filename}")
