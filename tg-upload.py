@@ -20,7 +20,7 @@ parser.add_argument("--ipv6", action="store_true", help="Connect Telegram using 
 parser.add_argument("--proxy", help="Proxy name (in proxy.json) to use for connecting Telegram.")
 
 # LOGIN FLAGS
-parser.add_argument("-p","--profile", required=True, help="Name of your new/existing session.")
+parser.add_argument("-p","--profile", help="Name of your new/existing session.")
 parser.add_argument("--api_id", type=int, help="Telegram API ID required to create new session.")
 parser.add_argument("--api_hash", help="Telegram API HASH required to create new session.")
 parser.add_argument("--phone", help="Phone number (international format) required to login as user.")
@@ -47,6 +47,7 @@ parser.add_argument("--as_audio", action="store_true", help="Send given file as 
 parser.add_argument("--as_voice", action="store_true", help="Send given file as voice.")
 parser.add_argument("--as_video_note", action="store_true", help="Send given file as video note.")
 parser.add_argument("--split", type=int, help="Split files in given bytes and upload.")
+parser.add_argument("--combine", nargs="+", type=str, help="Restore original file using part files produced by tg-upload. Accepts one or more paths.")
 parser.add_argument("--replace", nargs=2, type=str, help="Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.")
 parser.add_argument("--disable_stream", action="store_false", help="Disable streaming for given video.")
 parser.add_argument("-b","--spoiler", action="store_true", help="Send media with spoiler animation.")
@@ -66,18 +67,6 @@ parser.add_argument("--system_version", help="Overwrite system version before st
 parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload: 1.0.3\nPython: {py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram: {get_dist('pyrogram').version}\nTgCrypto: {get_dist('tgcrypto').version}")
 args = parser.parse_args()
 
-if args.proxy:
-  if not Path("proxy.json").exists():
-    raise FileNotFoundError("Not found: proxy.json [file].")
-  with open("proxy.json", "r") as proxy:
-    try:
-      proxy_json = json_load(proxy)[args.proxy]
-      print(f"Connecting to {args.proxy}...")
-    except KeyError:
-      exit(f"Error: Unable to load {args.proxy}, please check proxy.json and ensure that everything is in correct format.")
-else:
-  proxy_json = None
-
 def file_hash(file_path, caption_text):
   file_size = Path(file_path).stat().st_size
 
@@ -95,7 +84,7 @@ def file_hash(file_path, caption_text):
         bytes_read += len(chunk)
         progress = bytes_read / file_size * 100
         print(f"\rCalculating SHA256 & MD5 - {progress:.2f}%", end="")
-    file_sha256=file_sha256.hexdigest()
+    file_sha256 = file_sha256.hexdigest()
     file_md5 = file_md5.hexdigest()
   elif '{file_sha256}' in caption_text:
     with open(file_path, "rb") as f:
@@ -160,6 +149,39 @@ def get_chatid(raw_id):
     return int(raw_id)
   else:
     return raw_id
+
+if args.combine:
+  output_file_name = Path(args.combine[0]).stem
+  with open(output_file_name, 'wb') as f:
+    file_size = sum(Path(file_path).stat().st_size for file_path in args.combine)
+    bytes_written = 0
+    for file_path in args.combine:
+      with open(file_path, 'rb') as cf:
+        while True:
+          chunk = cf.read(1024 * 1024)
+          if not chunk:
+            break
+          f.write(chunk)
+          bytes_written += len(chunk)
+          progress = (bytes_written / file_size) * 100
+          print(f"\rCOMBINE: [{output_file_name}] - {progress:.2f}%", end="")
+      if args.delete_on_done:
+        Path(file_path).unlink() 
+  exit()
+elif not args.profile:
+  exit("Error: No session name (--profile) passed to start client with.")
+
+if args.proxy:
+  if not Path("proxy.json").exists():
+    raise FileNotFoundError("Not found: proxy.json [file].")
+  with open("proxy.json", "r") as proxy:
+    try:
+      proxy_json = json_load(proxy)[args.proxy]
+      print(f"Connecting to {args.proxy}...")
+    except KeyError:
+      exit(f"Error: Unable to load {args.proxy}, please check proxy.json and ensure that everything is in correct format.")
+else:
+  proxy_json = None
 
 if args.api_id and args.api_hash:
   if args.phone and args.bot:
