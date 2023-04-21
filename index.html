@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>tg-upload | An open-source Python program to upload files/folder to Telegram effortlessly.</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="tg-upload" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An open-source Python program to upload files/folder to Telegram effortlessly." />
+<meta property="og:description" content="An open-source Python program to upload files/folder to Telegram effortlessly." />
+<link rel="canonical" href="https://thecaduceus.eu.org/tg-upload/" />
+<meta property="og:url" content="http://thecaduceus.eu.org/tg-upload/" />
+<meta property="og:site_name" content="tg-upload" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="tg-upload" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"An open-source Python program to upload files/folder to Telegram effortlessly.","headline":"tg-upload","name":"tg-upload","url":"http://thecaduceus.eu.org/tg-upload/"}</script>
+    <link rel="stylesheet" href="/tg-upload/assets/css/style.css?v=3b5c76801d1324bab3aeaa3d42a1439921367cf7">
+    <link rel="icon" type="image/jpg" sizes="32x32" href="https://cdn.thecaduceus.eu.org/icons/Official_Logo.jpg">
+    <link rel="icon" type="image/jpg" sizes="16x16" href="https://cdn.thecaduceus.eu.org/icons/Official_Logo.jpg">
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+
+      <div align="center">
+<h1>📦tg-upload</h1>
+<b>An open-source Python program to upload files/folder to Telegram effortlessly.</b>
+</div>
+
+<h2 id="-index"><strong>📑 INDEX</strong></h2>
+
+<ul>
+  <li><a href="#installation"><strong>⚙️ Installation</strong></a>
+    <ul>
+      <li><a href="#i-1">Python &amp; Git</a></li>
+      <li><a href="#i-2">Download</a></li>
+      <li><a href="#i-3">Requirements</a></li>
+    </ul>
+  </li>
+  <li><a href="#options"><strong>🚩 Options</strong></a>
+    <ul>
+      <li><a href="#flag-1">Connectivity</a></li>
+      <li><a href="#flag-2">Login</a></li>
+      <li><a href="#flag-3">File</a></li>
+      <li><a href="#flag-4">Behaviour</a></li>
+      <li><a href="#flag-5">Misc</a></li>
+    </ul>
+  </li>
+  <li><a href="#how-to-use"><strong>🕹️ How to use?</strong></a>
+    <ul>
+      <li><a href="#htu-1">Get API ID &amp; HASH</a></li>
+      <li><a href="#htu-2">Authorization</a></li>
+      <li><a href="#htu-3">Get Started</a></li>
+      <li><a href="#htu-4">Dynamic Caption</a></li>
+      <li><a href="#htu-5">Caption Templates</a></li>
+      <li><a href="#htu-6">Using Proxy</a></li>
+    </ul>
+  </li>
+  <li><a href="#limits"><strong>🪧 Limits</strong></a>
+    <ul>
+      <li><a href="#l-1">File Size</a></li>
+      <li><a href="#l-2">Thumbnail</a></li>
+      <li><a href="#l-3">Caption</a></li>
+    </ul>
+  </li>
+  <li><a href="#contribution"><strong>⚒️ Contribution</strong></a></li>
+  <li><a href="#help"><strong>⛑️ Need help!</strong></a></li>
+  <li><a href="#credits"><strong>❤️ Credits &amp; Thanks</strong></a></li>
+</ul>
+
+<p><a name="installation"></a></p>
+
+<h2 id="️-installation">⚙️ Installation</h2>
+<p>Git installation is optional if you prefer downloading stable releases zips of tg-upload using <a href="https://github.com/TheCaduceus/tg-upload/releases">releases</a> section.
+<a name="i-1"></a></p>
+
+<p><strong>1.Install Python &amp; Git:</strong></p>
+
+<p>Prefer Python 3.11 for faster execution speed.</p>
+
+<p>For Windows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>winget install Python.Python.3.11
+winget install Git.Git
+</code></pre></div></div>
+<p>For Linux:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get update &amp;&amp; sudo apt-get install -y python3.11 git pip
+</code></pre></div></div>
+<p>For MacOS:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install python@3.11 git
+</code></pre></div></div>
+<p>For Termux:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pkg install python -y
+pkg install git -y
+</code></pre></div></div>
+
+<p><a name="i-2"></a></p>
+
+<p><strong>2.Download tg-upload:</strong></p>
+
+<ul>
+  <li>
+    <p>For stable releases, download zip from <a href="https://github.com/TheCaduceus/tg-upload/releases">here</a> and unzip. (Recommended)</p>
+  </li>
+  <li>
+    <p>To download beta releases, use git:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheCaduceus/tg-upload.git
+</code></pre></div>    </div>
+    <p><strong>3.Change Directory:</strong></p>
+  </li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd tg-upload
+</code></pre></div></div>
+
+<p><a name="i-3"></a></p>
+
+<p><strong>4.Install requirements:</strong></p>
+
+<p>If your device already have required dependencies installed, then verify if their version and the version mentioned in ‘requirements.txt’ are same otherwise upgrade them. You can see their version by using tg-upload’s <code class="language-plaintext highlighter-rouge">-v</code> flag.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install -r requirements.txt
+</code></pre></div></div>
+
+<p><strong>5.Run the program:</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py -h
+</code></pre></div></div>
+
+<p><a name="options"></a></p>
+
+<h2 id="-options">🚩 Options</h2>
+<p><strong>tg-upload provides multiple options known as flags to control overall behaviour of the program, flags are categorized as follows:</strong></p>
+
+<p><a name="flag-1"></a></p>
+
+<p><strong>1.CONNECTIVITY FLAGS:</strong></p>
+
+<p>Connectivity flags controls how the program should establish connection to Telegram servers, helpful for those uses proxies to bypass ban imposed on Telegram by their ISP (or for increasing transfer speed) or for those prefer IPv6 to establish connection.</p>
+
+<p>Learn <a href="#htu-4">here</a>, how to configure proxies?</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--ipv6 - Connect Telegram using device's IPv6. By default IPv4.
+--proxy - Proxy name (in proxy.json) to use for connecting Telegram.
+</code></pre></div></div>
+
+<p><a name="flag-2"></a></p>
+
+<p><strong>2.LOGIN FLAGS:</strong></p>
+
+<p>Login flags are responsible for controling behaviour of the program during authentication flow.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-p,--profile - Name of your new/existing session.
+--api_id - Telegram API ID required to create new session.
+--api_hash - Telegram API HASH required to create new session.
+--phone - Phone number (international format) required to login as user.
+--hide_pswd - Hide 2FA password using getpass.
+--bot - Telegram bot token required to login as bot.
+--login_string - Session string to login without auth &amp; creating an session file.
+--export_string - Generate &amp; display session string using existing session file.
+--tmp_session - Don't create session file for this login.
+--login_only - Exit immediately after authorization process.
+</code></pre></div></div>
+
+<p><a name="flag-3"></a></p>
+
+<p><strong>3.FILE FLAGS:</strong></p>
+
+<p>File flags are used to provide information about file/folder.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-l,--path - Path to the file or folder to upload.
+-n,--filename - To upload data with custom name.
+-i,--thumb - Path of thumbnail image (JPEG format) to be attached with given file.
+-z,--caption - Caption text to be attached with file(s), markdown &amp; HTML formatting allowed.
+--duration - Duration of sent media in seconds.
+--capjson - Caption name (in caption.json) to attach with given file(s).
+</code></pre></div></div>
+
+<p><a name="flag-4"></a></p>
+
+<p><strong>4.BEHAVIOUR FLAGS:</strong></p>
+
+<p>Behaviour flags controls the behaviour of transmission.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-c,--chat_id - Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.
+--as_photo - Send given file as picture.
+--as_video - Send given file as video.
+--as_audio - Send given file as audio.
+--as_voice - Send given file as voice.
+--as_video_note - Send given file as video note.
+--split - Split files in given bytes and upload.
+--combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
+--replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
+--disable_stream - Disable streaming for given video.
+-b,--spoiler - Send media with spoiler animation.
+-d,--delete_on_done - Delete the given file after task completion.
+-w,--width - Set custom width for video.
+-e,--height - Set custom height for video.
+-a,--artist - Set artist name of given audio file.
+-t,--title - Set title of given audio file
+-s,--silent - Send files silently to given chat.
+-r,--recursive - Upload files recursively if path is a folder.
+--prefix - Add given prefix text to each filename (prefix + filename) before upload.
+--no_warn - Don't show warning messages.
+</code></pre></div></div>
+
+<p><a name="flag-5"></a></p>
+
+<p><strong>5.MISC FLAGS:</strong></p>
+
+<p>Flags that does not fit in above categories are listed in this category:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-h, --help - To get help message as well as availabe options.
+--device_model - Overwrite device model before starting client, by default 'tg-upload', can be anything like your name or 'My Device'.
+--system_version - Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.
+-v,--version - Display current tg-upload &amp; dependencies version.
+</code></pre></div></div>
+
+<p><a name="how-to-use"></a></p>
+
+<h2 id="️-how-to-use">🕹️ How to use?</h2>
+
+<p><a name="htu-1"></a></p>
+
+<p><strong>1.Create a Telegram app:</strong></p>
+
+<p>Go to <a href="https://my.telegram.org/apps">My Telegram</a> and create an app and get its <strong>API_ID</strong> &amp; <strong>API_HASH</strong> and save it somewhere securely and treat them as your bank password.</p>
+
+<p><a name="htu-2"></a></p>
+
+<p><strong>2.Login in tg-upload:</strong></p>
+
+<p>tg-upload supports login as user (using phone number or session string) or bot (using bot token), you must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>), to login as user you must pass your phone number (<code class="language-plaintext highlighter-rouge">--phone</code>) or to login as bot pass bot token (<code class="language-plaintext highlighter-rouge">--bot</code>).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
+</code></pre></div></div>
+<p>now from next time whenever you need to perform any task, you just need to pass the profile name (<code class="language-plaintext highlighter-rouge">--profile</code>) which you used to create your session and you will be logged in without any authentication flow (until you terminate the session from Telegram app).</p>
+
+<p><a name="htu-3"></a></p>
+
+<p><strong>3.Get Started:</strong></p>
+
+<p>Hooray! now you are all set to use tg-upload. You can try out some sample commands that will help you to get started quickly:</p>
+
+<p>Get help &amp; options:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py -h
+</code></pre></div></div>
+
+<p>Upload files/folder:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
+</code></pre></div></div>
+
+<p>Check versions:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py -v
+</code></pre></div></div>
+
+<p><a name="htu-4"></a></p>
+
+<p><strong>4.Dynamic Caption:</strong></p>
+
+<p>tg-upload provides variables that user can place in file’s caption to make it dynamic, this variables are automatically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">{file_name}</code> - Name of file without its format.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_format}</code> - Format of given file including ‘.’.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_sha256}</code> - Given file’s SHA256.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_md5}</code> - Given file’s MD5.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_size_b}</code> - Size of file in byte.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_size_kb}</code> - Size of file in KB.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_size_mb}</code> - Size of file in MB.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_size_gb}</code> - Size of file in GB.</li>
+</ul>
+
+<p>Additionally, we can also limit number of decimals places to be shown in file size, like to limit number of decimals places to 2 we need to pass <code class="language-plaintext highlighter-rouge">:.2f</code> with a variable like <code class="language-plaintext highlighter-rouge">{file_size_mb:.2f}</code>.</p>
+<div align="center">
+
+![dynamic-caption-1](https://user-images.githubusercontent.com/87380104/233124265-a4427be6-b6cd-461a-b479-dcad599e970d.png)
+
+</div>
+<p>Just like a plan text, you can also apply same formatting on variables, just make sure you put all formatting tags outside of {} brackets to prevent any error.</p>
+
+<p>One variable can be called multiple times in same caption and user must prevent writing any other keyword between {} otherwise tg-upload will raise KeyError indicating that given variable is not yet defined.</p>
+
+<p><a name="htu-5"></a></p>
+
+<p><strong>5.Caption Templates:</strong></p>
+
+<p>We can make &amp; save our static &amp; dynamic caption format in ‘caption.json’ with a name (required) and description (optional) so we don’t have to write it again.</p>
+
+<p>1.Open ‘caption.json’ file and edit it as following:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"captionTemplateName"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"text"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"main caption text"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"description"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"An optional description to make recall easy."</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="err">...more</span><span class="w"> </span><span class="err">caption</span><span class="w"> </span><span class="err">templates</span><span class="w"> 
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>2.When needed, just mention the caption template name using <code class="language-plaintext highlighter-rouge">--capjson</code> flag.</p>
+
+<p>Just like <code class="language-plaintext highlighter-rouge">--caption</code> flag, caption template also supports formatting using HTML or markdown. I already provided some general caption templates to make your work easy! :)</p>
+
+<p><a name="htu-6"></a></p>
+
+<p><strong>6.Using Proxy:</strong></p>
+
+<p>Using proxy is completely optional step and can be used to bypass ban imposed by local authorities or for increasing transfer speed:</p>
+
+<p>1.Rename ‘proxy-sample.json’ to ‘proxy.json’</p>
+
+<p>2.Fill the proxy details:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"proxyName"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"scheme"</span><span class="p">:</span><span class="w"> </span><span class="s2">"proxyScheme"</span><span class="p">,</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">like</span><span class="w"> </span><span class="err">socks</span><span class="mi">5</span><span class="w">
+    </span><span class="nl">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"proxyHostname"</span><span class="p">,</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">like</span><span class="w"> </span><span class="mf">192.168</span><span class="err">.</span><span class="mf">1.1</span><span class="w">
+    </span><span class="nl">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">like</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span><span class="w"> </span><span class="err">should</span><span class="w"> </span><span class="err">be</span><span class="w"> </span><span class="err">integer.</span><span class="w">
+    </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"proxyUsername"</span><span class="p">,</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">optional</span><span class="p">,</span><span class="w"> </span><span class="err">omit</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">keep</span><span class="w"> </span><span class="err">empty</span><span class="w"> </span><span class="err">if</span><span class="w"> </span><span class="err">not</span><span class="w"> </span><span class="err">required.</span><span class="w">
+    </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"proxyPassword"</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">optional</span><span class="p">,</span><span class="w"> </span><span class="err">omit</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">keep</span><span class="w"> </span><span class="err">empty</span><span class="w"> </span><span class="err">if</span><span class="w"> </span><span class="err">not</span><span class="w"> </span><span class="err">required.</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="err">...more</span><span class="w"> </span><span class="err">proxies</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>3.While running tg-upload, just mention the proxy name using <code class="language-plaintext highlighter-rouge">--proxy</code>.</p>
+
+<p><a name="limits"></a></p>
+
+<h2 id="-limits">🪧 Limits</h2>
+
+<p><a name="l-1"></a></p>
+
+<p><strong>1.File size:</strong></p>
+
+<ul>
+  <li>2GB for bots &amp; freemium users.</li>
+  <li>4GB for premium users.</li>
+</ul>
+
+<p><a name="l-2"></a></p>
+
+<p><strong>2.Thumbnail:</strong></p>
+
+<ul>
+  <li>Only JPEG format.</li>
+  <li>Size should be 200 KB or below.</li>
+  <li>Width &amp; height should not be more than 320 pixels.</li>
+</ul>
+
+<p><a name="l-3"></a></p>
+
+<p><strong>3.Caption:</strong></p>
+
+<ul>
+  <li>1024 characters for all files &amp; media.</li>
+</ul>
+
+<p><a name="contribution"></a></p>
+
+<h2 id="️-contribution">⚒️ Contribution</h2>
+
+<p>Feel free to create a PR (to dev branch) if you have any valueable changes like adding new features or fixing bugs and not only including (but not limited to):</p>
+
+<ul>
+  <li>Changing print statements’ string.</li>
+  <li>Refactoring code using AI tools.</li>
+  <li>Typos in README.</li>
+  <li>File rename.</li>
+  <li>Changing default values unless it causing problems.</li>
+  <li>Deleting existing features.</li>
+</ul>
+
+<p><a name="help"></a></p>
+
+<h2 id="️-need-help">⛑️ Need help!</h2>
+
+<ul>
+  <li>Create an <a href="https://github.com/TheCaduceus/tg-upload/issues">issue</a> on GitHub.</li>
+  <li><a href="https://t.me/TheCaduceusOfficial">Subscribe</a> Telegram channel.</li>
+  <li>Ask questions or doubts <a href="https://t.me/DrDiscussion">here</a>.</li>
+  <li>Send a <a href="https://t.me/TheCaduceusHere">personal message</a> to developer on Telegram.</li>
+  <li>Tag on <a href="https://twitter.com/BeingDrCaduceus">Twitter</a>.</li>
+</ul>
+
+<p><a name="credits"></a></p>
+
+<h2 id="️-credits--thanks">❤️ Credits &amp; Thanks</h2>
+
+<p><a href="https://t.me/TheCaduceusHere"><strong>Dr.Caduceus</strong></a>: Owner &amp; current maintainer of tg-upload.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        Website hosted by <a href="https://github.com/TheCaduceus">Dr.Caduceus.</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
