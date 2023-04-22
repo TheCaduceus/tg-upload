@@ -14,7 +14,8 @@
   * [Login](#flag-2)
   * [File](#flag-3)
   * [Behaviour](#flag-4)
-  * [Misc](#flag-5)
+  * [Utility](#flag-5)
+  * [Misc](#flag-6)
 * [**🕹️ How to use?**](#how-to-use)
   * [Get API ID & HASH](#htu-1)
   * [Authorization](#htu-2)
@@ -117,6 +118,7 @@ Login flags are responsible for controling behaviour of the program during authe
 
 ```
 -p,--profile - Name of your new/existing session.
+--info - Show your Telegram account details as JSON.
 --api_id - Telegram API ID required to create new session.
 --api_hash - Telegram API HASH required to create new session.
 --phone - Phone number (international format) required to login as user.
@@ -157,7 +159,6 @@ Behaviour flags controls the behaviour of transmission.
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
 --split - Split files in given bytes and upload.
---combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
@@ -171,10 +172,23 @@ Behaviour flags controls the behaviour of transmission.
 --prefix - Add given prefix text to each filename (prefix + filename) before upload.
 --no_warn - Don't show warning messages.
 ```
-
 <a name="flag-5"></a>
 
-**5.MISC FLAGS:**
+**5.UTILITY FLAGS:**
+
+Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing new session (`--profile`) to use them.
+
+```
+--file_info - Show basic file information.
+--hash - Calculate & display hash of given file.
+--split_file - Split file in given byte, accepts only size & requires path using path flag.
+--combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
+--convert - Convert any image into JPEG format.
+```
+
+<a name="flag-6"></a>
+
+**6.MISC FLAGS:**
 
 Flags that does not fit in above categories are listed in this category:
 
@@ -237,12 +251,21 @@ python tg-upload.py -v
 tg-upload provides variables that user can place in file's caption to make it dynamic, this variables are automtically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:
 * `{file_name}` - Name of file without its format.
 * `{file_format}` - Format of given file including '.'.
+* `{creation_time[indice]}` - File's creation time or last modification time.
 * `{file_sha256}` - Given file's SHA256.
 * `{file_md5}` - Given file's MD5.
 * `{file_size_b}` - Size of file in byte.
 * `{file_size_kb}` - Size of file in KB.
 * `{file_size_mb}` - Size of file in MB.
 * `{file_size_gb}` - Size of file in GB.
+
+File's creation time variable `{creation_time}` stores multiple values like year, month, day, hour, minute, second of creation and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or depends upon your operating-system:
+* `0`|`{creation_time[0]}` - Year of creation/modification.
+* `1`|`{creation_time[1]}` - Month of creation/modification.
+* `2`|`{creation_time[2]}` - Day of creation/modification.
+* `3`|`{creation_time[3]}` - Hour of creation/modification.
+* `4`|`{creation_time[4]}` - Minute of creation/modification.
+* `5`|`{creation_time[5]}` - Second of creation/modification.
 
 Additionally, we can also limit number of decimals places to be shown in file size, like to limit number of decimals places to 2 we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
 <div align="center">
@@ -312,11 +335,13 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
 - 2GB for bots & freemium users.
 - 4GB for premium users.
 
+To upload larger files, use `--split` flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use `--combine` flag and tg-upload will restore original file for you (remeber to provide part file paths in ordered form 0,1,2,3...).
+
 <a name="l-2"></a>
 
 **2.Thumbnail:**
 
-- Only JPEG format.
+- ~~Only JPEG format.~~ Any image will be converted to JPEG format by tg-upload.
 - Size should be 200 KB or below.
 - Width & height should not be more than 320 pixels.
 
