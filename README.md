@@ -176,7 +176,7 @@ Behaviour flags controls the behaviour of transmission.
 
 **5.UTILITY FLAGS:**
 
-Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing new session (`--profile`) to use them.
+Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (`--profile`) to use them.
 
 ```
 --file_info - Show basic file information.
