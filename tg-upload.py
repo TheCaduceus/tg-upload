@@ -334,7 +334,7 @@ with client:
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
         else:
-          print(f"[Dir] -> {filename}")
+          print(f"[Dir] -> {PurePath(_path).name}")
   elif args.as_video:
     if Path(args.path).is_file():
       try:
@@ -366,7 +366,7 @@ with client:
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
         else:
-          print(f"[Dir] -> {filename}")
+          print(f"[Dir] -> {PurePath(_path).name}")
   elif args.as_audio:
     if Path(args.path).is_file():
       try:
@@ -398,7 +398,7 @@ with client:
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
         else:
-          print(f"[Dir] -> {filename}")
+          print(f"[Dir] -> {PurePath(_path).name}")
   elif args.as_voice:
     if Path(args.path).is_file():
       try:
@@ -430,7 +430,7 @@ with client:
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
         else:
-          print(f"[Dir] -> {filename}")
+          print(f"[Dir] -> {PurePath(_path).name}")
   elif args.as_video_note:
     if Path(args.path).is_file():
       try:
@@ -460,7 +460,7 @@ with client:
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
         else:
-          print(f"[Dir] -> {filename}")
+          print(f"[Dir] -> {PurePath(_path).name}")
   else:
     if Path(args.path).is_file():
       try:
@@ -506,4 +506,4 @@ with client:
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
         else:
-          print(f"[Dir] -> {filename}")
+          print(f"[Dir] -> {PurePath(_path).name}")
