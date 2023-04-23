@@ -49,7 +49,8 @@
       <li><a href="#flag-2">Login</a></li>
       <li><a href="#flag-3">File</a></li>
       <li><a href="#flag-4">Behaviour</a></li>
-      <li><a href="#flag-5">Misc</a></li>
+      <li><a href="#flag-5">Utility</a></li>
+      <li><a href="#flag-6">Misc</a></li>
     </ul>
   </li>
   <li><a href="#how-to-use"><strong>🕹️ How to use?</strong></a>
@@ -57,7 +58,13 @@
       <li><a href="#htu-1">Get API ID &amp; HASH</a></li>
       <li><a href="#htu-2">Authorization</a></li>
       <li><a href="#htu-3">Get Started</a></li>
-      <li><a href="#htu-4">Dynamic Caption</a></li>
+      <li><a href="#htu-4">Dynamic Caption</a>
+        <ul>
+          <li><a href="#htu4.1">Variables</a></li>
+          <li><a href="#htu4.2">Time Index</a></li>
+          <li><a href="#htu4.3">Decimal Places</a></li>
+        </ul>
+      </li>
       <li><a href="#htu-5">Caption Templates</a></li>
       <li><a href="#htu-6">Using Proxy</a></li>
     </ul>
@@ -110,12 +117,11 @@ pkg install git -y
   <li>
     <p>To download beta releases, use git:</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheCaduceus/tg-upload.git
-</code></pre></div></div>
-
+</code></pre></div>    </div>
   </li>
 </ul>
 
-<p><strong>3.Change Directory:</strong></p>      
+<p><strong>3.Change Directory:</strong></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd tg-upload
 </code></pre></div></div>
@@ -145,7 +151,7 @@ pkg install git -y
 
 <p>Connectivity flags controls how the program should establish connection to Telegram servers, helpful for those uses proxies to bypass ban imposed on Telegram by their ISP (or for increasing transfer speed) or for those prefer IPv6 to establish connection.</p>
 
-<p>Learn <a href="#htu-4">here</a>, how to configure proxies?</p>
+<p>Learn <a href="#htu-6">here</a>, how to configure proxies?</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--ipv6 - Connect Telegram using device's IPv6. By default IPv4.
 --proxy - Proxy name (in proxy.json) to use for connecting Telegram.
@@ -158,6 +164,7 @@ pkg install git -y
 <p>Login flags are responsible for controling behaviour of the program during authentication flow.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-p,--profile - Name of your new/existing session.
+--info - Show your Telegram account details as JSON.
 --api_id - Telegram API ID required to create new session.
 --api_hash - Telegram API HASH required to create new session.
 --phone - Phone number (international format) required to login as user.
@@ -196,7 +203,6 @@ pkg install git -y
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
 --split - Split files in given bytes and upload.
---combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
@@ -210,10 +216,22 @@ pkg install git -y
 --prefix - Add given prefix text to each filename (prefix + filename) before upload.
 --no_warn - Don't show warning messages.
 </code></pre></div></div>
-
 <p><a name="flag-5"></a></p>
 
-<p><strong>5.MISC FLAGS:</strong></p>
+<p><strong>5.UTILITY FLAGS:</strong></p>
+
+<p>Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (<code class="language-plaintext highlighter-rouge">--profile</code>) to call them.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--file_info - Show basic file information.
+--hash - Calculate &amp; display hash of given file.
+--split_file - Split file in given bytes, accepts only size &amp; requires path using path flag.
+--combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
+--convert - Convert any image into JPEG format.
+</code></pre></div></div>
+
+<p><a name="flag-6"></a></p>
+
+<p><strong>6.MISC FLAGS:</strong></p>
 
 <p>Flags that does not fit in above categories are listed in this category:</p>
 
@@ -237,7 +255,7 @@ pkg install git -y
 
 <p><strong>2.Login in tg-upload:</strong></p>
 
-<p>tg-upload supports login as user (using phone number or session string) or bot (using bot token), you must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>), to login as user you must pass your phone number (<code class="language-plaintext highlighter-rouge">--phone</code>) or to login as bot pass bot token (<code class="language-plaintext highlighter-rouge">--bot</code>).</p>
+<p>tg-upload supports login as user (using phone number or session string) or bot (using bot token or session string), you must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>), to login as user you must pass your phone number (<code class="language-plaintext highlighter-rouge">--phone</code>) or to login as bot pass bot token (<code class="language-plaintext highlighter-rouge">--bot</code>).</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
 </code></pre></div></div>
@@ -268,10 +286,15 @@ pkg install git -y
 
 <p><strong>4.Dynamic Caption:</strong></p>
 
-<p>tg-upload provides variables that user can place in file’s caption to make it dynamic, this variables are automatically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:</p>
+<p>tg-upload provides variables that user can place in file’s caption to make it dynamic, this variables are automtically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:</p>
+
+<p><a name="htu4.1"></a></p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">{file_name}</code> - Name of file without its format.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_format}</code> - Format of given file including ‘.’.</li>
+  <li><code class="language-plaintext highlighter-rouge">{creation_time[indice]}</code> - File’s creation time.</li>
+  <li><code class="language-plaintext highlighter-rouge">{modification_time[indice]}</code> - File’s last modification time.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_sha256}</code> - Given file’s SHA256.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_md5}</code> - Given file’s MD5.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_size_b}</code> - Size of file in byte.</li>
@@ -280,10 +303,24 @@ pkg install git -y
   <li><code class="language-plaintext highlighter-rouge">{file_size_gb}</code> - Size of file in GB.</li>
 </ul>
 
-<p>Additionally, we can also limit number of decimals places to be shown in file size, like to limit number of decimals places to 2 we need to pass <code class="language-plaintext highlighter-rouge">:.2f</code> with a variable like <code class="language-plaintext highlighter-rouge">{file_size_mb:.2f}</code>.</p>
+<p><a name="htu4.2"></a></p>
+
+<p>File’s creation/modification time variables <code class="language-plaintext highlighter-rouge">{creation_time}</code> and <code class="language-plaintext highlighter-rouge">{modification_time}</code> stores multiple values like year, month, day, hour, minute, second of creation and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">0</code> - Year of creation/modification.</li>
+  <li><code class="language-plaintext highlighter-rouge">1</code> - Month of creation/modification.</li>
+  <li><code class="language-plaintext highlighter-rouge">2</code> - Day of creation/modification.</li>
+  <li><code class="language-plaintext highlighter-rouge">3</code> - Hour of creation/modification.</li>
+  <li><code class="language-plaintext highlighter-rouge">4</code> - Minute of creation/modification.</li>
+  <li><code class="language-plaintext highlighter-rouge">5</code> - Second of creation/modification.</li>
+</ul>
+
+<p><a name="htu4.3"></a></p>
+
+<p>Additionally, we can also limit number of decimal places to be shown in file size, like to limit number of decimals places to 2 we need to pass <code class="language-plaintext highlighter-rouge">:.2f</code> with a variable like <code class="language-plaintext highlighter-rouge">{file_size_mb:.2f}</code>.</p>
 <div align="center">
 
-<img src="https://user-images.githubusercontent.com/87380104/233124265-a4427be6-b6cd-461a-b479-dcad599e970d.png">
+<img src="https://user-images.githubusercontent.com/87380104/233824278-eed11926-1748-4455-8cb0-cb2cf1ebcdbd.png" />
 
 </div>
 <p>Just like a plan text, you can also apply same formatting on variables, just make sure you put all formatting tags outside of {} brackets to prevent any error.</p>
@@ -348,15 +385,19 @@ pkg install git -y
   <li>4GB for premium users.</li>
 </ul>
 
+<p>To upload larger files, use <code class="language-plaintext highlighter-rouge">--split</code> flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use <code class="language-plaintext highlighter-rouge">--combine</code> flag and tg-upload will restore original file for you (remeber to provide part file paths in ordered form 0,1,2,3…).</p>
+
 <p><a name="l-2"></a></p>
 
 <p><strong>2.Thumbnail:</strong></p>
 
 <ul>
-  <li>Only JPEG format.</li>
+  <li><del>Only JPEG format.</del></li>
   <li>Size should be 200 KB or below.</li>
   <li>Width &amp; height should not be more than 320 pixels.</li>
 </ul>
+
+<p>Starting from v1.0.5, tg-upload will automatically convert any other image format into JPEG format and you can also use <code class="language-plaintext highlighter-rouge">--convert</code> flag to do it manually and without starting the main client.</p>
 
 <p><a name="l-3"></a></p>
 
