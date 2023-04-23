@@ -14,12 +14,16 @@
   * [Login](#flag-2)
   * [File](#flag-3)
   * [Behaviour](#flag-4)
-  * [Misc](#flag-5)
+  * [Utility](#flag-5)
+  * [Misc](#flag-6)
 * [**🕹️ How to use?**](#how-to-use)
   * [Get API ID & HASH](#htu-1)
   * [Authorization](#htu-2)
   * [Get Started](#htu-3)
   * [Dynamic Caption](#htu-4)
+    * [Variables](#htu4.1)
+    * [Time Index](#htu4.2)
+    * [Decimal Places](#htu4.3)
   * [Caption Templates](#htu-5)
   * [Using Proxy](#htu-6)
 * [**🪧 Limits**](#limits)
@@ -69,6 +73,7 @@ pkg install git -y
 ```
 git clone https://github.com/TheCaduceus/tg-upload.git
 ```
+
 **3.Change Directory:**
 
 ```
@@ -102,7 +107,7 @@ python tg-upload.py -h
 
 Connectivity flags controls how the program should establish connection to Telegram servers, helpful for those uses proxies to bypass ban imposed on Telegram by their ISP (or for increasing transfer speed) or for those prefer IPv6 to establish connection.
 
-Learn [here](#htu-4), how to configure proxies?
+Learn [here](#htu-6), how to configure proxies?
 
 ```
 --ipv6 - Connect Telegram using device's IPv6. By default IPv4.
@@ -117,6 +122,7 @@ Login flags are responsible for controling behaviour of the program during authe
 
 ```
 -p,--profile - Name of your new/existing session.
+--info - Show your Telegram account details as JSON.
 --api_id - Telegram API ID required to create new session.
 --api_hash - Telegram API HASH required to create new session.
 --phone - Phone number (international format) required to login as user.
@@ -157,7 +163,6 @@ Behaviour flags controls the behaviour of transmission.
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
 --split - Split files in given bytes and upload.
---combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
@@ -171,10 +176,23 @@ Behaviour flags controls the behaviour of transmission.
 --prefix - Add given prefix text to each filename (prefix + filename) before upload.
 --no_warn - Don't show warning messages.
 ```
-
 <a name="flag-5"></a>
 
-**5.MISC FLAGS:**
+**5.UTILITY FLAGS:**
+
+Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (`--profile`) to call them.
+
+```
+--file_info - Show basic file information.
+--hash - Calculate & display hash of given file.
+--split_file - Split file in given bytes, accepts only size & requires path using path flag.
+--combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
+--convert - Convert any image into JPEG format.
+```
+
+<a name="flag-6"></a>
+
+**6.MISC FLAGS:**
 
 Flags that does not fit in above categories are listed in this category:
 
@@ -199,7 +217,7 @@ Go to [My Telegram](https://my.telegram.org/apps) and create an app and get its 
 
 **2.Login in tg-upload:**
 
-tg-upload supports login as user (using phone number or session string) or bot (using bot token), you must pass the value of your **API_ID** (`--api_id`) & **API_HASH** (`--api_hash`) and a unique name for your session (`--profile`), to login as user you must pass your phone number (`--phone`) or to login as bot pass bot token (`--bot`).
+tg-upload supports login as user (using phone number or session string) or bot (using bot token or session string), you must pass the value of your **API_ID** (`--api_id`) & **API_HASH** (`--api_hash`) and a unique name for your session (`--profile`), to login as user you must pass your phone number (`--phone`) or to login as bot pass bot token (`--bot`).
 
 ```
 python tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
@@ -235,8 +253,13 @@ python tg-upload.py -v
 **4.Dynamic Caption:**
 
 tg-upload provides variables that user can place in file's caption to make it dynamic, this variables are automtically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:
+
+<a name="htu4.1"></a>
+
 * `{file_name}` - Name of file without its format.
 * `{file_format}` - Format of given file including '.'.
+* `{creation_time[indice]}` - File's creation time.
+* `{modification_time[indice]}` - File's last modification time.
 * `{file_sha256}` - Given file's SHA256.
 * `{file_md5}` - Given file's MD5.
 * `{file_size_b}` - Size of file in byte.
@@ -244,10 +267,22 @@ tg-upload provides variables that user can place in file's caption to make it dy
 * `{file_size_mb}` - Size of file in MB.
 * `{file_size_gb}` - Size of file in GB.
 
-Additionally, we can also limit number of decimals places to be shown in file size, like to limit number of decimals places to 2 we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
+<a name="htu4.2"></a>
+
+File's creation/modification time variables `{creation_time}` and `{modification_time}` stores multiple values like year, month, day, hour, minute, second of creation and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:
+* `0` - Year of creation/modification.
+* `1` - Month of creation/modification.
+* `2` - Day of creation/modification.
+* `3` - Hour of creation/modification.
+* `4` - Minute of creation/modification.
+* `5` - Second of creation/modification.
+
+<a name="htu4.3"></a>
+
+Additionally, we can also limit number of decimal places to be shown in file size, like to limit number of decimals places to 2 we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
 <div align="center">
 
-![dynamic-caption-1](https://user-images.githubusercontent.com/87380104/233124265-a4427be6-b6cd-461a-b479-dcad599e970d.png)
+<img src="https://user-images.githubusercontent.com/87380104/233824278-eed11926-1748-4455-8cb0-cb2cf1ebcdbd.png">
 
 </div>
 Just like a plan text, you can also apply same formatting on variables, just make sure you put all formatting tags outside of {} brackets to prevent any error.
@@ -312,13 +347,17 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
 - 2GB for bots & freemium users.
 - 4GB for premium users.
 
+To upload larger files, use `--split` flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use `--combine` flag and tg-upload will restore original file for you (remeber to provide part file paths in ordered form 0,1,2,3...).
+
 <a name="l-2"></a>
 
 **2.Thumbnail:**
 
-- Only JPEG format.
+- ~~Only JPEG format.~~
 - Size should be 200 KB or below.
 - Width & height should not be more than 320 pixels.
+
+Starting from v1.0.5, tg-upload will automatically convert any other image format into JPEG format and you can also use `--convert` flag to do it manually and without starting the main client.
 
 <a name="l-3"></a>
 
