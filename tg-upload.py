@@ -1,4 +1,3 @@
-from pyrogram import Client
 from pathlib import Path, PurePath
 from sys import version_info as py_ver
 from pkg_resources import get_distribution as get_dist
@@ -10,7 +9,7 @@ from datetime import datetime
 import argparse
 import hashlib
 
-tg_upload = "1.0.5"
+tg_upload = "1.0.6"
 
 parser = argparse.ArgumentParser(
   prog="tg-upload.py",
@@ -31,6 +30,7 @@ parser.add_argument("--api_hash", help="Telegram API HASH required to create new
 parser.add_argument("--phone", help="Phone number (international format) required to login as user.")
 parser.add_argument("--hide_pswd", action="store_true", help="Hide 2FA password using getpass.")
 parser.add_argument("--bot", help="Telegram bot token required to login as bot.")
+parser.add_argument("--logout", action="store_true", help="Revoke current session and delete session file.")
 parser.add_argument("--login_string", help="Session string to login without auth & creating a session file.")
 parser.add_argument("--export_string", action="store_true", help="Generate & display session string using existing session file.")
 parser.add_argument("--tmp_session", action="store_true", help="Don't create session file for this login.")
@@ -39,7 +39,7 @@ parser.add_argument("--login_only", action="store_true", help="Exit immediately 
 # FILE FLAGS
 parser.add_argument("-l","--path", help="Path to the file or folder to upload.")
 parser.add_argument("-n","--filename", help="To upload data with custom name.")
-parser.add_argument("-i","--thumb", help="Path of thumbnail image (JPEG format) to be attached with given file.")
+parser.add_argument("-i","--thumb", help="Path of thumbnail image to be attached with given file.")
 parser.add_argument("-z","--caption", default="", help="Caption text to be attached with file(s), markdown & HTML formatting allowed.")
 parser.add_argument("--duration", default=0, type=int, help="Duration of sent media in seconds.")
 parser.add_argument("--capjson", help="Caption name (in caption.json) to attach with given file(s).")
@@ -55,11 +55,12 @@ parser.add_argument("--split", type=int, help="Split files in given bytes and up
 parser.add_argument("--replace", nargs=2, type=str, help="Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.")
 parser.add_argument("--disable_stream", action="store_false", help="Disable streaming for given video.")
 parser.add_argument("-b","--spoiler", action="store_true", help="Send media with spoiler animation.")
+parser.add_argument("--parse_mode", help="Set custom formatting mode for caption.")
 parser.add_argument("-d","--delete_on_done", action="store_true",help="Delete the given file after task completion.")
 parser.add_argument("-w","--width", type=int, default=1280, help="Set custom width for video.")
 parser.add_argument("-e","--height", type=int, default=552, help="Set custom height for video.")
 parser.add_argument("-a","--artist", help="Set artist name of given audio file.")
-parser.add_argument("-t","--title", help="Set title of given audio file")
+parser.add_argument("-t","--title", help="Set title of given audio file.")
 parser.add_argument("-s","--silent", action="store_true", help="Send files silently to given chat.")
 parser.add_argument("-r","--recursive", action="store_true", help="Upload files recursively if path is a folder.")
 parser.add_argument("--prefix", help="Add given prefix text to each filename (prefix + filename) before upload.")
@@ -76,6 +77,7 @@ parser.add_argument("--convert", help="Convert any image into JPEG format.")
 parser.add_argument("--device_model", help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
 parser.add_argument("--system_version", help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
 parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload:\n{tg_upload}\nPython:\n{py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram:\n{get_dist('pyrogram').version}\nTgCrypto:\n{get_dist('tgcrypto').version}\nPillow:\n{get_dist('pillow').version}")
+
 args = parser.parse_args()
 
 def file_info(file_path, caption_text):
@@ -172,7 +174,7 @@ def get_chatid(raw_id):
     return raw_id
 
 if args.combine:
-  output_file_name = Path(args.combine[0]).stem
+  output_file_name = args.filename or Path(args.combine[0]).stem
   with open(output_file_name, 'wb') as f:
     file_size = sum(Path(file_path).stat().st_size for file_path in args.combine)
     bytes_written = 0
@@ -237,6 +239,8 @@ elif not args.api_id or not args.api_hash:
   if not Path(f'{args.profile}.session').exists() and not args.login_string:
     raise ValueError("Given profile is not yet initialized! provide API_ID and API_HASH to initialize.")
 
+from pyrogram import Client, enums
+
 if args.phone:
   client = Client(
     args.profile,
@@ -280,6 +284,9 @@ with client:
     exit("Authorization completed!")
   elif args.export_string:
     exit(f"Your session string:\n{client.export_session_string()}")
+  elif args.logout:
+    client.log_out()
+    exit(f"Terminated [{args.profile}]")
   elif not args.path and not args.info:
     exit("Error: Path is not provided.")
 
@@ -293,16 +300,39 @@ with client:
       Image.open(args.thumb).convert('RGB').save(jpg_path)
       args.thumb = jpg_path
 
+  parse_mode = enums.ParseMode.DEFAULT
+
   if args.capjson:
     if not Path("caption.json").exists():
       raise FileNotFoundError("Not found: caption.json [file].")
     with open("caption.json", "r") as caption_json:
       try:
-        caption = json_load(caption_json)[args.capjson]["text"]
+        _caption = json_load(caption_json)[args.capjson]
       except KeyError:
         exit(f"Error: Not found {args.capjson} in caption.json file, please check caption.json and ensure that everything is in correct format.")
+
+    # Get text & parse mode
+    try:
+      caption = _caption["text"]
+      parse_mode = _caption["mode"]
+    except KeyError as error_code:
+      exit(f"Error: An error occured while reading json.\n{error_code}")
+    
+    if parse_mode.lower() == "html":
+      parse_mode = enums.ParseMode.HTML
+    elif parse_mode.lower() == "markdown":
+      parse_mode = enums.ParseMode.MARKDOWN
+    elif parse_mode == "disabled":
+      parse_mode = enums.ParseMode.DISABLED
   elif args.caption:
     caption = args.caption
+    if args.parse_mode:
+      if args.parse_mode.lower() == "html":
+        parse_mode = enums.ParseMode.HTML
+      elif args.parse_mode.lower() == "markdown":
+        parse_mode = enums.ParseMode.MARKDOWN
+      elif args.parse_mode.lower() == "disabled":
+        parse_mode = enums.ParseMode.DISABLED
   else:
     caption = ""
 
@@ -317,7 +347,7 @@ with client:
         filename = PurePath(args.path).name
         file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
         start_time = time()
-        client.send_photo(chat_id, args.path, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
+        client.send_photo(chat_id, args.path, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
         print(f"\nAn error occured!\n{error_code}")
@@ -329,7 +359,7 @@ with client:
           try:
             file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
             start_time = time()
-            client.send_photo(chat_id, _path, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
+            client.send_photo(chat_id, _path, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
@@ -345,7 +375,7 @@ with client:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
         start_time = time()
-        client.send_video(chat_id, args.path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
+        client.send_video(chat_id, args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
         print(f"\nAn error occured!\n{error_code}")
@@ -361,7 +391,7 @@ with client:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
             start_time = time()
-            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
+            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
@@ -377,7 +407,7 @@ with client:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
         start_time = time()
-        client.send_audio(chat_id, args.path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), performer=args.artist, title=args.title, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
+        client.send_audio(chat_id, args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), performer=args.artist, title=args.title, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
         print(f"\nAn error occured!\n{error_code}")
@@ -393,7 +423,7 @@ with client:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
             start_time = time()
-            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), performer=args.artist, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
+            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), performer=args.artist, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
@@ -409,7 +439,7 @@ with client:
           filename = filename.replace(args.replace[0], args.replace[1])
         file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
         start_time = time()
-        client.send_voice(chat_id. args.path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), disable_notification=args.silent)
+        client.send_voice(chat_id. args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
         print(f"\nAn error occured!\n{error_code}")
@@ -425,7 +455,7 @@ with client:
               filename = filename.replace(args.replace[0], args.replace[1])
             file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
             start_time = time()
-            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), disable_notification=args.silent)
+            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), disable_notification=args.silent)
             Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
@@ -473,12 +503,12 @@ with client:
           for _splitted_file, filename in split_file(args.path, args.split, filename):
             file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
             start_time = time()
-            client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+            client.send_document(chat_id, _splitted_file, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_splitted_file)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
             Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
         else:
           file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
           start_time = time()
-          client.send_document(chat_id, args.path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+          client.send_document(chat_id, args.path, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
         Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
       except Exception as error_code:
         print(f"\nAn error occured!\n{error_code}")
@@ -496,12 +526,12 @@ with client:
               for _splitted_file, filename in split_file(_path, args.split, filename):
                 file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
                 start_time = time()
-                client.send_document(chat_id, _splitted_file, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+                client.send_document(chat_id, _splitted_file, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_splitted_file)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
                 Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
             else:
               file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
               start_time = time()
-              client.send_document(chat_id, _path, progress=upload_progress, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+              client.send_document(chat_id, _path, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
               Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
           except Exception as error_code:
             print(f"\nAn error occured!\n{error_code}")
