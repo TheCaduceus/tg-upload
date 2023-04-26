@@ -20,12 +20,15 @@
   * [Get API ID & HASH](#htu-1)
   * [Authorization](#htu-2)
   * [Get Started](#htu-3)
-  * [Dynamic Caption](#htu-4)
-    * [Variables](#htu4.1)
-    * [Time Index](#htu4.2)
-    * [Decimal Places](#htu4.3)
-  * [Caption Templates](#htu-5)
-  * [Using Proxy](#htu-6)
+  * [Caption](#htu-4)
+    * [Dynamic Caption](#htu4.1)
+      * [Variables](#htu4.1.1)
+      * [Path Methods](#htu4.1.2)
+      * [Time Index](#htu4.1.3)
+      * [Decimal Places](#htu4.1.4)
+    * [Formatting Modes](#htu-4.2)
+    * [Caption Templates](#htu-4.3)
+  * [Using Proxy](#htu-5)
 * [**🪧 Limits**](#limits)
   * [File Size](#l-1)
   * [Thumbnail](#l-2)
@@ -128,6 +131,7 @@ Login flags are responsible for controling behaviour of the program during authe
 --phone - Phone number (international format) required to login as user.
 --hide_pswd - Hide 2FA password using getpass.
 --bot - Telegram bot token required to login as bot.
+--logout - Revoke current session and delete session file.
 --login_string - Session string to login without auth & creating an session file.
 --export_string - Generate & display session string using existing session file.
 --tmp_session - Don't create session file for this login.
@@ -166,6 +170,7 @@ Behaviour flags controls the behaviour of transmission.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
+--parse_mode - Set custom formatting mode for caption.
 -d,--delete_on_done - Delete the given file after task completion.
 -w,--width - Set custom width for video.
 -e,--height - Set custom height for video.
@@ -250,14 +255,17 @@ python tg-upload.py -v
 
 <a name="htu-4"></a>
 
+<a name="htu4.1"></a>
+
 **4.Dynamic Caption:**
 
 tg-upload provides variables that user can place in file's caption to make it dynamic, this variables are automtically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:
 
-<a name="htu4.1"></a>
+<a name="htu4.1.1"></a>
 
 * `{file_name}` - Name of file without its format.
 * `{file_format}` - Format of given file including '.'.
+* `{path}` - Retrive particular value from path or exact path. *(for advanced users)*
 * `{creation_time[indice]}` - File's creation time.
 * `{modification_time[indice]}` - File's last modification time.
 * `{file_sha256}` - Given file's SHA256.
@@ -267,9 +275,24 @@ tg-upload provides variables that user can place in file's caption to make it dy
 * `{file_size_mb}` - Size of file in MB.
 * `{file_size_gb}` - Size of file in GB.
 
-<a name="htu4.2"></a>
+<a name="htu4.1.2"></a>
 
-File's creation/modification time variables `{creation_time}` and `{modification_time}` stores multiple values like year, month, day, hour, minute, second of creation and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:
+File's source variable `{path}` is both a variable and a function, calling it directly will simply return the full path of file while calling it with a given method will return value associated with that method, below are the methods that you can call with path:
+* `{path}` - Return exact path of file.
+* `{path.parts}` - A tuple giving access to the path’s various components. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parts)
+* `{path.drive}` - A string representing the drive letter or name, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.drive)
+* `{path.root}` - A string representing the (local or global) root, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.root)
+* `{path.anchor}` - The concatenation of the drive and root. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.anchor)
+* `{path.parents}` - An immutable sequence providing access to the logical ancestors of the path. [example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parents)
+* `{path.parent}` - The logical parent of the path. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parent)
+* `{path.name}` - A string representing the final path component, excluding the drive and root, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.name)
+* `{path.suffix}` - The file extension of the final component, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffix)
+* `{path.suffixes}` - A list of the path’s file extensions. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffixes)
+* `{path.stem}` - The final path component, without its suffix. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.stem)
+
+<a name="htu4.1.3"></a>
+
+File's creation/modification time variables `{creation_time}` and `{modification_time}` stores multiple values like year, month, day, hour, minute, second of creation/modification and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:
 * `0` - Year of creation/modification.
 * `1` - Month of creation/modification.
 * `2` - Day of creation/modification.
@@ -277,7 +300,7 @@ File's creation/modification time variables `{creation_time}` and `{modification
 * `4` - Minute of creation/modification.
 * `5` - Second of creation/modification.
 
-<a name="htu4.3"></a>
+<a name="htu4.1.4"></a>
 
 Additionally, we can also limit number of decimal places to be shown in file size, like to limit number of decimals places to 2 we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
 <div align="center">
@@ -289,7 +312,20 @@ Just like a plan text, you can also apply same formatting on variables, just mak
 
 One variable can be called multiple times in same caption and user must prevent writing any other keyword between {} otherwise tg-upload will raise KeyError indicating that given variable is not yet defined.
 
-<a name="htu-5"></a>
+<a name="htu-4.2"></a>
+
+**4.Formatting Modes:**
+
+Formatting and making caption attractive is cool! but sometime filename or output of any variable can mess our caption by injecting same tags which are used to format our plan text 💀, to tackle this error! tg-upload provide option to switch between different formatting modes to prevent misinterpretation of some tags in our caption:
+
+* `DEFAULT` - Interpret both markdown & HTML tags in caption.
+* `MARKDOWN` - Interpret only markdown tags and ignore HTML tags in caption.
+* `HTML` - Interpret only HTML tags and ignore markdown tags in caption.
+* `DISABLED` - Interpret nothing, keep caption as it is.
+
+If you are using `--caption` flag then you can switch mode using `--parse_mode` flag else just change the value of 'mode' key value in 'caption.json' in case of `--capjson`.
+
+<a name="htu-4.3"></a>
 
 **5.Caption Templates:**
 
@@ -301,6 +337,7 @@ We can make & save our static & dynamic caption format in 'caption.json' with a 
 {
   "captionTemplateName": {
     "text" : "main caption text",
+    "mode" : "DEFAULT",
     "description" : "An optional description to make recall easy."
   },
   ...more caption templates 
@@ -311,9 +348,9 @@ We can make & save our static & dynamic caption format in 'caption.json' with a 
 
 Just like `--caption` flag, caption template also supports formatting using HTML or markdown. I already provided some general caption templates to make your work easy! :)
 
-<a name="htu-6"></a>
+<a name="htu-5"></a>
 
-**6.Using Proxy:**
+**Using Proxy**
 
 Using proxy is completely optional step and can be used to bypass ban imposed by local authorities or for increasing transfer speed:
 
