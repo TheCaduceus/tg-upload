@@ -1,16 +1,25 @@
 {
   "caption1": {
     "text": "**File Name:**\n`{file_name}`\n**File Format:**\n`{file_format}`\n**File Size:**\n`{file_size_mb:.2f}MB`\n**Creation Date:**\n`{creation_time[2]}.{creation_time[1]}.{creation_time[0]}`\n**SHA256:**\n`{file_sha256}`\n**MD5:\n`{file_md5}`**",
-    "description": "A caption template showing basic file information."
+    "mode": "MARKDOWN",
+    "description": "A caption template showing basic file information and only support formatting in markdown."
   },
 
   "caption2": {
-    "text": "{file_name}'s sha256:\n`{file_sha256}`",
-    "description": "A caption template showing filename & file's SHA256."
+    "text": "<b>{file_name}</b>'s sha256:\n`{file_sha256}`",
+    "mode": "DEFAULT",
+    "description": "A caption template showing filename & file's SHA256 and supports formatting in both HTML as well as markdown."
   },
 
   "caption3": {
-    "text": "{file_name}{file_format}",
-    "description": "A caption template only showing filename with file format."
+    "text": "<code>{file_name}{file_format}</code>",
+    "mode": "HTML",
+    "description": "A caption template only showing filename with file format and only support formatting in HTML."
+  },
+
+  "caption4": {
+    "text": "{path.name}",
+    "mode": "DISABLED",
+    "description": "A caption template showing final path component (filename with format) and not support formatting."
   }
 }
