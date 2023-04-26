@@ -279,16 +279,16 @@ tg-upload provides variables that user can place in file's caption to make it dy
 
 File's source variable `{path}` is both a variable and a function, calling it directly will simply return the full path of file while calling it with a given method will return value associated with that method, below are the methods that you can call with path:
 * `{path}` - Return exact path of file.
-* `{path.parts}` - A tuple giving access to the path’s various components. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parts)
-* `{path.drive}` - A string representing the drive letter or name, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.drive)
-* `{path.root}` - A string representing the (local or global) root, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.root)
-* `{path.anchor}` - The concatenation of the drive and root. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.anchor)
-* `{path.parents}` - An immutable sequence providing access to the logical ancestors of the path. [example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parents)
+* `{path.parts}` - A tuple giving access to the path’s various components. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parts)]
+* `{path.drive}` - A string representing the drive letter or name, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.drive)]
+* `{path.root}` - A string representing the (local or global) root, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.root)]
+* `{path.anchor}` - The concatenation of the drive and root. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.anchor)]
+* `{path.parents}` - An immutable sequence providing access to the logical ancestors of the path. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parents)]
 * `{path.parent}` - The logical parent of the path. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parent)
-* `{path.name}` - A string representing the final path component, excluding the drive and root, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.name)
-* `{path.suffix}` - The file extension of the final component, if any. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffix)
-* `{path.suffixes}` - A list of the path’s file extensions. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffixes)
-* `{path.stem}` - The final path component, without its suffix. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.stem)
+* `{path.name}` - A string representing the final path component, excluding the drive and root, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.name)]
+* `{path.suffix}` - The file extension of the final component, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffix)]
+* `{path.suffixes}` - A list of the path’s file extensions. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffixes)]
+* `{path.stem}` - The final path component, without its suffix. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.stem)]
 
 <a name="htu4.1.3"></a>
 
@@ -314,7 +314,7 @@ One variable can be called multiple times in same caption and user must prevent 
 
 <a name="htu-4.2"></a>
 
-**4.Formatting Modes:**
+**5.Formatting Modes:**
 
 Formatting and making caption attractive is cool! but sometime filename or output of any variable can mess our caption by injecting same tags which are used to format our plan text 💀, to tackle this error! tg-upload provide option to switch between different formatting modes to prevent misinterpretation of some tags in our caption:
 
@@ -327,7 +327,7 @@ If you are using `--caption` flag then you can switch mode using `--parse_mode` 
 
 <a name="htu-4.3"></a>
 
-**5.Caption Templates:**
+**6.Caption Templates:**
 
 We can make & save our static & dynamic caption format in 'caption.json' with a name (required) and description (optional) so we don't have to write it again.
 
