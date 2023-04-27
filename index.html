@@ -308,7 +308,7 @@ pkg install git -y
   <li><code class="language-plaintext highlighter-rouge">{modification_time[indice]}</code> - File’s last modification time.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_sha256}</code> - Given file’s SHA256.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_md5}</code> - Given file’s MD5.</li>
-  <li><code class="language-plaintext highlighter-rouge">{file_size_b}</code> - Size of file in byte.</li>
+  <li><code class="language-plaintext highlighter-rouge">{file_size_b}</code> - Size of file in bytes.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_size_kb}</code> - Size of file in KB.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_size_mb}</code> - Size of file in MB.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_size_gb}</code> - Size of file in GB.</li>
@@ -324,7 +324,7 @@ pkg install git -y
   <li><code class="language-plaintext highlighter-rouge">{path.root}</code> - A string representing the (local or global) root, if any. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.root">example</a>]</li>
   <li><code class="language-plaintext highlighter-rouge">{path.anchor}</code> - The concatenation of the drive and root. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.anchor">example</a>]</li>
   <li><code class="language-plaintext highlighter-rouge">{path.parents}</code> - An immutable sequence providing access to the logical ancestors of the path. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parents">example</a>]</li>
-  <li><code class="language-plaintext highlighter-rouge">{path.parent}</code> - The logical parent of the path. <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parent">[example]</a></li>
+  <li><code class="language-plaintext highlighter-rouge">{path.parent}</code> - The logical parent of the path. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parent">example</a>]</li>
   <li><code class="language-plaintext highlighter-rouge">{path.name}</code> - A string representing the final path component, excluding the drive and root, if any. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.name">example</a>]</li>
   <li><code class="language-plaintext highlighter-rouge">{path.suffix}</code> - The file extension of the final component, if any. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffix">example</a>]</li>
   <li><code class="language-plaintext highlighter-rouge">{path.suffixes}</code> - A list of the path’s file extensions. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffixes">example</a>]</li>
@@ -429,7 +429,7 @@ pkg install git -y
   <li>4GB for premium users.</li>
 </ul>
 
-<p>To upload larger files, use <code class="language-plaintext highlighter-rouge">--split</code> flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use <code class="language-plaintext highlighter-rouge">--combine</code> flag and tg-upload will restore original file for you (remeber to provide part file paths in ordered form 0,1,2,3…).</p>
+<p>To upload larger files, use <code class="language-plaintext highlighter-rouge">--split</code> flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use <code class="language-plaintext highlighter-rouge">--combine</code> flag and tg-upload will restore original file for you (remember to provide part file paths in ordered form 0,1,2,3…).</p>
 
 <p><a name="l-2"></a></p>
 
