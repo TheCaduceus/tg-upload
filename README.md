@@ -270,7 +270,7 @@ tg-upload provides variables that user can place in file's caption to make it dy
 * `{modification_time[indice]}` - File's last modification time.
 * `{file_sha256}` - Given file's SHA256.
 * `{file_md5}` - Given file's MD5.
-* `{file_size_b}` - Size of file in byte.
+* `{file_size_b}` - Size of file in bytes.
 * `{file_size_kb}` - Size of file in KB.
 * `{file_size_mb}` - Size of file in MB.
 * `{file_size_gb}` - Size of file in GB.
@@ -284,7 +284,7 @@ File's source variable `{path}` is both a variable and a function, calling it di
 * `{path.root}` - A string representing the (local or global) root, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.root)]
 * `{path.anchor}` - The concatenation of the drive and root. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.anchor)]
 * `{path.parents}` - An immutable sequence providing access to the logical ancestors of the path. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parents)]
-* `{path.parent}` - The logical parent of the path. [[example]](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parent)
+* `{path.parent}` - The logical parent of the path. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parent)]
 * `{path.name}` - A string representing the final path component, excluding the drive and root, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.name)]
 * `{path.suffix}` - The file extension of the final component, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffix)]
 * `{path.suffixes}` - A list of the path’s file extensions. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffixes)]
@@ -384,7 +384,7 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
 - 2GB for bots & freemium users.
 - 4GB for premium users.
 
-To upload larger files, use `--split` flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use `--combine` flag and tg-upload will restore original file for you (remeber to provide part file paths in ordered form 0,1,2,3...).
+To upload larger files, use `--split` flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use `--combine` flag and tg-upload will restore original file for you (remember to provide part file paths in ordered form 0,1,2,3...).
 
 <a name="l-2"></a>
 
