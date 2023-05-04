@@ -82,6 +82,7 @@
       <li><a href="#l-3">Caption</a></li>
     </ul>
   </li>
+  <li><a href="#faq"><strong>❓ FAQ</strong></a></li>
   <li><a href="#contribution"><strong>⚒️ Contribution</strong></a></li>
   <li><a href="#help"><strong>⛑️ Need help!</strong></a></li>
   <li><a href="#credits"><strong>❤️ Credits &amp; Thanks</strong></a></li>
@@ -126,6 +127,10 @@ pkg install git -y
 </code></pre></div>    </div>
   </li>
 </ul>
+
+<blockquote>
+  <p>Starting from release <a href="https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.1">v1.0.1</a>, tg-upload not support Termux anymore due to absence of some required dependencies. You may try older <a href="https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.0">release</a> to enjoy basic functionalities offered by tg-upload. Hence, any issue related with Termux will be rejected without any further investigation.</p>
+</blockquote>
 
 <p><strong>3.Change Directory:</strong></p>
 
@@ -177,7 +182,7 @@ pkg install git -y
 --hide_pswd - Hide 2FA password using getpass.
 --bot - Telegram bot token required to login as bot.
 --logout - Revoke current session and delete session file.
---login_string - Session string to login without auth &amp; creating an session file.
+--login_string - Session string to login without auth &amp; creating session file.
 --export_string - Generate &amp; display session string using existing session file.
 --tmp_session - Don't create session file for this login.
 --login_only - Exit immediately after authorization process.
@@ -331,6 +336,8 @@ pkg install git -y
   <li><code class="language-plaintext highlighter-rouge">{path.stem}</code> - The final path component, without its suffix. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.stem">example</a>]</li>
 </ul>
 
+<p>For more detailed methods, click <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.as_posix">here</a>. Some methods requires newer Python version.</p>
+
 <p><a name="htu4.1.3"></a></p>
 
 <p>File’s creation/modification time variables <code class="language-plaintext highlighter-rouge">{creation_time}</code> and <code class="language-plaintext highlighter-rouge">{modification_time}</code> stores multiple values like year, month, day, hour, minute, second of creation/modification and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:</p>
@@ -368,7 +375,7 @@ pkg install git -y
   <li><code class="language-plaintext highlighter-rouge">DISABLED</code> - Interpret nothing, keep caption as it is.</li>
 </ul>
 
-<p>If you are using <code class="language-plaintext highlighter-rouge">--caption</code> flag then you can switch mode using <code class="language-plaintext highlighter-rouge">--parse_mode</code> flag else just change the value of ‘mode’ key value in ‘caption.json’ in case of <code class="language-plaintext highlighter-rouge">--capjson</code>.</p>
+<p>If you are using <code class="language-plaintext highlighter-rouge">--caption</code> flag then you can switch mode using <code class="language-plaintext highlighter-rouge">--parse_mode</code> flag else just change ‘mode’ key value in ‘caption.json’ in case of <code class="language-plaintext highlighter-rouge">--capjson</code>.</p>
 
 <p><a name="htu-4.3"></a></p>
 
@@ -450,6 +457,44 @@ pkg install git -y
 <ul>
   <li>1024 characters for all files &amp; media.</li>
 </ul>
+
+<p><a name="faq"></a></p>
+
+<h2 id="faq">❓FAQ</h2>
+
+<p><strong>1.Getting <code class="language-plaintext highlighter-rouge">socket.send()</code>, <code class="language-plaintext highlighter-rouge">OSError()</code>, <code class="language-plaintext highlighter-rouge">TimeoutError()</code>, Connection lost/reset…?</strong></p>
+
+<p>Such network related issues are most likely a result of a temporarily slow or inconsistent network connection and will eventually disappear automatically.</p>
+
+<p><strong>2.Can split or combine flags cause file corruption?</strong></p>
+
+<p>No, split &amp; combine flags NEVER causes file corruption until its user side mistake like not providing .part file paths in correct format (0,1,2,3…). tg-upload follows commonly used &amp; trusted technique to split or combine data.</p>
+
+<p><strong>3.Files are still usable/accessible in their splitted form?</strong></p>
+
+<p>Yes, some file extensions like .txt, .csv, .json etc are still usable in their splitted forms while some file extensions like .mkv, .exe, .mp3 etc are NOT usable until we combine them back.</p>
+
+<p><strong>4.For me upload speed is slow?</strong></p>
+
+<p>In many cases, users expect speed in mbps while tg-upload shows upload speed in MB/s where MB/s &gt; mbps and this is where users get confused.</p>
+
+<p>In fact, tg-upload have nothing to do with upload speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check code to understand it in more better way.</p>
+
+<p><strong>5.How tg-upload able to upload larger files (upto 2GB) using bot profiles while Bot API limit it to just 50MB?</strong></p>
+
+<p>Its simple! tg-upload never make use of Bot API server which works as intermediate server to communicate with Telegram’s MTProto while tg-upload directly uses MTProto API making it even more faster.</p>
+
+<ul>
+  <li><strong>Generally:🐢</strong></li>
+</ul>
+
+<p>You (JSON/HTTP) -&gt; Bot API (MTProto) -&gt; Telegram = Smaller &amp; slower data transfer.</p>
+
+<ul>
+  <li><strong>tg-upload:⚡</strong></li>
+</ul>
+
+<p>You (MTProto) -&gt; Telegram = Larger &amp; direct data transfer.</p>
 
 <p><a name="contribution"></a></p>
 
