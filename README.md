@@ -33,6 +33,7 @@
   * [File Size](#l-1)
   * [Thumbnail](#l-2)
   * [Caption](#l-3)
+* [**❓ FAQ**](#faq)
 * [**⚒️ Contribution**](#contribution)
 * [**⛑️ Need help!**](#help)
 * [**❤️ Credits & Thanks**](#credits)
@@ -76,6 +77,8 @@ pkg install git -y
 ```
 git clone https://github.com/TheCaduceus/tg-upload.git
 ```
+
+> Starting from release [v1.0.1](https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.1), tg-upload not support Termux anymore due to absence of some required dependencies. You may try older [release](https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.0) to enjoy basic functionalities offered by tg-upload. Hence, any issue related with Termux will be rejected without any further investigation.
 
 **3.Change Directory:**
 
@@ -132,7 +135,7 @@ Login flags are responsible for controling behaviour of the program during authe
 --hide_pswd - Hide 2FA password using getpass.
 --bot - Telegram bot token required to login as bot.
 --logout - Revoke current session and delete session file.
---login_string - Session string to login without auth & creating an session file.
+--login_string - Session string to login without auth & creating session file.
 --export_string - Generate & display session string using existing session file.
 --tmp_session - Don't create session file for this login.
 --login_only - Exit immediately after authorization process.
@@ -290,6 +293,8 @@ File's source variable `{path}` is both a variable and a function, calling it di
 * `{path.suffixes}` - A list of the path’s file extensions. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.suffixes)]
 * `{path.stem}` - The final path component, without its suffix. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.stem)]
 
+For more detailed methods, click [here](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.as_posix). Some methods requires newer Python version.
+
 <a name="htu4.1.3"></a>
 
 File's creation/modification time variables `{creation_time}` and `{modification_time}` stores multiple values like year, month, day, hour, minute, second of creation/modification and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:
@@ -323,7 +328,7 @@ Formatting and making caption attractive is cool! but sometime filename or outpu
 * `HTML` - Interpret only HTML tags and ignore markdown tags in caption.
 * `DISABLED` - Interpret nothing, keep caption as it is.
 
-If you are using `--caption` flag then you can switch mode using `--parse_mode` flag else just change the value of 'mode' key value in 'caption.json' in case of `--capjson`.
+If you are using `--caption` flag then you can switch mode using `--parse_mode` flag else just change 'mode' key value in 'caption.json' in case of `--capjson`.
 
 <a name="htu-4.3"></a>
 
@@ -401,6 +406,40 @@ Starting from v1.0.5, tg-upload will automatically convert any other image forma
 **3.Caption:**
 
 - 1024 characters for all files & media.
+
+<a name="faq"></a>
+
+## ❓FAQ
+
+**1.Getting `socket.send()`, `OSError()`, `TimeoutError()`, Connection lost/reset…?**
+
+Such network related issues are most likely a result of a temporarily slow or inconsistent network connection and will eventually disappear automatically.
+
+**2.Can split or combine flags cause file corruption?**
+
+No, split & combine flags NEVER causes file corruption until its user side mistake like not providing .part file paths in correct format (0,1,2,3...). tg-upload follows commonly used & trusted technique to split or combine data.
+
+**3.Files are still usable/accessible in their splitted form?**
+
+Yes, some file extensions like .txt, .csv, .json etc are still usable in their splitted forms while some file extensions like .mkv, .exe, .mp3 etc are NOT usable until we combine them back.
+
+**4.For me upload speed is slow?**
+
+In many cases, users expect speed in mbps while tg-upload shows upload speed in MB/s where MB/s > mbps and this is where users get confused.
+
+In fact, tg-upload have nothing to do with upload speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check code to understand it in more better way.
+
+**5.How tg-upload able to upload larger files (upto 2GB) using bot profiles while Bot API limit it to just 50MB?**
+
+Its simple! tg-upload never make use of Bot API server which works as intermediate server to communicate with Telegram's MTProto while tg-upload directly uses MTProto API making it even more faster.
+
+* **Generally:🐢**
+
+You (JSON/HTTP) -> Bot API (MTProto) -> Telegram = Smaller & slower data transfer.
+
+* **tg-upload:⚡**
+
+You (MTProto) -> Telegram = Larger & direct data transfer.
 
 <a name="contribution"></a>
 
