@@ -5,11 +5,13 @@ from time import time
 from json import load as json_load
 from PIL import Image
 from datetime import datetime
+from httpx import get as get_url
 
 import argparse
 import hashlib
 
-tg_upload = "1.0.6"
+tg_upload = "1.0.7"
+json_endpoint = "https://cdn.thecaduceus.eu.org/tg-upload/release.json"
 
 parser = argparse.ArgumentParser(
   prog="tg-upload.py",
@@ -65,6 +67,7 @@ parser.add_argument("-s","--silent", action="store_true", help="Send files silen
 parser.add_argument("-r","--recursive", action="store_true", help="Upload files recursively if path is a folder.")
 parser.add_argument("--prefix", help="Add given prefix text to each filename (prefix + filename) before upload.")
 parser.add_argument("--no_warn", action="store_true", help="Don't show warning messages.")
+parser.add_argument("--no_update", action="store_true", help="Disable checking for updates.")
 
 # UTILITY FLAGS
 parser.add_argument("--file_info", help="Show basic file information.")
@@ -79,6 +82,22 @@ parser.add_argument("--system_version", help="Overwrite system version before st
 parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload:\n{tg_upload}\nPython:\n{py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram:\n{get_dist('pyrogram').version}\nTgCrypto:\n{get_dist('tgcrypto').version}\nPillow:\n{get_dist('pillow').version}")
 
 args = parser.parse_args()
+
+# Check version
+if not args.no_update:
+  try:
+    release_json = get_url(json_endpoint).json()
+    if tg_upload != release_json["latestRelease"]["version"]:
+      print(f"[UPDATE] - A new release v{release_json['latestRelease']['version']} is availabe.\n")
+      if release_json["latestRelease"]["showNotLatestMSG"] == "1":
+        print(f"\n[NEWS] - {release_json['release']['notLatestMSG']}\n")
+    elif release_json["latestRelease"]["showLatestMSG"] == "1":
+      print(f"[NEWS] - {release_json['latestRelease']['latestMSG']}\n")
+
+    if tg_upload in list(release_json["releaseSpecificNotice"].keys()):
+      print(f"[NOTICE] - {release_json['releaseSpecificNotice'][tg_upload]}\n")
+  except Exception:
+    print("[UPDATE] - Failed to check for latest version.")
 
 def file_info(file_path, caption_text):
   file_size = Path(file_path).stat().st_size
@@ -322,7 +341,7 @@ with client:
       parse_mode = enums.ParseMode.HTML
     elif parse_mode.lower() == "markdown":
       parse_mode = enums.ParseMode.MARKDOWN
-    elif parse_mode == "disabled":
+    elif parse_mode.lower() == "disabled":
       parse_mode = enums.ParseMode.DISABLED
   elif args.caption:
     caption = args.caption
