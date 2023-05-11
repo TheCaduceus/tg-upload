@@ -1,6 +1,10 @@
 <div align="center">
 <h1>📦tg-upload</h1>
-<b>An open-source Python program to upload files/folder to Telegram effortlessly.</b>
+<b>An open-source Python program or a CLI Tool to upload files/folder to Telegram effortlessly.</b>
+</div><br>
+
+<div align="center">
+<i>tg-upload was born when there was no dedicated CLI tool or existing tools were outdated and much slower with limited functionalities. Now, it is used by thousands of users worldwide, according to GitHub Insight Report.</i>
 </div>
 
 ## **📑 INDEX**
@@ -183,6 +187,7 @@ Behaviour flags controls the behaviour of transmission.
 -r,--recursive - Upload files recursively if path is a folder.
 --prefix - Add given prefix text to each filename (prefix + filename) before upload.
 --no_warn - Don't show warning messages.
+--no_update - Disable checking for updates.
 ```
 <a name="flag-5"></a>
 
@@ -433,13 +438,21 @@ In fact, tg-upload have nothing to do with upload speed and it totally depends u
 
 Its simple! tg-upload never make use of Bot API server which works as intermediate server to communicate with Telegram's MTProto while tg-upload directly uses MTProto API making it even more faster.
 
-* **Generally:🐢**
+**i.Generally:🐢**
 
 You (JSON/HTTP) -> Bot API (MTProto) -> Telegram = Smaller & slower data transfer.
 
-* **tg-upload:⚡**
+**ii.tg-upload:⚡**
 
 You (MTProto) -> Telegram = Larger & direct data transfer.
+
+**6.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?**
+
+tg-upload's `--logout` flag is here to help! just mention the session name using `--profile` flag and pass the `--logout` flag. This will directly revoke the specified session and will omit it from your Telegram Account's active sessions list.
+
+```
+python tg-upload.py --profile xyz --logout
+```
 
 <a name="contribution"></a>
 
