@@ -33,6 +33,12 @@
     * [Formatting Modes](#htu-4.2)
     * [Caption Templates](#htu-4.3)
   * [Using Proxy](#htu-5)
+* [**📝 ENV Variables**](#env)
+  * [Connectivity](#env-1)
+  * [Login](#env-2)
+  * [File](#env-3)
+  * [Behaviour](#env-4)
+  * [Misc](#env-5)
 * [**🪧 Limits**](#limits)
   * [File Size](#l-1)
   * [Thumbnail](#l-2)
@@ -383,6 +389,82 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
 
 3.While running tg-upload, just mention the proxy name using `--proxy`.
 
+<a name="env"></a>
+
+## 📝 ENV Variables
+
+**Tired of passing values each time using flags? With tg-upload, you can get values from the system environment automatically once detected. Each flag has its own unique system environment variable name to get its value from. You don’t need to remember those pesky values ever again! Just set given variables in system environment accordingly, of course you can overwrite them by passing values using flags.**
+
+<a name="env-1"></a>
+
+**1.CONNECTIVITY VARS:**
+
+* `TG_UPLOAD_IPV6` -> `--ipv6` | True or False.
+* `TG_UPLOAD_PROXY` -> `--proxy`
+
+<a name="env-2"></a>
+
+**2.LOGIN VARS:**
+
+* `TG_UPLOAD_PROFILE` -> `--profile`
+* `TG_UPLOAD_INFO` -> `--info`
+* `TG_UPLOAD_API_ID` -> `--api_id`
+* `TG_UPLOAD_API_HASH` -> `--api_hash`
+* `TG_UPLOAD_PHONE` -> `--phone`
+* `TG_UPLOAD_HIDE_PSWD` -> `--hide_pswd` | True or False.
+* `TG_UPLOAD_BOT_TOKEN` -> `--bot`
+* `TG_UPLOAD_LOGOUT` -> `--logout` | True or False.
+* `TG_UPLOAD_SESSION_STRING` -> `--login_string`
+* `TG_UPLOAD_EXPORT_STRING` -> `--export_string` | True or False.
+* `TG_UPLOAD_TMP_SESSION` -> `--tmp_session` | True or False.
+* `TG_UPLOAD_LOGIN_ONLY` -> `--login_only` | True or False.
+
+<a name="env-3"></a>
+
+**3.FILE VARS:**
+
+* `TG_UPLOAD_PATH` -> `--path`
+* `TG_UPLOAD_FILENAME` -> `--filename`
+* `TG_UPLOAD_THUMB` -> `--thumb`
+* `TG_UPLOAD_CAPTION` -> `--caption`
+* `TG_UPLOAD_DURATION` -> `--duration`
+* `TG_UPLOAD_CAPJSON` -> `--capjson`
+
+<a name="env-4"></a>
+
+**4.BEHAVIOUR VARS:**
+
+* `TG_UPLOAD_CHAT_ID` -> `--chat_id`
+* `TG_UPLOAD_AS_PHOTO` -> `--as_photo` | True or False.
+* `TG_UPLOAD_AS_VIDEO` -> `--as_video` | True or False.
+* `TG_UPLOAD_AS_AUDIO` -> `--as_audio` | True or False.
+* `TG_UPLOAD_AS_VOICE` -> `--as_voice` | True or False.
+* `TG_UPLOAD_AS_VIDEO_NOTE` -> `--as_video_note` | True or False.
+* `TG_UPLOAD_SPLIT` -> `--split`
+* `TG_UPLOAD_REPLACE` -> `--replace` | Separate both values using "," (comma).
+* `TG_UPLOAD_DISABLE_STREAM` -> `--disable_stream` | True or False.
+* `TG_UPLOAD_SPOILER` -> `--spoiler` | True or False.
+* `TG_UPLOAD_PARSE_MODE` -> `--parse_mode`
+* `TG_UPLOAD_DELETE_ON_DONE` -> `--delete_on_done` | True or False.
+* `TG_UPLOAD_WIDTH` -> `--width`
+* `TG_UPLOAD_HEIGHT` -> `--height`
+* `TG_UPLOAD_ARTIST` -> `--artist`
+* `TG_UPLOAD_TITLE` -> `--title`
+* `TG_UPLOAD_SILENT` -> `--silent` | True or False.
+* `TG_UPLOAD_RECURSIVE` -> `--recursive` | True or False.
+* `TG_UPLOAD_PREFIX` -> `--prefix`
+* `TG_UPLOAD_NO_WARN` -> `--no_warn` | True or False.
+* `TG_UPLOAD_NO_UPDATE` -> `--no_update` | True or False.
+
+<a name="env-5"></a>
+
+**5.MISC VARS:**
+
+* `TG_UPLOAD_DEVICE_MODEL` -> `--device_model`
+* `TG_UPLOAD_SYSTEM_VERSION` -> `--system_version`
+
+No need to set all of the listed variables at once, you can set any of them in any order. Remember, passing any flag will temporary overwrite its associated variable (if any).
+
 <a name="limits"></a>
 
 ## 🪧 Limits
@@ -481,4 +563,4 @@ Feel free to create a PR (to dev branch) if you have any valueable changes like 
 
 ## ❤️ Credits & Thanks
 
-[**Dr.Caduceus**](https://t.me/TheCaduceusHere): Owner & current maintainer of tg-upload.
+[**Dr.Caduceus**](https://t.me/TheCaduceusHere): Owner & developer of tg-upload.

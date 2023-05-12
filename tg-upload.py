@@ -6,6 +6,7 @@ from json import load as json_load
 from PIL import Image
 from datetime import datetime
 from httpx import get as get_url
+from os import environ as env
 
 import argparse
 import hashlib
@@ -21,53 +22,53 @@ parser = argparse.ArgumentParser(
   )
 
 # CONNECTIVITY FLAGS
-parser.add_argument("--ipv6", action="store_true", help="Connect Telegram using device's IPv6. By default IPv4")
-parser.add_argument("--proxy", help="Proxy name (in proxy.json) to use for connecting Telegram.")
+parser.add_argument("--ipv6", default=env.get("TG_UPLOAD_IPV6", "False").lower() in {"true", "t", "1"}, action="store_true", help="Connect Telegram using device's IPv6. By default IPv4")
+parser.add_argument("--proxy", metavar="TG_UPLOAD_PROXY", default=env.get("TG_UPLOAD_PROXY", None), help="Proxy name (in proxy.json) to use for connecting Telegram.")
 
 # LOGIN FLAGS
-parser.add_argument("-p","--profile", help="Name of your new/existing session.")
-parser.add_argument("--info", action="store_true", help="Show your Telegram account details as JSON.")
-parser.add_argument("--api_id", type=int, help="Telegram API ID required to create new session.")
-parser.add_argument("--api_hash", help="Telegram API HASH required to create new session.")
-parser.add_argument("--phone", help="Phone number (international format) required to login as user.")
-parser.add_argument("--hide_pswd", action="store_true", help="Hide 2FA password using getpass.")
-parser.add_argument("--bot", help="Telegram bot token required to login as bot.")
-parser.add_argument("--logout", action="store_true", help="Revoke current session and delete session file.")
-parser.add_argument("--login_string", help="Session string to login without auth & creating a session file.")
-parser.add_argument("--export_string", action="store_true", help="Generate & display session string using existing session file.")
-parser.add_argument("--tmp_session", action="store_true", help="Don't create session file for this login.")
-parser.add_argument("--login_only", action="store_true", help="Exit immediately after authorization process.")
+parser.add_argument("-p","--profile", metavar="TG_UPLOAD_PROFILE", default=env.get("TG_UPLOAD_PROFILE", None), help="Name of your new/existing session.")
+parser.add_argument("--info", default=env.get("TG_UPLOAD_INFO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Show your Telegram account details as JSON.")
+parser.add_argument("--api_id", metavar="TG_UPLOAD_API_ID", default=int(env.get("TG_UPLOAD_API_ID", 12345)), type=int, help="Telegram API ID required to create new session.")
+parser.add_argument("--api_hash", metavar="TG_UPLOAD_API_HASH", default=env.get("TG_UPLOAD_API_HASH", None), help="Telegram API HASH required to create new session.")
+parser.add_argument("--phone", metavar="TG_UPLOAD_PHONE", default=env.get("TG_UPLOAD_PHONE", None), help="Phone number (international format) required to login as user.")
+parser.add_argument("--hide_pswd", default=env.get("TG_UPLOAD_HIDE_PSWD", "False").lower() in {"true", "t", "1"}, action="store_true", help="Hide 2FA password using getpass.")
+parser.add_argument("--bot", metavar="TG_UPLOAD_BOT_TOKEN", default=env.get("TG_UPLOAD_BOT_TOKEN", None), help="Telegram bot token required to login as bot.")
+parser.add_argument("--logout", default=env.get("TG_UPLOAD_LOGOUT", "False").lower() in {"true", "t", "1"}, action="store_true", help="Revoke current session and delete session file.")
+parser.add_argument("--login_string", metavar="TG_UPLOAD_SESSION_STRING", default=env.get("TG_UPLOAD_SESSION_STRING", None), help="Session string to login without auth & creating a session file.")
+parser.add_argument("--export_string", default=env.get("TG_UPLOAD_EXPORT_STRING", "False").lower() in {"true", "t", "1"}, action="store_true", help="Generate & display session string using existing session file.")
+parser.add_argument("--tmp_session", default=env.get("TG_UPLOAD_TMP_SESSION", "False").lower() in {"true", "t", "1"}, action="store_true", help="Don't create session file for this login.")
+parser.add_argument("--login_only", default=env.get("TG_UPLOAD_LOGIN_ONLY", "False").lower() in {"true", "t", "1"}, action="store_true", help="Exit immediately after authorization process.")
 
 # FILE FLAGS
-parser.add_argument("-l","--path", help="Path to the file or folder to upload.")
-parser.add_argument("-n","--filename", help="To upload data with custom name.")
-parser.add_argument("-i","--thumb", help="Path of thumbnail image to be attached with given file.")
-parser.add_argument("-z","--caption", default="", help="Caption text to be attached with file(s), markdown & HTML formatting allowed.")
-parser.add_argument("--duration", default=0, type=int, help="Duration of sent media in seconds.")
-parser.add_argument("--capjson", help="Caption name (in caption.json) to attach with given file(s).")
+parser.add_argument("-l","--path", metavar="TG_UPLOAD_PATH", default=env.get("TG_UPLOAD_PATH", None), help="Path to the file or folder to upload.")
+parser.add_argument("-n","--filename", metavar="TG_UPLOAD_FILENAME", default=env.get("TG_UPLOAD_FILENAME", None), help="To upload data with custom name.")
+parser.add_argument("-i","--thumb", metavar="TG_UPLOAD_THUMB", default=env.get("TG_UPLOAD_THUMB", None), help="Path of thumbnail image to be attached with given file.")
+parser.add_argument("-z","--caption", metavar="TG_UPLOAD_CAPTION", default=env.get("TG_UPLOAD_CAPTION", ""), help="Caption text to be attached with file(s), markdown & HTML formatting allowed.")
+parser.add_argument("--duration", metavar="TG_UPLOAD_DURATION", default=int(env.get("TG_UPLOAD_DURATION", 0)), type=int, help="Duration of sent media in seconds.")
+parser.add_argument("--capjson", metavar="TG_UPLOAD_CAPJSON", default=env.get("TG_UPLOAD_CAPJSON", None), help="Caption name (in caption.json) to attach with given file(s).")
 
 # BEHAVIOUR FLAGS
-parser.add_argument("-c","--chat_id", help="Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.")
-parser.add_argument("--as_photo", action="store_true", help="Send given file as picture.")
-parser.add_argument("--as_video", action="store_true", help="Send given file as video.")
-parser.add_argument("--as_audio", action="store_true", help="Send given file as audio.")
-parser.add_argument("--as_voice", action="store_true", help="Send given file as voice.")
-parser.add_argument("--as_video_note", action="store_true", help="Send given file as video note.")
-parser.add_argument("--split", type=int, help="Split files in given bytes and upload.")
-parser.add_argument("--replace", nargs=2, type=str, help="Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.")
-parser.add_argument("--disable_stream", action="store_false", help="Disable streaming for given video.")
-parser.add_argument("-b","--spoiler", action="store_true", help="Send media with spoiler animation.")
-parser.add_argument("--parse_mode", help="Set custom formatting mode for caption.")
-parser.add_argument("-d","--delete_on_done", action="store_true",help="Delete the given file after task completion.")
-parser.add_argument("-w","--width", type=int, default=1280, help="Set custom width for video.")
-parser.add_argument("-e","--height", type=int, default=552, help="Set custom height for video.")
-parser.add_argument("-a","--artist", help="Set artist name of given audio file.")
-parser.add_argument("-t","--title", help="Set title of given audio file.")
-parser.add_argument("-s","--silent", action="store_true", help="Send files silently to given chat.")
-parser.add_argument("-r","--recursive", action="store_true", help="Upload files recursively if path is a folder.")
-parser.add_argument("--prefix", help="Add given prefix text to each filename (prefix + filename) before upload.")
-parser.add_argument("--no_warn", action="store_true", help="Don't show warning messages.")
-parser.add_argument("--no_update", action="store_true", help="Disable checking for updates.")
+parser.add_argument("-c","--chat_id", metavar="TG_UPLOAD_CHAT_ID", default=env.get("TG_UPLOAD_CHAT_ID", None) , help="Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.")
+parser.add_argument("--as_photo", default=env.get("TG_UPLOAD_AS_PHOTO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as picture.")
+parser.add_argument("--as_video", default=env.get("TG_UPLOAD_AS_VIDEO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as video.")
+parser.add_argument("--as_audio", default=env.get("TG_UPLOAD_AS_AUDIO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as audio.")
+parser.add_argument("--as_voice", default=env.get("TG_UPLOAD_AS_VOICE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as voice.")
+parser.add_argument("--as_video_note", default=env.get("TG_UPLOAD_AS_VIDEO_NOTE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as video note.")
+parser.add_argument("--split", metavar="TG_UPLOAD_SPLIT", type=int, default=int(env.get("TG_UPLOAD_SPLIT", 0)), help="Split files in given bytes and upload.")
+parser.add_argument("--replace", metavar="TG_UPLOAD_REPLACE", type=str, default=env.get("TG_UPLOAD_REPLACE", ",").split(","), nargs=2, help="Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.")
+parser.add_argument("--disable_stream", default=env.get("TG_UPLOAD_DISABLE_STREAM", "True").lower() in {"true", "t", "1"}, action="store_false", help="Disable streaming for given video.")
+parser.add_argument("-b","--spoiler", default=env.get("TG_UPLOAD_SPOILER", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send media with spoiler animation.")
+parser.add_argument("--parse_mode", metavar="TG_UPLOAD_PARSE_MODE", default=env.get("TG_UPLOAD_PARSE_MODE", "DEFAULT"), help="Set custom formatting mode for caption.")
+parser.add_argument("-d","--delete_on_done", default=env.get("TG_UPLOAD_DELETE_ON_DONE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Delete the given file after task completion.")
+parser.add_argument("-w","--width", metavar="TG_UPLOAD_WIDTH", type=int, default=int(env.get("TG_UPLOAD_WIDTH", 1280)), help="Set custom width for video.")
+parser.add_argument("-e","--height", metavar="TG_UPLOAD_HEIGHT", type=int, default=int(env.get("TG_UPLOAD_HEIGHT", 552)), help="Set custom height for video.")
+parser.add_argument("-a","--artist", metavar="TG_UPLOAD_ARTIST", default=env.get("TG_UPLOAD_ARTIST", None), help="Set artist name of given audio file.")
+parser.add_argument("-t","--title", metavar="TG_UPLOAD_TITLE", default=env.get("TG_UPLOAD_TITLE", None), help="Set title of given audio file.")
+parser.add_argument("-s","--silent", default=env.get("TG_UPLOAD_SILENT", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send files silently to given chat.")
+parser.add_argument("-r","--recursive", default=env.get("TG_UPLOAD_RECURSIVE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Upload files recursively if path is a folder.")
+parser.add_argument("--prefix", metavar="TG_UPLOAD_PREFIX", default=env.get("TG_UPLOAD_PREFIX", None), help="Add given prefix text to each filename (prefix + filename) before upload.")
+parser.add_argument("--no_warn", default=env.get("TG_UPLOAD_NO_WARN", "False").lower() in {"true", "t", "1"}, action="store_true", help="Don't show warning messages.")
+parser.add_argument("--no_update", default=env.get("TG_UPLOAD_NO_UPDATE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Disable checking for updates.")
 
 # UTILITY FLAGS
 parser.add_argument("--file_info", help="Show basic file information.")
@@ -77,8 +78,8 @@ parser.add_argument("--combine", nargs="+", type=str, help="Restore original fil
 parser.add_argument("--convert", help="Convert any image into JPEG format.")
 
 # MISC FLAGS
-parser.add_argument("--device_model", help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
-parser.add_argument("--system_version", help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
+parser.add_argument("--device_model", metavar="TG_UPLOAD_DEVICE_MODEL", default=env.get("TG_UPLOAD_DEVICE_MODEL", "tg-upload"), help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
+parser.add_argument("--system_version", metavar="TG_UPLOAD_SYSTEM_VERSION", default=env.get("TG_UPLOAD_SYSTEM_VERSION", f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"), help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
 parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload:\n{tg_upload}\nPython:\n{py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram:\n{get_dist('pyrogram').version}\nTgCrypto:\n{get_dist('tgcrypto').version}\nPillow:\n{get_dist('pillow').version}")
 
 args = parser.parse_args()
@@ -268,8 +269,8 @@ if args.phone:
     phone_number=args.phone,
     hide_password=args.hide_pswd,
     app_version=tg_upload,
-    device_model=args.device_model or "tg-upload",
-    system_version=args.system_version or f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}",
+    device_model=args.device_model,
+    system_version=args.system_version,
     ipv6=args.ipv6,
     in_memory=args.tmp_session,
     proxy=proxy_json
@@ -518,7 +519,7 @@ with client:
           filename = args.prefix + filename
         if args.replace:
           filename = filename.replace(args.replace[0], args.replace[1])
-        if args.split and Path(args.path).stat().st_size > args.split:
+        if args.split and Path(args.path).stat().st_size > args.split and args.split != 0:
           for _splitted_file, filename in split_file(args.path, args.split, filename):
             file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
             start_time = time()
@@ -541,7 +542,7 @@ with client:
               filename = args.prefix + filename
             if args.replace:
               filename = filename.replace(args.replace[0], args.replace[1])
-            if args.split and Path(_path).stat().st_size > args.split:
+            if args.split and Path(_path).stat().st_size > args.split and args.split != 0:
               for _splitted_file, filename in split_file(_path, args.split, filename):
                 file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
                 start_time = time()
