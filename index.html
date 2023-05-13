@@ -57,6 +57,7 @@
       <li><a href="#flag-6">Misc</a></li>
     </ul>
   </li>
+  <li><a href="#env"><strong>📝 ENV Variables</strong></a></li>
   <li><a href="#how-to-use"><strong>🕹️ How to use?</strong></a>
     <ul>
       <li><a href="#htu-1">Get API ID &amp; HASH</a></li>
@@ -77,15 +78,6 @@
         </ul>
       </li>
       <li><a href="#htu-5">Using Proxy</a></li>
-    </ul>
-  </li>
-  <li><a href="#env"><strong>📝 ENV Variables</strong></a>
-    <ul>
-      <li><a href="#env-1">Connectivity</a></li>
-      <li><a href="#env-2">Login</a></li>
-      <li><a href="#env-3">File</a></li>
-      <li><a href="#env-4">Behaviour</a></li>
-      <li><a href="#env-5">Misc</a></li>
     </ul>
   </li>
   <li><a href="#limits"><strong>🪧 Limits</strong></a>
@@ -270,6 +262,241 @@ pkg install git -y
 
 <p><a name="how-to-use"></a></p>
 
+<p><a name="env"></a></p>
+
+<h2 id="-env-variables">📝 ENV Variables</h2>
+
+<p><strong>Tired of passing values each time using flags? Set flag values in system environment, each flag has its own unique system variable name from which it retrive value once detected. Below is the table showing variable name, flag it is associated with and value it expects.</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Variable</th>
+      <th style="text-align: center">Flag</th>
+      <th style="text-align: center">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_IPV6</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--ipv6</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PROXY</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--proxy</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PROFILE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--profile</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_INFO</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--info</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_API_ID</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--api_id</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_API_HASH</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--api_hash</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PHONE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--phone</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_HIDE_PSWD</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--hide_pswd</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_BOT_TOKEN</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--bot</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_LOGOUT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--logout</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SESSION_STRING</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--login_string</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_EXPORT_STRING</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--export_string</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_TMP_SESSION</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--tmp_session</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_LOGIN_ONLY</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--login_only</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PATH</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--path</code></td>
+      <td style="text-align: center">Same sa flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_FILENAME</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--filename</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_THUMB</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--thumb</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_CAPTION</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--caption</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DURATION</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--duration</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_CAPJSON</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--capjson</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_CHAT_ID</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--chat_id</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_PHOTO</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--as_photo</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_VIDEO</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--as_video</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_AUDIO</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--as_audio</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_VOICE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--as_voice</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_VIDEO_NOTE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--as_video_note</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SPLIT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--split</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_REPLACE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--replace</code></td>
+      <td style="text-align: center">Separate both values using “,” (comma).</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DISABLE_STREAM</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--disable_stream</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SPOILER</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--spoiler</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PARSE_MODE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--parse_mode</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DELETE_ON_DONE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--delete_on_done</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_WIDTH</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--width</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_HEIGHT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--height</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_ARTIST</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--artist</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_TITLE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--title</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SILENT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--silent</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_RECURSIVE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--recursive</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PREFIX</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--prefix</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_NO_WARN</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--no_warn</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_NO_UPDATE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--no_update</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DEVICE_MODEL</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--device_model</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SYSTEM_VERSION</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--system_version</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>User can set as many variables as it want in any order and can temporary overwrite variable’s value by passing the new value using its associated flag.</p>
+
 <h2 id="️-how-to-use">🕹️ How to use?</h2>
 
 <p><a name="htu-1"></a></p>
@@ -437,263 +664,6 @@ pkg install git -y
 
 <p>3.While running tg-upload, just mention the proxy name using <code class="language-plaintext highlighter-rouge">--proxy</code>.</p>
 
-<p><a name="env"></a></p>
-
-<h2 id="-env-variables">📝 ENV Variables</h2>
-
-<p><strong>Tired of passing values each time using flags? With tg-upload, you can get values from the system environment automatically once detected. Each flag has its own unique system environment variable name to get its value from. You don’t need to remember those pesky values ever again! Just set given variables in system environment accordingly, of course you can overwrite them by passing values using flags.</strong></p>
-
-<p><a name="env-1"></a></p>
-
-<p><strong>1.CONNECTIVITY VARS:</strong></p>
-
-<ul>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_IPV6</code> -&gt; <code class="language-plaintext highlighter-rouge">--ipv6</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PROXY</code> -&gt; <code class="language-plaintext highlighter-rouge">--proxy</code></li>
-</ul>
-
-<p><a name="env-2"></a></p>
-
-<p><strong>2.LOGIN VARS:</strong></p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PROFILE</code> -&gt; <code class="language-plaintext highlighter-rouge">--profile</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_INFO</code> -&gt; <code class="language-plaintext highlighter-rouge">--info</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_API_ID</code> -&gt; <code class="language-plaintext highlighter-rouge">--api_id</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_API_HASH</code> -&gt; <code class="language-plaintext highlighter-rouge">--api_hash</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PHONE</code> -&gt; <code class="language-plaintext highlighter-rouge">--phone</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_HIDE_PSWD</code> -&gt; <code class="language-plaintext highlighter-rouge">--hide_pswd</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_BOT_TOKEN</code> -&gt; <code class="language-plaintext highlighter-rouge">--bot</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_LOGOUT</code> -&gt; <code class="language-plaintext highlighter-rouge">--logout</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SESSION_STRING</code> -&gt; <code class="language-plaintext highlighter-rouge">--login_string</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_EXPORT_STRING</code> -&gt; <code class="language-plaintext highlighter-rouge">--export_string</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_TMP_SESSION</code> -&gt; <code class="language-plaintext highlighter-rouge">--tmp_session</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_LOGIN_ONLY</code> -&gt; <code class="language-plaintext highlighter-rouge">--login_only</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-</ul>
-
-<p><a name="env-3"></a></p>
-
-<p><strong>3.FILE VARS:</strong></p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PATH</code> -&gt; <code class="language-plaintext highlighter-rouge">--path</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_FILENAME</code> -&gt; <code class="language-plaintext highlighter-rouge">--filename</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_THUMB</code> -&gt; <code class="language-plaintext highlighter-rouge">--thumb</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_CAPTION</code> -&gt; <code class="language-plaintext highlighter-rouge">--caption</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DURATION</code> -&gt; <code class="language-plaintext highlighter-rouge">--duration</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_CAPJSON</code> -&gt; <code class="language-plaintext highlighter-rouge">--capjson</code></li>
-</ul>
-
-<p><a name="env-4"></a></p>
-
-<p><strong>4.BEHAVIOUR VARS:</strong></p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_CHAT_ID</code> -&gt; <code class="language-plaintext highlighter-rouge">--chat_id</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_PHOTO</code> -&gt; <code class="language-plaintext highlighter-rouge">--as_photo</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_VIDEO</code> -&gt; <code class="language-plaintext highlighter-rouge">--as_video</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_AUDIO</code> -&gt; <code class="language-plaintext highlighter-rouge">--as_audio</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_VOICE</code> -&gt; <code class="language-plaintext highlighter-rouge">--as_voice</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AS_VIDEO_NOTE</code> -&gt; <code class="language-plaintext highlighter-rouge">--as_video_note</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SPLIT</code> -&gt; <code class="language-plaintext highlighter-rouge">--split</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_REPLACE</code> -&gt; <code class="language-plaintext highlighter-rouge">--replace</code></td>
-          <td>Separate both values using “,” (comma).</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DISABLE_STREAM</code> -&gt; <code class="language-plaintext highlighter-rouge">--disable_stream</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SPOILER</code> -&gt; <code class="language-plaintext highlighter-rouge">--spoiler</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PARSE_MODE</code> -&gt; <code class="language-plaintext highlighter-rouge">--parse_mode</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DELETE_ON_DONE</code> -&gt; <code class="language-plaintext highlighter-rouge">--delete_on_done</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_WIDTH</code> -&gt; <code class="language-plaintext highlighter-rouge">--width</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_HEIGHT</code> -&gt; <code class="language-plaintext highlighter-rouge">--height</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_ARTIST</code> -&gt; <code class="language-plaintext highlighter-rouge">--artist</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_TITLE</code> -&gt; <code class="language-plaintext highlighter-rouge">--title</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SILENT</code> -&gt; <code class="language-plaintext highlighter-rouge">--silent</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_RECURSIVE</code> -&gt; <code class="language-plaintext highlighter-rouge">--recursive</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PREFIX</code> -&gt; <code class="language-plaintext highlighter-rouge">--prefix</code></li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_NO_WARN</code> -&gt; <code class="language-plaintext highlighter-rouge">--no_warn</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td><code class="language-plaintext highlighter-rouge">TG_UPLOAD_NO_UPDATE</code> -&gt; <code class="language-plaintext highlighter-rouge">--no_update</code></td>
-          <td>True or False.</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-</ul>
-
-<p><a name="env-5"></a></p>
-
-<p><strong>5.MISC VARS:</strong></p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DEVICE_MODEL</code> -&gt; <code class="language-plaintext highlighter-rouge">--device_model</code></li>
-  <li><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SYSTEM_VERSION</code> -&gt; <code class="language-plaintext highlighter-rouge">--system_version</code></li>
-</ul>
-
-<p>No need to set all of the listed variables at once, you can set any of them in any order. Remember, passing any flag will temporary overwrite its associated variable (if any).</p>
-
 <p><a name="limits"></a></p>
 
 <h2 id="-limits">🪧 Limits</h2>
@@ -763,7 +733,19 @@ pkg install git -y
 
 <p>You (MTProto) -&gt; Telegram = Larger &amp; direct data transfer.</p>
 
-<p><strong>6.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?</strong></p>
+<p><strong>6.I don’t want to login again and again in different devices! is there any way to use existing session in different devices?</strong></p>
+
+<p>Yes, there are mainly two ways to do the same:</p>
+
+<p><strong>i.Generate &amp; use session string:</strong></p>
+
+<p>tg-upload supports generation of session string and login through it, to generate session string you can use <code class="language-plaintext highlighter-rouge">--export_string</code> flag with <code class="language-plaintext highlighter-rouge">--profile</code> flag to mention profile of which session string should be generated. Also, upon using session string tg-upload never creates new .session file.</p>
+
+<p><strong>ii.Carry .session files:</strong></p>
+
+<p>For every profile, tg-upload generates .session file which is the main file that helps to login into your Telegram account without following auth flow. Place the .session file in tg-upload’s working directory.</p>
+
+<p><strong>7.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?</strong></p>
 
 <p>tg-upload’s <code class="language-plaintext highlighter-rouge">--logout</code> flag is here to help! just mention the session name using <code class="language-plaintext highlighter-rouge">--profile</code> flag and pass the <code class="language-plaintext highlighter-rouge">--logout</code> flag. This will directly revoke the specified session and will omit it from your Telegram Account’s active sessions list.</p>
 
