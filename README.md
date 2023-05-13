@@ -20,6 +20,7 @@
   * [Behaviour](#flag-4)
   * [Utility](#flag-5)
   * [Misc](#flag-6)
+* [**📝 ENV Variables**](#env)
 * [**🕹️ How to use?**](#how-to-use)
   * [Get API ID & HASH](#htu-1)
   * [Authorization](#htu-2)
@@ -33,12 +34,6 @@
     * [Formatting Modes](#htu-4.2)
     * [Caption Templates](#htu-4.3)
   * [Using Proxy](#htu-5)
-* [**📝 ENV Variables**](#env)
-  * [Connectivity](#env-1)
-  * [Login](#env-2)
-  * [File](#env-3)
-  * [Behaviour](#env-4)
-  * [Misc](#env-5)
 * [**🪧 Limits**](#limits)
   * [File Size](#l-1)
   * [Thumbnail](#l-2)
@@ -224,6 +219,60 @@ Flags that does not fit in above categories are listed in this category:
 
 <a name="how-to-use"></a>
 
+<a name="env"></a>
+
+## 📝 ENV Variables
+
+**Tired of passing values each time using flags? Set flag values in system environment, each flag has its own unique system variable name from which it retrive value once detected. Below is the table showing variable name, flag it is associated with and value it expects.**
+
+|Variable                   |Flag               |Value           |
+|:-------------------------:|:-----------------:|:--------------:|
+|`TG_UPLOAD_IPV6`           |`--ipv6`           |True or False   |
+|`TG_UPLOAD_PROXY`          |`--proxy`          |Same as flag    |
+|`TG_UPLOAD_PROFILE`        |`--profile`        |Same as flag    |
+|`TG_UPLOAD_INFO`           |`--info`           |True or False   |
+|`TG_UPLOAD_API_ID`         |`--api_id`         |Same as flag    |
+|`TG_UPLOAD_API_HASH`       |`--api_hash`       |Same as flag    |
+|`TG_UPLOAD_PHONE`          |`--phone`          |Same as flag    |
+|`TG_UPLOAD_HIDE_PSWD`      |`--hide_pswd`      |True or False   |
+|`TG_UPLOAD_BOT_TOKEN`      |`--bot`            |Same as flag    |
+|`TG_UPLOAD_LOGOUT`         |`--logout`         |True or False   |
+|`TG_UPLOAD_SESSION_STRING` |`--login_string`   |Same as flag    |
+|`TG_UPLOAD_EXPORT_STRING`  |`--export_string`  |True or False   |
+|`TG_UPLOAD_TMP_SESSION`    |`--tmp_session`    |True or False   |
+|`TG_UPLOAD_LOGIN_ONLY`     |`--login_only`     |True or False   |
+|`TG_UPLOAD_PATH`           |`--path`           |Same sa flag    |
+|`TG_UPLOAD_FILENAME`       |`--filename`       |Same as flag    |
+|`TG_UPLOAD_THUMB`          |`--thumb`          |Same as flag    |
+|`TG_UPLOAD_CAPTION`        |`--caption`        |Same as flag    |
+|`TG_UPLOAD_DURATION`       |`--duration`       |Same as flag    |
+|`TG_UPLOAD_CAPJSON`        |`--capjson`        |Same as flag    |
+|`TG_UPLOAD_CHAT_ID`        |`--chat_id`        |Same as flag    |
+|`TG_UPLOAD_AS_PHOTO`       |`--as_photo`       |True or False   |
+|`TG_UPLOAD_AS_VIDEO`       |`--as_video`       |True or False   |
+|`TG_UPLOAD_AS_AUDIO`       |`--as_audio`       |True or False   |
+|`TG_UPLOAD_AS_VOICE`       |`--as_voice`       |True or False   |
+|`TG_UPLOAD_AS_VIDEO_NOTE`  |`--as_video_note`  |True or False   |
+|`TG_UPLOAD_SPLIT`          |`--split`          |Same as flag    |
+|`TG_UPLOAD_REPLACE`        |`--replace`        |Separate both values using "," (comma).|
+|`TG_UPLOAD_DISABLE_STREAM` |`--disable_stream` |True or False   |
+|`TG_UPLOAD_SPOILER`        |`--spoiler`        |True or False   |
+|`TG_UPLOAD_PARSE_MODE`     |`--parse_mode`     |Same as flag    |
+|`TG_UPLOAD_DELETE_ON_DONE` |`--delete_on_done` |True or False   |
+|`TG_UPLOAD_WIDTH`          |`--width`          |Same as flag    |
+|`TG_UPLOAD_HEIGHT`         |`--height`         |Same as flag    |
+|`TG_UPLOAD_ARTIST`         |`--artist`         |Same as flag    |
+|`TG_UPLOAD_TITLE`          |`--title`          |Same as flag    |
+|`TG_UPLOAD_SILENT`         |`--silent`         |True or False   |
+|`TG_UPLOAD_RECURSIVE`      |`--recursive`      |True or False   |
+|`TG_UPLOAD_PREFIX`         |`--prefix`         |Same as flag    |
+|`TG_UPLOAD_NO_WARN`        |`--no_warn`        |True or False   |
+|`TG_UPLOAD_NO_UPDATE`      |`--no_update`      |True or False   |
+|`TG_UPLOAD_DEVICE_MODEL`   |`--device_model`   |Same as flag    |
+|`TG_UPLOAD_SYSTEM_VERSION` |`--system_version` |Same as flag    |
+
+User can set as many variables as it want in any order and can temporary overwrite variable's value by passing the new value using its associated flag.
+
 ## 🕹️ How to use?
 
 <a name="htu-1"></a>
@@ -389,82 +438,6 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
 
 3.While running tg-upload, just mention the proxy name using `--proxy`.
 
-<a name="env"></a>
-
-## 📝 ENV Variables
-
-**Tired of passing values each time using flags? With tg-upload, you can get values from the system environment automatically once detected. Each flag has its own unique system environment variable name to get its value from. You don’t need to remember those pesky values ever again! Just set given variables in system environment accordingly, of course you can overwrite them by passing values using flags.**
-
-<a name="env-1"></a>
-
-**1.CONNECTIVITY VARS:**
-
-* `TG_UPLOAD_IPV6` -> `--ipv6` | True or False.
-* `TG_UPLOAD_PROXY` -> `--proxy`
-
-<a name="env-2"></a>
-
-**2.LOGIN VARS:**
-
-* `TG_UPLOAD_PROFILE` -> `--profile`
-* `TG_UPLOAD_INFO` -> `--info`
-* `TG_UPLOAD_API_ID` -> `--api_id`
-* `TG_UPLOAD_API_HASH` -> `--api_hash`
-* `TG_UPLOAD_PHONE` -> `--phone`
-* `TG_UPLOAD_HIDE_PSWD` -> `--hide_pswd` | True or False.
-* `TG_UPLOAD_BOT_TOKEN` -> `--bot`
-* `TG_UPLOAD_LOGOUT` -> `--logout` | True or False.
-* `TG_UPLOAD_SESSION_STRING` -> `--login_string`
-* `TG_UPLOAD_EXPORT_STRING` -> `--export_string` | True or False.
-* `TG_UPLOAD_TMP_SESSION` -> `--tmp_session` | True or False.
-* `TG_UPLOAD_LOGIN_ONLY` -> `--login_only` | True or False.
-
-<a name="env-3"></a>
-
-**3.FILE VARS:**
-
-* `TG_UPLOAD_PATH` -> `--path`
-* `TG_UPLOAD_FILENAME` -> `--filename`
-* `TG_UPLOAD_THUMB` -> `--thumb`
-* `TG_UPLOAD_CAPTION` -> `--caption`
-* `TG_UPLOAD_DURATION` -> `--duration`
-* `TG_UPLOAD_CAPJSON` -> `--capjson`
-
-<a name="env-4"></a>
-
-**4.BEHAVIOUR VARS:**
-
-* `TG_UPLOAD_CHAT_ID` -> `--chat_id`
-* `TG_UPLOAD_AS_PHOTO` -> `--as_photo` | True or False.
-* `TG_UPLOAD_AS_VIDEO` -> `--as_video` | True or False.
-* `TG_UPLOAD_AS_AUDIO` -> `--as_audio` | True or False.
-* `TG_UPLOAD_AS_VOICE` -> `--as_voice` | True or False.
-* `TG_UPLOAD_AS_VIDEO_NOTE` -> `--as_video_note` | True or False.
-* `TG_UPLOAD_SPLIT` -> `--split`
-* `TG_UPLOAD_REPLACE` -> `--replace` | Separate both values using "," (comma).
-* `TG_UPLOAD_DISABLE_STREAM` -> `--disable_stream` | True or False.
-* `TG_UPLOAD_SPOILER` -> `--spoiler` | True or False.
-* `TG_UPLOAD_PARSE_MODE` -> `--parse_mode`
-* `TG_UPLOAD_DELETE_ON_DONE` -> `--delete_on_done` | True or False.
-* `TG_UPLOAD_WIDTH` -> `--width`
-* `TG_UPLOAD_HEIGHT` -> `--height`
-* `TG_UPLOAD_ARTIST` -> `--artist`
-* `TG_UPLOAD_TITLE` -> `--title`
-* `TG_UPLOAD_SILENT` -> `--silent` | True or False.
-* `TG_UPLOAD_RECURSIVE` -> `--recursive` | True or False.
-* `TG_UPLOAD_PREFIX` -> `--prefix`
-* `TG_UPLOAD_NO_WARN` -> `--no_warn` | True or False.
-* `TG_UPLOAD_NO_UPDATE` -> `--no_update` | True or False.
-
-<a name="env-5"></a>
-
-**5.MISC VARS:**
-
-* `TG_UPLOAD_DEVICE_MODEL` -> `--device_model`
-* `TG_UPLOAD_SYSTEM_VERSION` -> `--system_version`
-
-No need to set all of the listed variables at once, you can set any of them in any order. Remember, passing any flag will temporary overwrite its associated variable (if any).
-
 <a name="limits"></a>
 
 ## 🪧 Limits
@@ -528,7 +501,19 @@ You (JSON/HTTP) -> Bot API (MTProto) -> Telegram = Smaller & slower data transfe
 
 You (MTProto) -> Telegram = Larger & direct data transfer.
 
-**6.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?**
+**6.I don't want to login again and again in different devices! is there any way to use existing session in different devices?**
+
+Yes, there are mainly two ways to do the same:
+
+**i.Generate & use session string:**
+
+tg-upload supports generation of session string and login through it, to generate session string you can use `--export_string` flag with `--profile` flag to mention profile of which session string should be generated. Also, upon using session string tg-upload never creates new .session file.
+
+**ii.Carry .session files:**
+
+For every profile, tg-upload generates .session file which is the main file that helps to login into your Telegram account without following auth flow. Place the .session file in tg-upload's working directory.
+
+**7.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?**
 
 tg-upload's `--logout` flag is here to help! just mention the session name using `--profile` flag and pass the `--logout` flag. This will directly revoke the specified session and will omit it from your Telegram Account's active sessions list.
 
