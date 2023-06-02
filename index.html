@@ -232,6 +232,8 @@ pkg install git -y
 -s,--silent - Send files silently to given chat.
 -r,--recursive - Upload files recursively if path is a folder.
 --prefix - Add given prefix text to each filename (prefix + filename) before upload.
+--hash_memory_limit - Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.
+--combine_memory_limit - Limit how much memory should be used to combine files in bytes, by default to 1 MB.
 --no_warn - Don't show warning messages.
 --no_update - Disable checking for updates.
 </code></pre></div></div>
@@ -241,7 +243,8 @@ pkg install git -y
 
 <p>Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (<code class="language-plaintext highlighter-rouge">--profile</code>) to call them.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--file_info - Show basic file information.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--env - Display environment variables, their current value and default value in tabular format.
+--file_info - Show basic file information.
 --hash - Calculate &amp; display hash of given file.
 --split_file - Split file in given bytes, accepts only size &amp; requires path using path flag.
 --combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
@@ -350,7 +353,7 @@ pkg install git -y
     <tr>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PATH</code></td>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--path</code></td>
-      <td style="text-align: center">Same sa flag</td>
+      <td style="text-align: center">Same as flag</td>
     </tr>
     <tr>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_FILENAME</code></td>
@@ -470,6 +473,16 @@ pkg install git -y
     <tr>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PREFIX</code></td>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--prefix</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_HASH_MEMORY_LIMIT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--hash_memory_limit</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_COMBINE_MEMORY_LIMIT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--combine_memory_limit</code></td>
       <td style="text-align: center">Same as flag</td>
     </tr>
     <tr>
