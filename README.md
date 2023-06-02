@@ -187,6 +187,8 @@ Behaviour flags controls the behaviour of transmission.
 -s,--silent - Send files silently to given chat.
 -r,--recursive - Upload files recursively if path is a folder.
 --prefix - Add given prefix text to each filename (prefix + filename) before upload.
+--hash_memory_limit - Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.
+--combine_memory_limit - Limit how much memory should be used to combine files in bytes, by default to 1 MB.
 --no_warn - Don't show warning messages.
 --no_update - Disable checking for updates.
 ```
@@ -197,6 +199,7 @@ Behaviour flags controls the behaviour of transmission.
 Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (`--profile`) to call them.
 
 ```
+--env - Display environment variables, their current value and default value in tabular format.
 --file_info - Show basic file information.
 --hash - Calculate & display hash of given file.
 --split_file - Split file in given bytes, accepts only size & requires path using path flag.
@@ -225,51 +228,53 @@ Flags that does not fit in above categories are listed in this category:
 
 **Tired of passing values each time using flags? Set flag values in system environment, each flag has its own unique system variable name from which it retrive value once detected. Below is the table showing variable name, flag it is associated with and value it expects.**
 
-|Variable                   |Flag               |Value           |
-|:-------------------------:|:-----------------:|:--------------:|
-|`TG_UPLOAD_IPV6`           |`--ipv6`           |True or False   |
-|`TG_UPLOAD_PROXY`          |`--proxy`          |Same as flag    |
-|`TG_UPLOAD_PROFILE`        |`--profile`        |Same as flag    |
-|`TG_UPLOAD_INFO`           |`--info`           |True or False   |
-|`TG_UPLOAD_API_ID`         |`--api_id`         |Same as flag    |
-|`TG_UPLOAD_API_HASH`       |`--api_hash`       |Same as flag    |
-|`TG_UPLOAD_PHONE`          |`--phone`          |Same as flag    |
-|`TG_UPLOAD_HIDE_PSWD`      |`--hide_pswd`      |True or False   |
-|`TG_UPLOAD_BOT_TOKEN`      |`--bot`            |Same as flag    |
-|`TG_UPLOAD_LOGOUT`         |`--logout`         |True or False   |
-|`TG_UPLOAD_SESSION_STRING` |`--login_string`   |Same as flag    |
-|`TG_UPLOAD_EXPORT_STRING`  |`--export_string`  |True or False   |
-|`TG_UPLOAD_TMP_SESSION`    |`--tmp_session`    |True or False   |
-|`TG_UPLOAD_LOGIN_ONLY`     |`--login_only`     |True or False   |
-|`TG_UPLOAD_PATH`           |`--path`           |Same sa flag    |
-|`TG_UPLOAD_FILENAME`       |`--filename`       |Same as flag    |
-|`TG_UPLOAD_THUMB`          |`--thumb`          |Same as flag    |
-|`TG_UPLOAD_CAPTION`        |`--caption`        |Same as flag    |
-|`TG_UPLOAD_DURATION`       |`--duration`       |Same as flag    |
-|`TG_UPLOAD_CAPJSON`        |`--capjson`        |Same as flag    |
-|`TG_UPLOAD_CHAT_ID`        |`--chat_id`        |Same as flag    |
-|`TG_UPLOAD_AS_PHOTO`       |`--as_photo`       |True or False   |
-|`TG_UPLOAD_AS_VIDEO`       |`--as_video`       |True or False   |
-|`TG_UPLOAD_AS_AUDIO`       |`--as_audio`       |True or False   |
-|`TG_UPLOAD_AS_VOICE`       |`--as_voice`       |True or False   |
-|`TG_UPLOAD_AS_VIDEO_NOTE`  |`--as_video_note`  |True or False   |
-|`TG_UPLOAD_SPLIT`          |`--split`          |Same as flag    |
-|`TG_UPLOAD_REPLACE`        |`--replace`        |Separate both values using "," (comma).|
-|`TG_UPLOAD_DISABLE_STREAM` |`--disable_stream` |True or False   |
-|`TG_UPLOAD_SPOILER`        |`--spoiler`        |True or False   |
-|`TG_UPLOAD_PARSE_MODE`     |`--parse_mode`     |Same as flag    |
-|`TG_UPLOAD_DELETE_ON_DONE` |`--delete_on_done` |True or False   |
-|`TG_UPLOAD_WIDTH`          |`--width`          |Same as flag    |
-|`TG_UPLOAD_HEIGHT`         |`--height`         |Same as flag    |
-|`TG_UPLOAD_ARTIST`         |`--artist`         |Same as flag    |
-|`TG_UPLOAD_TITLE`          |`--title`          |Same as flag    |
-|`TG_UPLOAD_SILENT`         |`--silent`         |True or False   |
-|`TG_UPLOAD_RECURSIVE`      |`--recursive`      |True or False   |
-|`TG_UPLOAD_PREFIX`         |`--prefix`         |Same as flag    |
-|`TG_UPLOAD_NO_WARN`        |`--no_warn`        |True or False   |
-|`TG_UPLOAD_NO_UPDATE`      |`--no_update`      |True or False   |
-|`TG_UPLOAD_DEVICE_MODEL`   |`--device_model`   |Same as flag    |
-|`TG_UPLOAD_SYSTEM_VERSION` |`--system_version` |Same as flag    |
+|Variable                        |Flag                    |Value           |
+|:------------------------------:|:----------------------:|:--------------:|
+|`TG_UPLOAD_IPV6`                |`--ipv6`                |True or False   |
+|`TG_UPLOAD_PROXY`               |`--proxy`               |Same as flag    |
+|`TG_UPLOAD_PROFILE`             |`--profile`             |Same as flag    |
+|`TG_UPLOAD_INFO`                |`--info`                |True or False   |
+|`TG_UPLOAD_API_ID`              |`--api_id`              |Same as flag    |
+|`TG_UPLOAD_API_HASH`            |`--api_hash`            |Same as flag    |
+|`TG_UPLOAD_PHONE`               |`--phone`               |Same as flag    |
+|`TG_UPLOAD_HIDE_PSWD`           |`--hide_pswd`           |True or False   |
+|`TG_UPLOAD_BOT_TOKEN`           |`--bot`                 |Same as flag    |
+|`TG_UPLOAD_LOGOUT`              |`--logout`              |True or False   |
+|`TG_UPLOAD_SESSION_STRING`      |`--login_string`        |Same as flag    |
+|`TG_UPLOAD_EXPORT_STRING`       |`--export_string`       |True or False   |
+|`TG_UPLOAD_TMP_SESSION`         |`--tmp_session`         |True or False   |
+|`TG_UPLOAD_LOGIN_ONLY`          |`--login_only`          |True or False   |
+|`TG_UPLOAD_PATH`                |`--path`                |Same as flag    |
+|`TG_UPLOAD_FILENAME`            |`--filename`            |Same as flag    |
+|`TG_UPLOAD_THUMB`               |`--thumb`               |Same as flag    |
+|`TG_UPLOAD_CAPTION`             |`--caption`             |Same as flag    |
+|`TG_UPLOAD_DURATION`            |`--duration`            |Same as flag    |
+|`TG_UPLOAD_CAPJSON`             |`--capjson`             |Same as flag    |
+|`TG_UPLOAD_CHAT_ID`             |`--chat_id`             |Same as flag    |
+|`TG_UPLOAD_AS_PHOTO`            |`--as_photo`            |True or False   |
+|`TG_UPLOAD_AS_VIDEO`            |`--as_video`            |True or False   |
+|`TG_UPLOAD_AS_AUDIO`            |`--as_audio`            |True or False   |
+|`TG_UPLOAD_AS_VOICE`            |`--as_voice`            |True or False   |
+|`TG_UPLOAD_AS_VIDEO_NOTE`       |`--as_video_note`       |True or False   |
+|`TG_UPLOAD_SPLIT`               |`--split`               |Same as flag    |
+|`TG_UPLOAD_REPLACE`             |`--replace`             |Separate both values using "," (comma).|
+|`TG_UPLOAD_DISABLE_STREAM`      |`--disable_stream`      |True or False   |
+|`TG_UPLOAD_SPOILER`             |`--spoiler`             |True or False   |
+|`TG_UPLOAD_PARSE_MODE`          |`--parse_mode`          |Same as flag    |
+|`TG_UPLOAD_DELETE_ON_DONE`      |`--delete_on_done`      |True or False   |
+|`TG_UPLOAD_WIDTH`               |`--width`               |Same as flag    |
+|`TG_UPLOAD_HEIGHT`              |`--height`              |Same as flag    |
+|`TG_UPLOAD_ARTIST`              |`--artist`              |Same as flag    |
+|`TG_UPLOAD_TITLE`               |`--title`               |Same as flag    |
+|`TG_UPLOAD_SILENT`              |`--silent`              |True or False   |
+|`TG_UPLOAD_RECURSIVE`           |`--recursive`           |True or False   |
+|`TG_UPLOAD_PREFIX`              |`--prefix`              |Same as flag    |
+|`TG_UPLOAD_HASH_MEMORY_LIMIT`   |`--hash_memory_limit`   |Same as flag    |
+|`TG_UPLOAD_COMBINE_MEMORY_LIMIT`|`--combine_memory_limit`|Same as flag    |
+|`TG_UPLOAD_NO_WARN`             |`--no_warn`             |True or False   |
+|`TG_UPLOAD_NO_UPDATE`           |`--no_update`           |True or False   |
+|`TG_UPLOAD_DEVICE_MODEL`        |`--device_model`        |Same as flag    |
+|`TG_UPLOAD_SYSTEM_VERSION`      |`--system_version`      |Same as flag    |
 
 User can set as many variables as it want in any order and can temporary overwrite variable's value by passing the new value using its associated flag.
 
