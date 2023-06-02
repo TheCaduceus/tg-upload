@@ -48,7 +48,7 @@ parser.add_argument("--duration", metavar="TG_UPLOAD_DURATION", default=int(env.
 parser.add_argument("--capjson", metavar="TG_UPLOAD_CAPJSON", default=env.get("TG_UPLOAD_CAPJSON", None), help="Caption name (in caption.json) to attach with given file(s).")
 
 # BEHAVIOUR FLAGS
-parser.add_argument("-c","--chat_id", metavar="TG_UPLOAD_CHAT_ID", default=env.get("TG_UPLOAD_CHAT_ID", None) , help="Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.")
+parser.add_argument("-c","--chat_id", metavar="TG_UPLOAD_CHAT_ID", default=env.get("TG_UPLOAD_CHAT_ID", "me") , help="Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.")
 parser.add_argument("--as_photo", default=env.get("TG_UPLOAD_AS_PHOTO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as picture.")
 parser.add_argument("--as_video", default=env.get("TG_UPLOAD_AS_VIDEO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as video.")
 parser.add_argument("--as_audio", default=env.get("TG_UPLOAD_AS_AUDIO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as audio.")
@@ -67,10 +67,13 @@ parser.add_argument("-t","--title", metavar="TG_UPLOAD_TITLE", default=env.get("
 parser.add_argument("-s","--silent", default=env.get("TG_UPLOAD_SILENT", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send files silently to given chat.")
 parser.add_argument("-r","--recursive", default=env.get("TG_UPLOAD_RECURSIVE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Upload files recursively if path is a folder.")
 parser.add_argument("--prefix", metavar="TG_UPLOAD_PREFIX", default=env.get("TG_UPLOAD_PREFIX", None), help="Add given prefix text to each filename (prefix + filename) before upload.")
+parser.add_argument("-g","--hash_memory_limit", metavar="TG_UPLOAD_HASH_MEMORY_LIMIT", type=int, default=int(env.get("TG_UPLOAD_HASH_MEMORY_LIMIT", 1000000)), help="Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.")
+parser.add_argument("-f","--combine_memory_limit", metavar="TG_UPLOAD_COMBINE_MEMORY_LIMIT", type=int, default=int(env.get("TG_UPLOAD_COMBINE_MEMORY_LIMIT", 1000000)), help="Limit how much memory should be used to combine files in bytes, by default to 1 MB.")
 parser.add_argument("--no_warn", default=env.get("TG_UPLOAD_NO_WARN", "False").lower() in {"true", "t", "1"}, action="store_true", help="Don't show warning messages.")
 parser.add_argument("--no_update", default=env.get("TG_UPLOAD_NO_UPDATE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Disable checking for updates.")
 
 # UTILITY FLAGS
+parser.add_argument("--env", action="store_true", help="Display environment variables, their current value and default value in tabular format.")
 parser.add_argument("--file_info", help="Show basic file information.")
 parser.add_argument("--hash", help="Calculate & display hash of given file.")
 parser.add_argument("--split_file", type=int, help="Split file in given byte, accepts only size & requires path using path flag.")
@@ -109,7 +112,7 @@ def file_info(file_path, caption_text):
       file_sha256 = hashlib.sha256()
       file_md5 = hashlib.md5()
       while True:
-        chunk = f.read(4096)
+        chunk = f.read(args.hash_memory_limit)
         if not chunk:
           break
         file_sha256.update(chunk)
@@ -124,7 +127,7 @@ def file_info(file_path, caption_text):
       bytes_read = 0
       file_sha256 = hashlib.sha256()
       while True:
-        chunk = f.read(4096)
+        chunk = f.read(args.hash_memory_limit)
         if not chunk:
           break
         file_sha256.update(chunk)
@@ -138,7 +141,7 @@ def file_info(file_path, caption_text):
       bytes_read = 0
       file_md5 = hashlib.md5()
       while True:
-        chunk = f.read(4096)
+        chunk = f.read(args.hash_memory_limit)
         if not chunk:
           break
         file_md5.update(chunk)
@@ -201,7 +204,7 @@ if args.combine:
     for file_path in args.combine:
       with open(file_path, 'rb') as cf:
         while True:
-          chunk = cf.read(1024 * 1024)
+          chunk = cf.read(args.combine_memory_limit)
           if not chunk:
             break
           f.write(chunk)
@@ -234,6 +237,56 @@ elif args.file_info:
   file_size,_,_, creation_time, modification_time = file_info(args.file_info, "")
   print(f"File Name:\n{PurePath(args.file_info).name}\n\nSize(s):\n{file_size / (1024 * 1024 * 1024):.2f}GB\n{file_size / (1024 * 1024):.2f}MB\n{file_size / 1024 :.2f}KB\n{file_size}B\n\nCreation Date (Time):\n{creation_time[2]}.{creation_time[1]}.{creation_time[0]} ({creation_time[3]}:{creation_time[4]}:{creation_time[5]})\n\nModification Date (Time):\n{modification_time[2]}.{modification_time[1]}.{modification_time[0]} ({modification_time[3]}:{modification_time[4]}:{modification_time[5]})")
   exit()
+elif args.env:
+  from prettytable import PrettyTable
+  table = PrettyTable(["ENV VARIABLE", "FLAG","CURRENT VALUE", "DEFAULT VALUE"])
+  table.add_row(["TG_UPLOAD_IPV6", "--ipv6", env.get("TG_UPLOAD_IPV6"), False])
+  table.add_row(["TG_UPLOAD_PROXY", "--proxy", env.get("TG_UPLOAD_PROXY"), None])
+  table.add_row(["TG_UPLOAD_PROFILE", "--profile", env.get("TG_UPLOAD_PROFILE"), None])
+  table.add_row(["TG_UPLOAD_INFO", "--info", env.get("TG_UPLOAD_INFO"), False])
+  table.add_row(["TG_UPLOAD_API_ID", "--api_id", env.get("TG_UPLOAD_API_ID"), None])
+  table.add_row(["TG_UPLOAD_API_HASH", "--api_hash", env.get("TG_UPLOAD_API_HASH"), None])
+  table.add_row(["TG_UPLOAD_PHONE", "--phone", env.get("TG_UPLOAD_PHONE"), None])
+  table.add_row(["TG_UPLOAD_HIDE_PSWD", "--hide_pswd", env.get("TG_UPLOAD_HIDE_PSWD"), False])
+  table.add_row(["TG_UPLOAD_BOT_TOKEN", "--bot", env.get("TG_UPLOAD_BOT_TOKEN"), None])
+  table.add_row(["TG_UPLOAD_LOGOUT", "--logout", env.get("TG_UPLOAD_LOGOUT"), False])
+  table.add_row(["TG_UPLOAD_SESSION_STRING", "--login_string", env.get("TG_UPLOAD_SESSION_STRING"), None])
+  table.add_row(["TG_UPLOAD_EXPORT_STRING", "--export_string", env.get("TG_UPLOAD_EXPORT_STRING"), False])
+  table.add_row(["TG_UPLOAD_TMP_SESSION", "--tmp_session", env.get("TG_UPLOAD_TMP_SESSION"), False])
+  table.add_row(["TG_UPLOAD_LOGIN_ONLY", "--login_only", env.get("TG_UPLOAD_LOGIN_ONLY"), False])
+  table.add_row(["TG_UPLOAD_PATH", "--path", env.get("TG_UPLOAD_PATH"), None])
+  table.add_row(["TG_UPLOAD_FILENAME", "--filename", env.get("TG_UPLOAD_FILENAME"), None])
+  table.add_row(["TG_UPLOAD_THUMB", "--thumb", env.get("TG_UPLOAD_THUMB"), None])
+  table.add_row(["TG_UPLOAD_CAPTION", "--caption", env.get("TG_UPLOAD_CAPTION"), None])
+  table.add_row(["TG_UPLOAD_DURATION", "--duration", env.get("TG_UPLOAD_DURATION"), 0])
+  table.add_row(["TG_UPLOAD_CAPJSON", "--capjson", env.get("TG_UPLOAD_CAPJSON"), None])
+  table.add_row(["TG_UPLOAD_CHAT_ID", "--chat_id", env.get("TG_UPLOAD_CHAT_ID"), "me"])
+  table.add_row(["TG_UPLOAD_AS_PHOTO", "--as_photo", env.get("TG_UPLOAD_AS_PHOTO"), False])
+  table.add_row(["TG_UPLOAD_AS_VIDEO", "--as_video", env.get("TG_UPLOAD_AS_VIDEO"), False])
+  table.add_row(["TG_UPLOAD_AS_AUDIO", "--as_audio", env.get("TG_UPLOAD_AS_AUDIO"), False])
+  table.add_row(["TG_UPLOAD_AS_VOICE", "--as_voice", env.get("TG_UPLOAD_AS_VOICE"), False])
+  table.add_row(["TG_UPLOAD_AS_VIDEO_NOTE", "--as_video_note", env.get("TG_UPLOAD_AS_VIDEO_NOTE"), False])
+  table.add_row(["TG_UPLOAD_SPLIT", "--split", env.get("TG_UPLOAD_SPLIT"), 0])
+  table.add_row(["TG_UPLOAD_REPLACE", "--replace", env.get("TG_UPLOAD_REPLACE"), None])
+  table.add_row(["TG_UPLOAD_DISABLE_STREAM", "--disable_stream", env.get("TG_UPLOAD_DISABLE_STREAM"), False])
+  table.add_row(["TG_UPLOAD_SPOILER", "--spoiler", env.get("TG_UPLOAD_SPOILER"), False])
+  table.add_row(["TG_UPLOAD_PARSE_MODE", "--parse_mode", env.get("TG_UPLOAD_PARSE_MODE"), "DEFAULT"])
+  table.add_row(["TG_UPLOAD_DELETE_ON_DONE", "--delete_on_done", env.get("TG_UPLOAD_DELETE_ON_DONE"), False])
+  table.add_row(["TG_UPLOAD_WIDTH", "--width", env.get("TG_UPLOAD_WIDTH"), 1280])
+  table.add_row(["TG_UPLOAD_HEIGHT", "--height", env.get("TG_UPLOAD_HEIGHT"), 552])
+  table.add_row(["TG_UPLOAD_ARTIST", "--artist", env.get("TG_UPLOAD_ARTIST"), None])
+  table.add_row(["TG_UPLOAD_TITLE", "--title", env.get("TG_UPLOAD_TITLE"), None])
+  table.add_row(["TG_UPLOAD_SILENT", "--silent", env.get("TG_UPLOAD_SILENT"), False])
+  table.add_row(["TG_UPLOAD_RECURSIVE", "--recursive", env.get("TG_UPLOAD_RECURSIVE"), False])
+  table.add_row(["TG_UPLOAD_PREFIX", "--prefix", env.get("TG_UPLOAD_PREFIX"), None])
+  table.add_row(["TG_UPLOAD_HASH_MEMORY_LIMIT", "--hash_memory_limit", env.get("TG_UPLOAD_HASH_MEMORY_LIMIT"), 1000000])
+  table.add_row(["TG_UPLOAD_COMBINE_MEMORY_LIMIT", "--combine_memory_limit", env.get("TG_UPLOAD_COMBINE_MEMORY_LIMIT"), 1000000])
+  table.add_row(["TG_UPLOAD_NO_WARN", "--no_warn", env.get("TG_UPLOAD_NO_WARN"), False])
+  table.add_row(["TG_UPLOAD_NO_UPDATE", "--no_update", env.get("TG_UPLOAD_NO_UPDATE"), False])
+  table.add_row(["TG_UPLOAD_DEVICE_MODEL", "--device_model", env.get("TG_UPLOAD_DEVICE_MODEL"), "tg-upload"])
+  table.add_row(["TG_UPLOAD_SYSTEM_VERSION", "--system_version", env.get("TG_UPLOAD_SYSTEM_VERSION"), f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"])
+  exit(table)
+
 elif not args.profile:
   exit("Error: No session name (--profile) passed to start client with.")
 
