@@ -1,4 +1,5 @@
 pyrogram==2.0.106
 tgcrypto==1.2.5
 pillow==9.5.0
+prettytable==3.7.0
 httpx
