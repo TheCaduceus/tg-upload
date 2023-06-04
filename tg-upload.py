@@ -188,7 +188,7 @@ def upload_progress(current,total):
   print(f"\rUP: [{filename}] - {current/total*100:.2f}% | {upload_speed:.2f}MB/s", end="")
 
 def get_chatid(raw_id):
-  raw_id = raw_id.lstrip()
+  raw_id = raw_id.replace(" ","")
   if raw_id[0] == '-' and raw_id[1:].isdigit():
     return int(raw_id)
   elif raw_id.isdigit():
