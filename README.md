@@ -1,6 +1,6 @@
 <div align="center">
 <h1>📦tg-upload</h1>
-<b>An open-source Python program or a CLI Tool to upload files/folder to Telegram effortlessly.</b>
+<b>An open-source Python program or a CLI Tool to upload/download files/folder to/from Telegram effortlessly.</b>
 </div><br>
 
 <div align="center">
@@ -18,8 +18,9 @@
   * [Login](#flag-2)
   * [File](#flag-3)
   * [Behaviour](#flag-4)
-  * [Utility](#flag-5)
-  * [Misc](#flag-6)
+  * [Download](#flag-5)
+  * [Utility](#flag-6)
+  * [Misc](#flag-7)
 * [**📝 ENV Variables**](#env)
 * [**🕹️ How to use?**](#how-to-use)
   * [Get API ID & HASH](#htu-1)
@@ -186,7 +187,7 @@ Behaviour flags controls the behaviour of transmission.
 -t,--title - Set title of given audio file
 -s,--silent - Send files silently to given chat.
 -r,--recursive - Upload files recursively if path is a folder.
---prefix - Add given prefix text to each filename (prefix + filename) before upload.
+--prefix - Add given prefix text to each filename (prefix + filename).
 --hash_memory_limit - Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.
 --combine_memory_limit - Limit how much memory should be used to combine files in bytes, by default to 1 MB.
 --no_warn - Don't show warning messages.
@@ -194,7 +195,26 @@ Behaviour flags controls the behaviour of transmission.
 ```
 <a name="flag-5"></a>
 
-**5.UTILITY FLAGS:**
+**5.DOWNLOAD FLAGS:**
+
+List of flags that are usable with tg-upload's download module, while flags with "(common)" tag are usable with both upload & download task.
+
+```
+--dl - Enable download module of tg-upload.
+--links - Telegram file links to be downloaded (separated with space).
+--txt_file - .txt file path containing telegram file links to be downloaded (1 link / line).
+--range - Find and download messages in between of two given links of same chat.
+--chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
+--msg_id - Identity number of message which needs to be downloaded.
+--filename (common) - To download data with custom name.
+--replace (common) - Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.
+--prefix (common) - Add given prefix text to each filename (prefix + filename).
+--dl_dir - Change the download directory, by default 'downloads' in current working directory.
+```
+
+<a name="flag-6"></a>
+
+**6.UTILITY FLAGS:**
 
 Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (`--profile`) to call them.
 
@@ -207,9 +227,9 @@ Utility flags provides an easy way to directly use internal functions used by tg
 --convert - Convert any image into JPEG format.
 ```
 
-<a name="flag-6"></a>
+<a name="flag-7"></a>
 
-**6.MISC FLAGS:**
+**7.MISC FLAGS:**
 
 Flags that does not fit in above categories are listed in this category:
 
@@ -273,6 +293,12 @@ Flags that does not fit in above categories are listed in this category:
 |`TG_UPLOAD_COMBINE_MEMORY_LIMIT`|`--combine_memory_limit`|Same as flag    |
 |`TG_UPLOAD_NO_WARN`             |`--no_warn`             |True or False   |
 |`TG_UPLOAD_NO_UPDATE`           |`--no_update`           |True or False   |
+|`TG_UPLOAD_DL`                  |`--dl`                  |True or False   |
+|`TG_UPLOAD_LINKS`               |`--links`               |Same as flag    |
+|`TG_UPLOAD_TXT_FILE`            |`--txt_file`            |Same as flag    |
+|`TG_UPLOAD_RANGE`               |`--range`               |True or False   |
+|`TG_UPLOAD_MSG_ID`              |`--msg_id`              |Same as flag    |
+|`TG_UPLOAD_DL_DIR`              |`--dl_dir`              |Same as flag    |
 |`TG_UPLOAD_DEVICE_MODEL`        |`--device_model`        |Same as flag    |
 |`TG_UPLOAD_SYSTEM_VERSION`      |`--system_version`      |Same as flag    |
 
@@ -313,6 +339,12 @@ Upload files/folder:
 
 ```
 python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
+```
+
+Download files:
+
+```
+python tg-upload.py --profile VALUE --dl --links LINK...  --OTHER OPTIONAL FLAGS
 ```
 
 Check versions:
@@ -451,8 +483,14 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
 
 **1.File size:**
 
+*Upload Limit:*
+
 - 2GB for bots & freemium users.
 - 4GB for premium users.
+
+*Download Limit:*
+
+- 4GB for all users & bots.
 
 To upload larger files, use `--split` flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use `--combine` flag and tg-upload will restore original file for you (remember to provide part file paths in ordered form 0,1,2,3...).
 
@@ -488,13 +526,15 @@ No, split & combine flags NEVER causes file corruption until its user side mista
 
 Yes, some file extensions like .txt, .csv, .json etc are still usable in their splitted forms while some file extensions like .mkv, .exe, .mp3 etc are NOT usable until we combine them back.
 
-**4.For me upload speed is slow?**
+**4.For me upload/download speed is slow?**
 
-In many cases, users expect speed in mbps while tg-upload shows upload speed in MB/s where MB/s > mbps and this is where users get confused.
+In many cases, users expect speed in mbps while tg-upload shows upload/download speed in MB/s where MB/s > mbps and this is where users get confused.
 
-In fact, tg-upload have nothing to do with upload speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check code to understand it in more better way.
+In fact, tg-upload have nothing to do with upload/download speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check code to understand it in more better way.
 
-**5.How tg-upload able to upload larger files (upto 2GB) using bot profiles while Bot API limit it to just 50MB?**
+For increasing download speed, you must subscribe to Telegram premium to remove the speed limit imposed by Telegram for freemium users.
+
+**5.How tg-upload able to upload/download larger files (upto 2GB & 4GB) using bot profiles while Bot API limit it to just 50MB & 20MB?**
 
 Its simple! tg-upload never make use of Bot API server which works as intermediate server to communicate with Telegram's MTProto while tg-upload directly uses MTProto API making it even more faster.
 

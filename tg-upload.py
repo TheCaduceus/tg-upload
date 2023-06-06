@@ -11,13 +11,13 @@ from os import environ as env
 import argparse
 import hashlib
 
-tg_upload = "1.0.7"
+tg_upload = "1.0.8"
 json_endpoint = "https://cdn.thecaduceus.eu.org/tg-upload/release.json"
 
 parser = argparse.ArgumentParser(
   prog="tg-upload.py",
   usage="To perform any task listed below, you will need to create or use a new/existing session.\nEach new/existing session can be accessed by its name provided using the --profile flag.\n\nYou don't need to provide API_ID, API_HASH, phone number or bot token etc to perform any task again & again!\nOnce you successfully login & created a session then you just need to provide its name using --profile flag and you will be logged in without any authentication flow (until you terminate the session using Telegram).",
-  description="An open-source Python program to upload files/folder to Telegram effortlessly.",
+  description="An open-source Python program to upload/download files/folder to/from Telegram effortlessly.",
   epilog="An open-source program developed by Dr.Caduceus (GitHub.com/TheCaduceus)"
   )
 
@@ -41,14 +41,14 @@ parser.add_argument("--login_only", default=env.get("TG_UPLOAD_LOGIN_ONLY", "Fal
 
 # FILE FLAGS
 parser.add_argument("-l","--path", metavar="TG_UPLOAD_PATH", default=env.get("TG_UPLOAD_PATH", None), help="Path to the file or folder to upload.")
-parser.add_argument("-n","--filename", metavar="TG_UPLOAD_FILENAME", default=env.get("TG_UPLOAD_FILENAME", None), help="To upload data with custom name.")
+parser.add_argument("-n","--filename", metavar="TG_UPLOAD_FILENAME", default=env.get("TG_UPLOAD_FILENAME", None), help="To upload/download data with custom name.")
 parser.add_argument("-i","--thumb", metavar="TG_UPLOAD_THUMB", default=env.get("TG_UPLOAD_THUMB", None), help="Path of thumbnail image to be attached with given file.")
 parser.add_argument("-z","--caption", metavar="TG_UPLOAD_CAPTION", default=env.get("TG_UPLOAD_CAPTION", ""), help="Caption text to be attached with file(s), markdown & HTML formatting allowed.")
 parser.add_argument("--duration", metavar="TG_UPLOAD_DURATION", default=int(env.get("TG_UPLOAD_DURATION", 0)), type=int, help="Duration of sent media in seconds.")
 parser.add_argument("--capjson", metavar="TG_UPLOAD_CAPJSON", default=env.get("TG_UPLOAD_CAPJSON", None), help="Caption name (in caption.json) to attach with given file(s).")
 
 # BEHAVIOUR FLAGS
-parser.add_argument("-c","--chat_id", metavar="TG_UPLOAD_CHAT_ID", default=env.get("TG_UPLOAD_CHAT_ID", "me") , help="Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.")
+parser.add_argument("-c","--chat_id", metavar="TG_UPLOAD_CHAT_ID", default=env.get("TG_UPLOAD_CHAT_ID", "me") , help="Identity of chat to send/download the file to/from? can be username, phone number (international format) or Identity number, by default to Saved Messages.")
 parser.add_argument("--as_photo", default=env.get("TG_UPLOAD_AS_PHOTO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as picture.")
 parser.add_argument("--as_video", default=env.get("TG_UPLOAD_AS_VIDEO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as video.")
 parser.add_argument("--as_audio", default=env.get("TG_UPLOAD_AS_AUDIO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as audio.")
@@ -66,11 +66,19 @@ parser.add_argument("-a","--artist", metavar="TG_UPLOAD_ARTIST", default=env.get
 parser.add_argument("-t","--title", metavar="TG_UPLOAD_TITLE", default=env.get("TG_UPLOAD_TITLE", None), help="Set title of given audio file.")
 parser.add_argument("-s","--silent", default=env.get("TG_UPLOAD_SILENT", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send files silently to given chat.")
 parser.add_argument("-r","--recursive", default=env.get("TG_UPLOAD_RECURSIVE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Upload files recursively if path is a folder.")
-parser.add_argument("--prefix", metavar="TG_UPLOAD_PREFIX", default=env.get("TG_UPLOAD_PREFIX", None), help="Add given prefix text to each filename (prefix + filename) before upload.")
+parser.add_argument("--prefix", metavar="TG_UPLOAD_PREFIX", default=env.get("TG_UPLOAD_PREFIX", None), help="Add given prefix text to each filename (prefix + filename).")
 parser.add_argument("-g","--hash_memory_limit", metavar="TG_UPLOAD_HASH_MEMORY_LIMIT", type=int, default=int(env.get("TG_UPLOAD_HASH_MEMORY_LIMIT", 1000000)), help="Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.")
 parser.add_argument("-f","--combine_memory_limit", metavar="TG_UPLOAD_COMBINE_MEMORY_LIMIT", type=int, default=int(env.get("TG_UPLOAD_COMBINE_MEMORY_LIMIT", 1000000)), help="Limit how much memory should be used to combine files in bytes, by default to 1 MB.")
 parser.add_argument("--no_warn", default=env.get("TG_UPLOAD_NO_WARN", "False").lower() in {"true", "t", "1"}, action="store_true", help="Don't show warning messages.")
 parser.add_argument("--no_update", default=env.get("TG_UPLOAD_NO_UPDATE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Disable checking for updates.")
+
+# DOWNLOAD FLAGS
+parser.add_argument("--dl", default=env.get("TG_UPLOAD_DL", "False").lower() in {"true", "t", "1"}, action="store_true", help="Enable download module of tg-upload.")
+parser.add_argument("--links", metavar="TG_UPLOAD_LINKS", nargs="+", type=str, default=env.get("TG_UPLOAD_LINKS", []), help="Telegram file links to be downloaded (separated with space).")
+parser.add_argument("--txt_file", metavar="TG_UPLOAD_TXT_FILE", default=env.get("TG_UPLOAD_TXT_FILE", None), help=".txt file path containing telegram file links to be downloaded (1 link / line).")
+parser.add_argument("--range", default=env.get("TG_UPLOAD_RANGE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Find and download messages in between of two given links of same chat.")
+parser.add_argument("--msg_id", metavar="TG_UPLOAD_MSG_ID", type=int, default=env.get("TG_UPLOAD_MSG_ID", None), help="Identity number of message which needs to be downloaded.")
+parser.add_argument("--dl_dir", metavar="TG_UPLOAD_DL_DIR", default=env.get("TG_UPLOAD_DL_DIR", None), help="Change the download directory, by default 'downloads' in current working directory.")
 
 # UTILITY FLAGS
 parser.add_argument("--env", action="store_true", help="Display environment variables, their current value and default value in tabular format.")
@@ -102,6 +110,17 @@ if not args.no_update:
       print(f"[NOTICE] - {release_json['releaseSpecificNotice'][tg_upload]}\n")
   except Exception:
     print("[UPDATE] - Failed to check for latest version.")
+
+def validate_link(link):
+	link_parts = link.replace(" ", "").split('/')
+	if 'https:' not in link_parts and 'http:' not in link_parts:
+		exit("Error: Link should contain 'https://' or 'http://'.")
+	elif "t.me" not in link_parts:
+		exit("Error: Link should use t.me as domain.")
+	chat_id = int(f"-100{link_parts[4]}") if 'c' in link_parts else link_parts[3]
+	msg_id = int(link_parts[-1])
+	
+	return chat_id, msg_id
 
 def file_info(file_path, caption_text):
   file_size = Path(file_path).stat().st_size
@@ -182,13 +201,18 @@ def split_file(file_path, chunk_size, file_name):
       print(f"\rSPLIT: [{file_name}] - {progress:.2f}%", end="")
       yield chunk_file_path, chunk_file_name
 
+def download_progress(current,total):
+	elapsed_time = time() - start_time
+	dl_speed = current / elapsed_time / 1024 / 1024
+	print(f"\rDL: [{filename}] - {filesize:.2f}MB | {current/total*100:.2f}% | {dl_speed:.2f}MB/s", end="")
+
 def upload_progress(current,total):
   elapsed_time = time() - start_time
   upload_speed = current / elapsed_time / 1024 / 1024
   print(f"\rUP: [{filename}] - {current/total*100:.2f}% | {upload_speed:.2f}MB/s", end="")
 
 def get_chatid(raw_id):
-  raw_id = raw_id.lstrip()
+  raw_id = raw_id.replace(" ", "")
   if raw_id[0] == '-' and raw_id[1:].isdigit():
     return int(raw_id)
   elif raw_id.isdigit():
@@ -283,6 +307,12 @@ elif args.env:
   table.add_row(["TG_UPLOAD_COMBINE_MEMORY_LIMIT", "--combine_memory_limit", env.get("TG_UPLOAD_COMBINE_MEMORY_LIMIT"), 1000000])
   table.add_row(["TG_UPLOAD_NO_WARN", "--no_warn", env.get("TG_UPLOAD_NO_WARN"), False])
   table.add_row(["TG_UPLOAD_NO_UPDATE", "--no_update", env.get("TG_UPLOAD_NO_UPDATE"), False])
+  table.add_row(["TG_UPLOAD_DL", "--dl", env.get("TG_UPLOAD_DL"), False])
+  table.add_row(["TG_UPLOAD_LINKS", "--links", env.get("TG_UPLOAD_LINKS"), None])
+  table.add_row(["TG_UPLOAD_TXT_FILE", "--txt_file", env.get("TG_UPLOAD_TXT_FILE"), None])
+  table.add_row(["TG_UPLOAD_RANGE", "--range", env.get("TG_UPLOAD_RANGE", False)])
+  table.add_row(["TG_UPLOAD_MSG_ID", "--msg_id", env.get("TG_UPLOAD_MSG_ID"), None])
+  table.add_row(["TG_UPLOAD_DL_DIR", "--dl_dir", env.get("TG_UPLOAD_DL_DIR"), None])
   table.add_row(["TG_UPLOAD_DEVICE_MODEL", "--device_model", env.get("TG_UPLOAD_DEVICE_MODEL"), "tg-upload"])
   table.add_row(["TG_UPLOAD_SYSTEM_VERSION", "--system_version", env.get("TG_UPLOAD_SYSTEM_VERSION"), f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"])
   exit(table)
@@ -312,7 +342,7 @@ elif not args.api_id or not args.api_hash:
   if not Path(f'{args.profile}.session').exists() and not args.login_string:
     raise ValueError("Given profile is not yet initialized! provide API_ID and API_HASH to initialize.")
 
-from pyrogram import Client, enums
+from pyrogram import Client, enums, errors, filters
 
 if args.phone:
   client = Client(
@@ -360,253 +390,436 @@ with client:
   elif args.logout:
     client.log_out()
     exit(f"Terminated [{args.profile}]")
-  elif not args.path and not args.info:
-    exit("Error: Path is not provided.")
-
-  chat_id = get_chatid(args.chat_id) if args.chat_id else "me"
-
-  if args.thumb:
-    if PurePath(args.thumb).suffix not in ['.jpg','jpeg']:
-      thumbname = PurePath(args.thumb).stem
-      jpg_path = f"{thumbname}.jpg"
-      print(f"CONVERT: {PurePath(args.thumb).name} -> {jpg_path}")
-      Image.open(args.thumb).convert('RGB').save(jpg_path)
-      args.thumb = jpg_path
-
-  parse_mode = enums.ParseMode.DEFAULT
-
-  if args.capjson:
-    if not Path("caption.json").exists():
-      raise FileNotFoundError("Not found: caption.json [file].")
-    with open("caption.json", "r") as caption_json:
-      try:
-        _caption = json_load(caption_json)[args.capjson]
-      except KeyError:
-        exit(f"Error: Not found {args.capjson} in caption.json file, please check caption.json and ensure that everything is in correct format.")
-
-    # Get text & parse mode
-    try:
-      caption = _caption["text"]
-      parse_mode = _caption["mode"]
-    except KeyError as error_code:
-      exit(f"Error: An error occured while reading json.\n{error_code}")
-    
-    if parse_mode.lower() == "html":
-      parse_mode = enums.ParseMode.HTML
-    elif parse_mode.lower() == "markdown":
-      parse_mode = enums.ParseMode.MARKDOWN
-    elif parse_mode.lower() == "disabled":
-      parse_mode = enums.ParseMode.DISABLED
-  elif args.caption:
-    caption = args.caption
-    if args.parse_mode:
-      if args.parse_mode.lower() == "html":
-        parse_mode = enums.ParseMode.HTML
-      elif args.parse_mode.lower() == "markdown":
-        parse_mode = enums.ParseMode.MARKDOWN
-      elif args.parse_mode.lower() == "disabled":
-        parse_mode = enums.ParseMode.DISABLED
-  else:
-    caption = ""
-
-  if args.info:
+  elif args.info:
     try:
       print(client.get_me())
     except Exception as error_code:
       print(f"\nAn error occured!\n{error_code}")
-  elif args.as_photo:
-    if Path(args.path).is_file():
-      try:
-        filename = PurePath(args.path).name
-        file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
-        start_time = time()
-        client.send_photo(chat_id, args.path, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
-        Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
-      except Exception as error_code:
-        print(f"\nAn error occured!\n{error_code}")
-    elif Path(args.path).is_dir():
-      print("discovering paths...")
-      for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
-        filename = PurePath(_path).name
-        if Path(_path).is_file():
+  elif args.dl:
+    if args.txt_file:
+      if not Path(args.txt_file).exists() or not Path(args.txt_file).is_file():
+        exit("Error: Given txt file path is invalid.")
+      with open(args.txt_file, 'r') as txt_file:
+        args.links = txt_file.readlines()
+
+    if args.links and len(args.links) != 0:
+      if args.range:
+        _chat_id , _message_id = validate_link(args.links[0])
+        __chat_id, __message_id = validate_link(args.links[1])
+
+        if _chat_id != __chat_id:
+          exit("Error: Chat ID of both the links should be same.")
+        elif _message_id == __message_id:
+          exit("Error: Message ID of both links should be different.")
+        message_ids = range(_message_id,__message_id+1) if _message_id < __message_id else range(__message_id,_message_id+1)
+
+        for message_id in message_ids:
           try:
-            file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
-            start_time = time()
-            client.send_photo(chat_id, _path, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
-            Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
-          except Exception as error_code:
-            print(f"\nAn error occured!\n{error_code}")
-        else:
-          print(f"[Dir] -> {PurePath(_path).name}")
-  elif args.as_video:
-    if Path(args.path).is_file():
-      try:
-        filename = args.filename or PurePath(args.path).name
-        if args.prefix:
-          filename = args.prefix + filename
-        if args.replace:
-          filename = filename.replace(args.replace[0], args.replace[1])
-        file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
-        start_time = time()
-        client.send_video(chat_id, args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
-        Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
-      except Exception as error_code:
-        print(f"\nAn error occured!\n{error_code}")
-    elif Path(args.path).is_dir():
-      print("discovering paths...")
-      for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
-        if Path(_path).is_file():
+            message = client.get_messages(_chat_id, message_id)
+          except ValueError: # Chat ID or Message ID is not valid
+            print(f"\nMessage ID not found: {message_id}")
+            continue
+
+          if message.video:
+            filename = message.video.file_name
+            filesize = message.video.file_size / 1024 / 1024
+            if filename == None:
+              if message.video.mime_type == 'video/mp4':
+                filename = f"VID_{message.video.file_id}.mp4"
+              elif message.video.mime_type == 'video/x-matroska':
+                filename = f"VID_{message.video.file_id}.mkv"
+              else:
+                filename = f"VID_{message.video.file_id}.{message.video.mime_type.split('/')[-1]}"
+          elif message.document:
+            filename = message.document.file_name
+            filesize = message.document.file_size / 1024 / 1024
+          elif message.sticker:
+            filename = message.sticker.file_name
+            filesize = message.sticker.file_size / 1024 / 1024
+          elif message.animation:
+            filename = message.animation.file_name
+            filesize = message.animation.file_size / 1024 / 1024
+          elif message.audio:
+            filename = message.audio.file_name
+            filesize = message.audio.file_size / 1024 / 1024
+          elif message.photo:
+            filename = f"IMG_{message.photo.file_id}.jpg"
+            filesize = message.photo.file_size / 1024 / 1024
+          else:
+            filename = "unknown_{message.id}"
+            filesize = 0
+          
+          if args.filename:
+            filename = args.filename
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          if args.dl_dir:
+            dl_dir = PurePath(args.dl_dir)
+            filename = f"{dl_dir}/{filename}"
+
+          start_time = time()
           try:
-            filename = PurePath(_path).name
-            if args.prefix:
-              filename = args.prefix + filename
-            if args.replace:
-              filename = filename.replace(args.replace[0], args.replace[1])
-            file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
-            start_time = time()
-            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
-            Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
+            client.download_media(message, progress=download_progress, file_name=filename)
+          except ValueError: # No downloadable file in message
+            print(f"\nNo Media: MSG_{message_id}")
           except Exception as error_code:
-            print(f"\nAn error occured!\n{error_code}")
-        else:
-          print(f"[Dir] -> {PurePath(_path).name}")
-  elif args.as_audio:
-    if Path(args.path).is_file():
-      try:
-        filename= args.filename or PurePath(args.path).name
-        if args.prefix:
-          filename = args.prefix + filename
-        if args.replace:
-          filename = filename.replace(args.replace[0], args.replace[1])
-        file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
-        start_time = time()
-        client.send_audio(chat_id, args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), performer=args.artist, title=args.title, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
-        Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
-      except Exception as error_code:
-        print(f"\nAn error occured!\n{error_code}")
-    elif Path(args.path).is_dir():
-      print("discovering paths...")
-      for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
-        if Path(_path).is_file():
+            print(f"\n{error_code}")
+      else:
+        for link in args.links:
+          chat_id, message_id = validate_link(link)
           try:
-            filename = PurePath(_path).name
-            if args.prefix:
-              filename = args.prefix + filename
-            if args.replace:
-              filename = filename.replace(args.replace[0], args.replace[1])
-            file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
-            start_time = time()
-            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), performer=args.artist, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
-            Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
-          except Exception as error_code:
-            print(f"\nAn error occured!\n{error_code}")
-        else:
-          print(f"[Dir] -> {PurePath(_path).name}")
-  elif args.as_voice:
-    if Path(args.path).is_file():
-      try:
-        filename = args.filename or PurePath(args.path).name
-        if args.prefix:
-          filename = args.prefix + filename
-        if args.replace:
-          filename = filename.replace(args.replace[0], args.replace[1])
-        file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
-        start_time = time()
-        client.send_voice(chat_id. args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), disable_notification=args.silent)
-        Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
-      except Exception as error_code:
-        print(f"\nAn error occured!\n{error_code}")
-    elif Path(args.path).is_dir():
-      print("discovering paths...")
-      for _path in Path(args.path).glob('**/*') if args.recursive else Path(args.path).glob("*"):
-        if Path(_path).is_file():
+            message = client.get_messages(chat_id, message_id)
+          except errors.exceptions.bad_request_400.ChannelInvalid:
+            print(f"Error: No access to {link}")
+            continue
+          except ValueError as error_code:
+            print(f"\n{error_code} - {link}")
+            continue
+
+          if message.video:
+            filename = message.video.file_name
+            filesize = message.video.file_size / 1024 / 1024
+            if filename == None:
+              if message.video.mime_type == 'video/mp4':
+                filename = f"VID_{message.video.file_id}.mp4"
+              elif message.video.mime_type == 'video/x-matroska':
+                filename = f"VID_{message.video.file_id}.mkv"
+              else:
+                filename = f"VID_{message.video.file_id}.{message.video.mime_type.split('/')[-1]}"
+          elif message.document:
+            filename = message.document.file_name
+            filesize = message.document.file_size / 1024 / 1024
+          elif message.sticker:
+            filename = message.sticker.file_name
+            filesize = message.sticker.file_size / 1024 / 1024
+          elif message.animation:
+            filename = message.animation.file_name
+            filesize = message.sticker.file_size / 1024 / 1024
+          elif message.audio:
+            filename = message.audio.file_name
+            filesize = message.audio.file_size / 1024 / 1024
+          elif message.photo:
+            filename = f"IMG_{message.photo.file_id}.jpg"
+            filesize = message.photo.file_size / 1024 / 1024
+          else:
+            filename = f"unknown_{message.id}"
+            filesize = 0
+          
+          if args.filename:
+            filename = args.filename
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          if args.dl_dir:
+            dl_dir = PurePath(args.dl_dir)
+            filename = f"{dl_dir}/{filename}"
+          
+          start_time = time()
           try:
-            filename = PurePath(_path).name
-            if args.prefix:
-              filename = args.prefix + filename
-            if args.replace:
-              filename = filename.replace(args.replace[0], args.replace[1])
-            file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
-            start_time = time()
-            client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), disable_notification=args.silent)
-            Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
-          except Exception as error_code:
-            print(f"\nAn error occured!\n{error_code}")
-        else:
-          print(f"[Dir] -> {PurePath(_path).name}")
-  elif args.as_video_note:
-    if Path(args.path).is_file():
+            client.download_media(message, progress=download_progress, file_name=filename)
+          except ValueError as error_code:
+            print(f"\n{error_code}  - {link}")
+    elif args.chat_id and args.msg_id:
+      args.chat_id = get_chatid(args.chat_id)
       try:
-        filename = args.filename or PurePath(args.path).name
-        if args.prefix:
-          filename = args.prefix + filename
-        if args.replace:
-          filename = filename.replace(args.replace[0], args.replace[1])
-        start_time = time()
-        client.send_video_note(chat_id, args.path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
-        Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
-      except Exception as error_code:
-        print(f"\nAn error occured!\n{error_code}")
-    elif Path(args.path).is_dir():
-      print("discovering paths...")
-      for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
-        if Path(_path).is_file():
-          try:
-            filename = PurePath(_path).name
-            if args.prefix:
-              filename = args.prefix + filename
-            if args.replace:
-              filename = filename.replace(args.replace[0], args.replace[1])
-            start_time = time()
-            client.send_video_note(chat_id, _path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
-            Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
-          except Exception as error_code:
-            print(f"\nAn error occured!\n{error_code}")
-        else:
-          print(f"[Dir] -> {PurePath(_path).name}")
+        message = client.get_messages(args.chat_id, args.msg_id)
+      except errors.exceptions.bad_request_400.ChannelInvalid:
+        exit(f"Error: No access to {args.chat_id}.")
+      except ValueError as error_code:
+        exit(f"\n{error_code} - {args.chat_id}")
+      
+      if message.video:
+        filename = message.video.file_name
+        filesize = message.video.file_size / 1024 / 1024
+        if filename == None:
+          if message.video.mime_type == 'video/mp4':
+            filename = f"VID_{message.video.file_id}.mp4"
+          elif message.video.mime_type == 'video/x-matroska':
+            filename = f"VID_{message.video.file_id}.mkv"
+          else:
+            filename = f"VID_{message.video.file_id}.{message.video.mime_type.split('/')[-1]}"
+      elif message.document:
+        filename = message.document.file_name
+        filesize = message.document.file_size / 1024 / 1024
+      elif message.sticker:
+        filename = message.sticker.file_name
+        filesize = message.sticker.file_size / 1024 / 1024
+      elif message.animation:
+        filename = message.animation.file_name
+        filesize = message.animation.file_size / 1024 / 1024
+      elif message.audio:
+        filename = message.audio.file_name
+        filesize = message.audio.file_size / 1024 / 1024
+      elif message.photo:
+        filename = f"IMG_{message.photo.file_id}.jpg"
+        filesize = message.photo.file_size / 1024 /1024
+      else:
+        filename = f"unknown_{message.id}"
+        filesize = 0
+      
+      if args.filename:
+        filename = args.filename
+      if args.prefix:
+        filename = args.prefix + filename
+      if args.replace:
+        filename = filename.replace(args.replace[0], args.replace[1])
+      if args.dl_dir:
+        dl_dir = PurePath(args.dl_dir)
+        filename = f"{dl_dir}/{filename}"
+      
+      start_time = time()
+      try:
+        client.download_media(message, progress=download_progress, file_name=filename)
+      except ValueError:
+        exit(f"\nError: No downloadable media found - {args.message_id}")
+    else:
+      exit("Error: No link provided to download.")
   else:
-    if Path(args.path).is_file():
+    if not args.path:
+      exit("Error: Path is not provided.")
+
+    chat_id = get_chatid(args.chat_id)
+
+    if args.thumb:
+      if PurePath(args.thumb).suffix not in ['.jpg','jpeg']:
+        thumbname = PurePath(args.thumb).stem
+        jpg_path = f"{thumbname}.jpg"
+        print(f"CONVERT: {PurePath(args.thumb).name} -> {jpg_path}")
+        Image.open(args.thumb).convert('RGB').save(jpg_path)
+        args.thumb = jpg_path
+
+    parse_mode = enums.ParseMode.DEFAULT
+
+    if args.capjson:
+      if not Path("caption.json").exists():
+        raise FileNotFoundError("Not found: caption.json [file].")
+      with open("caption.json", "r") as caption_json:
+        try:
+          _caption = json_load(caption_json)[args.capjson]
+        except KeyError:
+          exit(f"Error: Not found {args.capjson} in caption.json file, please check caption.json and ensure that everything is in correct format.")
+
+      # Get text & parse mode
       try:
-        filename = args.filename or PurePath(args.path).name
-        if args.prefix:
-          filename = args.prefix + filename
-        if args.replace:
-          filename = filename.replace(args.replace[0], args.replace[1])
-        if args.split and Path(args.path).stat().st_size > args.split and args.split != 0:
-          for _splitted_file, filename in split_file(args.path, args.split, filename):
-            file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
-            start_time = time()
-            client.send_document(chat_id, _splitted_file, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_splitted_file)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
-            Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
-        else:
+        caption = _caption["text"]
+        parse_mode = _caption["mode"]
+      except KeyError as error_code:
+        exit(f"Error: An error occured while reading json.\n{error_code}")
+      
+      if parse_mode.lower() == "html":
+        parse_mode = enums.ParseMode.HTML
+      elif parse_mode.lower() == "markdown":
+        parse_mode = enums.ParseMode.MARKDOWN
+      elif parse_mode.lower() == "disabled":
+        parse_mode = enums.ParseMode.DISABLED
+    elif args.caption:
+      caption = args.caption
+      if args.parse_mode:
+        if args.parse_mode.lower() == "html":
+          parse_mode = enums.ParseMode.HTML
+        elif args.parse_mode.lower() == "markdown":
+          parse_mode = enums.ParseMode.MARKDOWN
+        elif args.parse_mode.lower() == "disabled":
+          parse_mode = enums.ParseMode.DISABLED
+    else:
+      caption = ""
+
+    if args.as_photo:
+      if Path(args.path).is_file():
+        try:
+          filename = PurePath(args.path).name
           file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
           start_time = time()
-          client.send_document(chat_id, args.path, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
-        Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
-      except Exception as error_code:
-        print(f"\nAn error occured!\n{error_code}")
-    elif Path(args.path).is_dir():
-      print("discovering paths...")
-      for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
-        if Path(_path).is_file():
-          try:
-            filename = PurePath(_path).name
-            if args.prefix:
-              filename = args.prefix + filename
-            if args.replace:
-              filename = filename.replace(args.replace[0], args.replace[1])
-            if args.split and Path(_path).stat().st_size > args.split and args.split != 0:
-              for _splitted_file, filename in split_file(_path, args.split, filename):
-                file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
-                start_time = time()
-                client.send_document(chat_id, _splitted_file, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_splitted_file)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
-                Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
-            else:
+          client.send_photo(chat_id, args.path, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
+          Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
+        except Exception as error_code:
+          print(f"\nAn error occured!\n{error_code}")
+      elif Path(args.path).is_dir():
+        print("discovering paths...")
+        for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
+          filename = PurePath(_path).name
+          if Path(_path).is_file():
+            try:
               file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
               start_time = time()
-              client.send_document(chat_id, _path, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+              client.send_photo(chat_id, _path, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), progress=upload_progress, disable_notification=args.silent, has_spoiler=args.spoiler)
               Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
-          except Exception as error_code:
-            print(f"\nAn error occured!\n{error_code}")
-        else:
-          print(f"[Dir] -> {PurePath(_path).name}")
+            except Exception as error_code:
+              print(f"\nAn error occured!\n{error_code}")
+          else:
+            print(f"[Dir] -> {PurePath(_path).name}")
+    elif args.as_video:
+      if Path(args.path).is_file():
+        try:
+          filename = args.filename or PurePath(args.path).name
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
+          start_time = time()
+          client.send_video(chat_id, args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
+          Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
+        except Exception as error_code:
+          print(f"\nAn error occured!\n{error_code}")
+      elif Path(args.path).is_dir():
+        print("discovering paths...")
+        for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
+          if Path(_path).is_file():
+            try:
+              filename = PurePath(_path).name
+              if args.prefix:
+                filename = args.prefix + filename
+              if args.replace:
+                filename = filename.replace(args.replace[0], args.replace[1])
+              file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
+              start_time = time()
+              client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent)
+              Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
+            except Exception as error_code:
+              print(f"\nAn error occured!\n{error_code}")
+          else:
+            print(f"[Dir] -> {PurePath(_path).name}")
+    elif args.as_audio:
+      if Path(args.path).is_file():
+        try:
+          filename= args.filename or PurePath(args.path).name
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
+          start_time = time()
+          client.send_audio(chat_id, args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), performer=args.artist, title=args.title, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
+          Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
+        except Exception as error_code:
+          print(f"\nAn error occured!\n{error_code}")
+      elif Path(args.path).is_dir():
+        print("discovering paths...")
+        for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
+          if Path(_path).is_file():
+            try:
+              filename = PurePath(_path).name
+              if args.prefix:
+                filename = args.prefix + filename
+              if args.replace:
+                filename = filename.replace(args.replace[0], args.replace[1])
+              file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
+              start_time = time()
+              client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), performer=args.artist, thumb=args.thumb, file_name=filename, disable_notification=args.silent)
+              Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
+            except Exception as error_code:
+              print(f"\nAn error occured!\n{error_code}")
+          else:
+            print(f"[Dir] -> {PurePath(_path).name}")
+    elif args.as_voice:
+      if Path(args.path).is_file():
+        try:
+          filename = args.filename or PurePath(args.path).name
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
+          start_time = time()
+          client.send_voice(chat_id. args.path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), disable_notification=args.silent)
+          Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
+        except Exception as error_code:
+          print(f"\nAn error occured!\n{error_code}")
+      elif Path(args.path).is_dir():
+        print("discovering paths...")
+        for _path in Path(args.path).glob('**/*') if args.recursive else Path(args.path).glob("*"):
+          if Path(_path).is_file():
+            try:
+              filename = PurePath(_path).name
+              if args.prefix:
+                filename = args.prefix + filename
+              if args.replace:
+                filename = filename.replace(args.replace[0], args.replace[1])
+              file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
+              start_time = time()
+              client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), disable_notification=args.silent)
+              Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
+            except Exception as error_code:
+              print(f"\nAn error occured!\n{error_code}")
+          else:
+            print(f"[Dir] -> {PurePath(_path).name}")
+    elif args.as_video_note:
+      if Path(args.path).is_file():
+        try:
+          filename = args.filename or PurePath(args.path).name
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          start_time = time()
+          client.send_video_note(chat_id, args.path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
+          Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
+        except Exception as error_code:
+          print(f"\nAn error occured!\n{error_code}")
+      elif Path(args.path).is_dir():
+        print("discovering paths...")
+        for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
+          if Path(_path).is_file():
+            try:
+              filename = PurePath(_path).name
+              if args.prefix:
+                filename = args.prefix + filename
+              if args.replace:
+                filename = filename.replace(args.replace[0], args.replace[1])
+              start_time = time()
+              client.send_video_note(chat_id, _path, progress=upload_progress, thumb=args.thumb, disable_notification=args.silent)
+              Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
+            except Exception as error_code:
+              print(f"\nAn error occured!\n{error_code}")
+          else:
+            print(f"[Dir] -> {PurePath(_path).name}")
+    else:
+      if Path(args.path).is_file():
+        try:
+          filename = args.filename or PurePath(args.path).name
+          if args.prefix:
+            filename = args.prefix + filename
+          if args.replace:
+            filename = filename.replace(args.replace[0], args.replace[1])
+          if args.split and Path(args.path).stat().st_size > args.split and args.split != 0:
+            for _splitted_file, filename in split_file(args.path, args.split, filename):
+              file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
+              start_time = time()
+              client.send_document(chat_id, _splitted_file, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_splitted_file)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+              Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
+          else:
+            file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
+            start_time = time()
+            client.send_document(chat_id, args.path, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(args.path)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+          Path(args.path).unlink(missing_ok=True) if args.delete_on_done else None
+        except Exception as error_code:
+          print(f"\nAn error occured!\n{error_code}")
+      elif Path(args.path).is_dir():
+        print("discovering paths...")
+        for _path in Path(args.path).glob("**/*") if args.recursive else Path(args.path).glob("*"):
+          if Path(_path).is_file():
+            try:
+              filename = PurePath(_path).name
+              if args.prefix:
+                filename = args.prefix + filename
+              if args.replace:
+                filename = filename.replace(args.replace[0], args.replace[1])
+              if args.split and Path(_path).stat().st_size > args.split and args.split != 0:
+                for _splitted_file, filename in split_file(_path, args.split, filename):
+                  file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_splitted_file, caption)
+                  start_time = time()
+                  client.send_document(chat_id, _splitted_file, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_splitted_file)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+                  Path(_splitted_file).unlink(missing_ok=True) if args.delete_on_done else None
+              else:
+                file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
+                start_time = time()
+                client.send_document(chat_id, _path, progress=upload_progress, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, path = PurePath(_path)), force_document=True, file_name=filename, thumb=args.thumb, disable_notification=args.silent)
+                Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
+            except Exception as error_code:
+              print(f"\nAn error occured!\n{error_code}")
+          else:
+            print(f"[Dir] -> {PurePath(_path).name}")
