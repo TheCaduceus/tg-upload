@@ -166,9 +166,9 @@ pkg install git -y
 
 <p><strong>1.CONNECTIVITY FLAGS:</strong></p>
 
-<p>Connectivity flags controls how the program should establish connection to Telegram servers, helpful for those uses proxies to bypass ban imposed on Telegram by their ISP (or for increasing transfer speed) or for those prefer IPv6 to establish connection.</p>
+<p>Connectivity flags controls how the program should establish connection to Telegram servers, thus letting users use proxies and IPV6.</p>
 
-<p>Learn <a href="#htu-6">here</a>, how to configure proxies?</p>
+<p>How to configure proxies? [<a href="#htu-5">Learn here</a>]</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--ipv6 - Connect Telegram using device's IPv6. By default IPv4.
 --proxy - Proxy name (in proxy.json) to use for connecting Telegram.
@@ -560,6 +560,7 @@ pkg install git -y
 <p>User can set as many variables as it want in any order and can temporary overwrite variable’s value by passing the new value using its associated flag.</p>
 
 <h2 id="️-how-to-use">🕹️ How to use?</h2>
+<p>For running python commands we can either use ‘python’ or ‘py’, in below examples we will use ‘py’.</p>
 
 <p><a name="htu-1"></a></p>
 
@@ -573,7 +574,7 @@ pkg install git -y
 
 <p>tg-upload supports login as user (using phone number or session string) or bot (using bot token or session string), you must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>), to login as user you must pass your phone number (<code class="language-plaintext highlighter-rouge">--phone</code>) or to login as bot pass bot token (<code class="language-plaintext highlighter-rouge">--bot</code>).</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
 </code></pre></div></div>
 <p>now from next time whenever you need to perform any task, you just need to pass the profile name (<code class="language-plaintext highlighter-rouge">--profile</code>) which you used to create your session and you will be logged in without any authentication flow (until you terminate the session from Telegram app).</p>
 
@@ -585,22 +586,35 @@ pkg install git -y
 
 <p>Get help &amp; options:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py -h
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py -h
 </code></pre></div></div>
 
 <p>Upload files/folder:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 </code></pre></div></div>
 
 <p>Download files:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py --profile VALUE --dl --links LINK...  --OTHER OPTIONAL FLAGS
+<p>1.<em>From private/public chats:</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --dl --links LINK...  --OTHER OPTIONAL FLAGS
 </code></pre></div></div>
+
+<p>2.<em>From Saved Messages:</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --dl --msg_id VALUE --OTHER OPTIONAL FLAGS
+</code></pre></div></div>
+
+<p>3.<em>From personal chats or by manually providing <code class="language-plaintext highlighter-rouge">chat_id</code> &amp; <code class="language-plaintext highlighter-rouge">msg_id</code>:</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --dl --chat_id phone/username/id --msg_id VALUE --OTHER OPTIONAL FLAGS
+</code></pre></div></div>
+<p>How to get <code class="language-plaintext highlighter-rouge">chat_id</code> and <code class="language-plaintext highlighter-rouge">msg_id</code>? [<a href="#faq-8">Learn here</a>]</p>
 
 <p>Check versions:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py -v
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py -v
 </code></pre></div></div>
 
 <p><a name="htu-4"></a></p>
@@ -826,8 +840,14 @@ pkg install git -y
 
 <p>tg-upload’s <code class="language-plaintext highlighter-rouge">--logout</code> flag is here to help! just mention the session name using <code class="language-plaintext highlighter-rouge">--profile</code> flag and pass the <code class="language-plaintext highlighter-rouge">--logout</code> flag. This will directly revoke the specified session and will omit it from your Telegram Account’s active sessions list.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python tg-upload.py --profile xyz --logout
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile xyz --logout
 </code></pre></div></div>
+
+<p><a name="faq-8"></a></p>
+
+<p><strong>8.How to get <code class="language-plaintext highlighter-rouge">chat_id</code> &amp; <code class="language-plaintext highlighter-rouge">msg_id</code> to use with tg-upload?</strong></p>
+
+<p>You can use third-party Telegram clients that let users to see more details (<a href="https://github.com/TheCaduceus/tg-upload/assets/87380104/6aa76de6-14ec-4a5f-b889-186aeb2e175b">see image</a>) of a given message like <a href="https://github.com/OctoGramApp/OctoGram">OctoGram</a>.</p>
 
 <p><a name="contribution"></a></p>
 
