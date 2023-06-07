@@ -117,9 +117,9 @@ python tg-upload.py -h
 
 **1.CONNECTIVITY FLAGS:**
 
-Connectivity flags controls how the program should establish connection to Telegram servers, helpful for those uses proxies to bypass ban imposed on Telegram by their ISP (or for increasing transfer speed) or for those prefer IPv6 to establish connection.
+Connectivity flags controls how the program should establish connection to Telegram servers, thus letting users use proxies and IPV6.
 
-Learn [here](#htu-6), how to configure proxies?
+How to configure proxies? [[Learn here](#htu-5)]
 
 ```
 --ipv6 - Connect Telegram using device's IPv6. By default IPv4.
@@ -305,6 +305,7 @@ Flags that does not fit in above categories are listed in this category:
 User can set as many variables as it want in any order and can temporary overwrite variable's value by passing the new value using its associated flag.
 
 ## 🕹️ How to use?
+For running python commands we can either use 'python' or 'py', in below examples we will use 'py'.
 
 <a name="htu-1"></a>
 
@@ -319,7 +320,7 @@ Go to [My Telegram](https://my.telegram.org/apps) and create an app and get its 
 tg-upload supports login as user (using phone number or session string) or bot (using bot token or session string), you must pass the value of your **API_ID** (`--api_id`) & **API_HASH** (`--api_hash`) and a unique name for your session (`--profile`), to login as user you must pass your phone number (`--phone`) or to login as bot pass bot token (`--bot`).
 
 ```
-python tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
+py tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
 ```
 now from next time whenever you need to perform any task, you just need to pass the profile name (`--profile`) which you used to create your session and you will be logged in without any authentication flow (until you terminate the session from Telegram app).
 
@@ -332,25 +333,40 @@ Hooray! now you are all set to use tg-upload. You can try out some sample comman
 Get help & options:
 
 ```
-python tg-upload.py -h
+py tg-upload.py -h
 ```
 
 Upload files/folder:
 
 ```
-python tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
+py tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 ```
 
 Download files:
 
+1.*From private/public chats:*
+
 ```
-python tg-upload.py --profile VALUE --dl --links LINK...  --OTHER OPTIONAL FLAGS
+py tg-upload.py --profile VALUE --dl --links LINK...  --OTHER OPTIONAL FLAGS
 ```
+
+2.*From Saved Messages:*
+
+```
+py tg-upload.py --profile VALUE --dl --msg_id VALUE --OTHER OPTIONAL FLAGS
+```
+
+3.*From personal chats or by manually providing `chat_id` & `msg_id`:*
+
+```
+py tg-upload.py --profile VALUE --dl --chat_id phone/username/id --msg_id VALUE --OTHER OPTIONAL FLAGS
+```
+How to get `chat_id` and `msg_id`? [[Learn here](#faq-8)]
 
 Check versions:
 
 ```
-python tg-upload.py -v
+py tg-upload.py -v
 ```
 
 <a name="htu-4"></a>
@@ -563,8 +579,14 @@ For every profile, tg-upload generates .session file which is the main file that
 tg-upload's `--logout` flag is here to help! just mention the session name using `--profile` flag and pass the `--logout` flag. This will directly revoke the specified session and will omit it from your Telegram Account's active sessions list.
 
 ```
-python tg-upload.py --profile xyz --logout
+py tg-upload.py --profile xyz --logout
 ```
+
+<a name="faq-8"></a>
+
+**8.How to get `chat_id` & `msg_id` to use with tg-upload?**
+
+You can use third-party Telegram clients that let users to see more details (<a href="https://github.com/TheCaduceus/tg-upload/assets/87380104/6aa76de6-14ec-4a5f-b889-186aeb2e175b">see image</a>) of a given message like [OctoGram](https://github.com/OctoGramApp/OctoGram).
 
 <a name="contribution"></a>
 
