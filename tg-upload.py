@@ -12,6 +12,13 @@ import argparse
 import hashlib
 
 tg_upload = "1.0.8"
+versions = f"tg-upload: {tg_upload} \
+Python: {py_ver[0]}.{py_ver[1]}.{py_ver[2]} \
+Pyrogram: {get_dist('pyrogram').version} \
+Prettytable: {get_dist('prettytable').version} \
+Pillow: {get_dist('pillow').version} \
+httpx: {get_dist('httpx').version} \
+TgCrypto: {get_dist('tgcrypto').version}"
 json_endpoint = "https://cdn.thecaduceus.eu.org/tg-upload/release.json"
 
 parser = argparse.ArgumentParser(
@@ -91,7 +98,7 @@ parser.add_argument("--convert", help="Convert any image into JPEG format.")
 # MISC FLAGS
 parser.add_argument("--device_model", metavar="TG_UPLOAD_DEVICE_MODEL", default=env.get("TG_UPLOAD_DEVICE_MODEL", "tg-upload"), help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
 parser.add_argument("--system_version", metavar="TG_UPLOAD_SYSTEM_VERSION", default=env.get("TG_UPLOAD_SYSTEM_VERSION", f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"), help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
-parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=f"tg-upload:\n{tg_upload}\nPython:\n{py_ver[0]}.{py_ver[1]}.{py_ver[2]}\nPyrogram:\n{get_dist('pyrogram').version}\nTgCrypto:\n{get_dist('tgcrypto').version}\nPillow:\n{get_dist('pillow').version}")
+parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=versions)
 
 args = parser.parse_args()
 
@@ -121,6 +128,47 @@ def validate_link(link):
 	msg_id = int(link_parts[-1])
 	
 	return chat_id, msg_id
+
+def msg_info(message):
+  if message.video:
+    filename = message.video.file_name
+    filesize = message.video.file_size
+    if filename is None:
+      if message.video.mime_type == 'video/x-matroska':
+        filename = f"VID_{message.id}_{message.video.file_unique_id}.mkv"
+      else:
+        filename = f"VID_{message.id}_{message.video.file_unique_id}.{message.video.mime_type.split('/')[-1]}"
+  elif message.document:
+    filename = message.document.file_name
+    filesize = message.document.file_size
+  elif message.sticker:
+    filename = message.sticker.file_name
+    filesize = message.sticker.file_size
+  elif message.animation:
+    filename = message.animation.file_name
+    filesize = message.animation.file_size
+  elif message.audio:
+    filename = message.audio.file_name
+    filesize = message.audio.file_size
+  elif message.photo:
+    filename = f"IMG_{message.id}_{message.photo.file_unique_id}.jpg"
+    filesize = message.photo.file_size
+  else:
+    filename = "unknown_{message.id}"
+    filesize = 0
+
+  if args.filename:
+    filename = args.filename
+  if args.prefix:
+    filename = args.prefix + filename
+  if args.replace:
+    filename = filename.replace(args.replace[0], args.replace[1])
+  if args.dl_dir:
+    dl_dir = PurePath(args.dl_dir)
+    filename = f"{dl_dir}/{filename}"
+
+  return filename, filesize / 1024 / 1024 if filesize != 0 else 0
+
 
 def file_info(file_path, caption_text):
   file_size = Path(file_path).stat().st_size
@@ -420,46 +468,9 @@ with client:
             print(f"\nMessage ID not found: {message_id}")
             continue
 
-          if message.video:
-            filename = message.video.file_name
-            filesize = message.video.file_size / 1024 / 1024
-            if filename == None:
-              if message.video.mime_type == 'video/mp4':
-                filename = f"VID_{message.video.file_id}.mp4"
-              elif message.video.mime_type == 'video/x-matroska':
-                filename = f"VID_{message.video.file_id}.mkv"
-              else:
-                filename = f"VID_{message.video.file_id}.{message.video.mime_type.split('/')[-1]}"
-          elif message.document:
-            filename = message.document.file_name
-            filesize = message.document.file_size / 1024 / 1024
-          elif message.sticker:
-            filename = message.sticker.file_name
-            filesize = message.sticker.file_size / 1024 / 1024
-          elif message.animation:
-            filename = message.animation.file_name
-            filesize = message.animation.file_size / 1024 / 1024
-          elif message.audio:
-            filename = message.audio.file_name
-            filesize = message.audio.file_size / 1024 / 1024
-          elif message.photo:
-            filename = f"IMG_{message.photo.file_id}.jpg"
-            filesize = message.photo.file_size / 1024 / 1024
-          else:
-            filename = "unknown_{message.id}"
-            filesize = 0
-          
-          if args.filename:
-            filename = args.filename
-          if args.prefix:
-            filename = args.prefix + filename
-          if args.replace:
-            filename = filename.replace(args.replace[0], args.replace[1])
-          if args.dl_dir:
-            dl_dir = PurePath(args.dl_dir)
-            filename = f"{dl_dir}/{filename}"
-
+          filename, filesize = msg_info(message)
           start_time = time()
+
           try:
             client.download_media(message, progress=download_progress, file_name=filename)
           except ValueError: # No downloadable file in message
@@ -478,46 +489,9 @@ with client:
             print(f"\n{error_code} - {link}")
             continue
 
-          if message.video:
-            filename = message.video.file_name
-            filesize = message.video.file_size / 1024 / 1024
-            if filename == None:
-              if message.video.mime_type == 'video/mp4':
-                filename = f"VID_{message.video.file_id}.mp4"
-              elif message.video.mime_type == 'video/x-matroska':
-                filename = f"VID_{message.video.file_id}.mkv"
-              else:
-                filename = f"VID_{message.video.file_id}.{message.video.mime_type.split('/')[-1]}"
-          elif message.document:
-            filename = message.document.file_name
-            filesize = message.document.file_size / 1024 / 1024
-          elif message.sticker:
-            filename = message.sticker.file_name
-            filesize = message.sticker.file_size / 1024 / 1024
-          elif message.animation:
-            filename = message.animation.file_name
-            filesize = message.sticker.file_size / 1024 / 1024
-          elif message.audio:
-            filename = message.audio.file_name
-            filesize = message.audio.file_size / 1024 / 1024
-          elif message.photo:
-            filename = f"IMG_{message.photo.file_id}.jpg"
-            filesize = message.photo.file_size / 1024 / 1024
-          else:
-            filename = f"unknown_{message.id}"
-            filesize = 0
-          
-          if args.filename:
-            filename = args.filename
-          if args.prefix:
-            filename = args.prefix + filename
-          if args.replace:
-            filename = filename.replace(args.replace[0], args.replace[1])
-          if args.dl_dir:
-            dl_dir = PurePath(args.dl_dir)
-            filename = f"{dl_dir}/{filename}"
-          
+          filename, filesize = msg_info(message)
           start_time = time()
+      
           try:
             client.download_media(message, progress=download_progress, file_name=filename)
           except ValueError as error_code:
@@ -531,46 +505,9 @@ with client:
       except ValueError as error_code:
         exit(f"\n{error_code} - {args.chat_id}")
       
-      if message.video:
-        filename = message.video.file_name
-        filesize = message.video.file_size / 1024 / 1024
-        if filename == None:
-          if message.video.mime_type == 'video/mp4':
-            filename = f"VID_{message.video.file_id}.mp4"
-          elif message.video.mime_type == 'video/x-matroska':
-            filename = f"VID_{message.video.file_id}.mkv"
-          else:
-            filename = f"VID_{message.video.file_id}.{message.video.mime_type.split('/')[-1]}"
-      elif message.document:
-        filename = message.document.file_name
-        filesize = message.document.file_size / 1024 / 1024
-      elif message.sticker:
-        filename = message.sticker.file_name
-        filesize = message.sticker.file_size / 1024 / 1024
-      elif message.animation:
-        filename = message.animation.file_name
-        filesize = message.animation.file_size / 1024 / 1024
-      elif message.audio:
-        filename = message.audio.file_name
-        filesize = message.audio.file_size / 1024 / 1024
-      elif message.photo:
-        filename = f"IMG_{message.photo.file_id}.jpg"
-        filesize = message.photo.file_size / 1024 /1024
-      else:
-        filename = f"unknown_{message.id}"
-        filesize = 0
-      
-      if args.filename:
-        filename = args.filename
-      if args.prefix:
-        filename = args.prefix + filename
-      if args.replace:
-        filename = filename.replace(args.replace[0], args.replace[1])
-      if args.dl_dir:
-        dl_dir = PurePath(args.dl_dir)
-        filename = f"{dl_dir}/{filename}"
-      
+      filename, filesize = msg_info(message)
       start_time = time()
+
       try:
         client.download_media(message, progress=download_progress, file_name=filename)
       except ValueError:
