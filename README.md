@@ -156,9 +156,9 @@ File flags are used to provide information about file/folder.
 ```
 -l,--path - Path to the file or folder to upload.
 -n,--filename - To upload data with custom name.
--i,--thumb - Path of thumbnail image (JPEG format) to be attached with given file.
+-i,--thumb - Path of thumbnail image to be attached with given file. Pass 'auto' for random frame or particular frame time (in seconds) to attach it with video as thumbnail.
 -z,--caption - Caption text to be attached with file(s), markdown & HTML formatting allowed.
---duration - Duration of sent media in seconds.
+--duration - Duration of audio/video in seconds. Pass '-1' for automatic detection.
 --capjson - Caption name (in caption.json) to attach with given file(s).
 ```
 
@@ -181,8 +181,8 @@ Behaviour flags controls the behaviour of transmission.
 -b,--spoiler - Send media with spoiler animation.
 --parse_mode - Set custom formatting mode for caption.
 -d,--delete_on_done - Delete the given file after task completion.
--w,--width - Set custom width for video.
--e,--height - Set custom height for video.
+-w,--width - Set custom width for video, by default to original video width.
+-e,--height - Set custom height for video, by default to original video height.
 -a,--artist - Set artist name of given audio file.
 -t,--title - Set title of given audio file
 -s,--silent - Send files silently to given chat.
@@ -225,6 +225,7 @@ Utility flags provides an easy way to directly use internal functions used by tg
 --split_file - Split file in given bytes, accepts only size & requires path using path flag.
 --combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
 --convert - Convert any image into JPEG format.
+--frame - Captue a frame from a video file at given time & save as .jpg file, accepts only time (in seconds) & video file path using path flag.
 ```
 
 <a name="flag-7"></a>
@@ -381,6 +382,9 @@ tg-upload provides variables that user can place in file's caption to make it dy
 
 * `{file_name}` - Name of file without its format.
 * `{file_format}` - Format of given file including '.'.
+* `{height}` - Height of video file. *(--as_video only)*
+* `{width}` - Width of video file. *(--as_video only)*
+* `{duration}` - Duration of video or audio file in seconds. *(--as_audio & --as_video only)*
 * `{path}` - Retrive particular value from path or exact path. *(for advanced users)*
 * `{creation_time[indice]}` - File's creation time.
 * `{modification_time[indice]}` - File's last modification time.
