@@ -98,6 +98,7 @@ parser.add_argument("--file_info", help="Show basic file information.")
 parser.add_argument("--hash", help="Calculate & display hash of given file.")
 parser.add_argument("--split_file", type=int, help="Split file in given byte, accepts only size & requires path using path flag.")
 parser.add_argument("--combine", nargs="+", type=str, help="Restore original file using part files produced by tg-upload. Accepts one or more paths.")
+parser.add_argument("--frame", type=int, help="Captue a frame from a video file at given time & save as .jpg file, accepts only time (in seconds) & video file path using path flag.")
 parser.add_argument("--convert", help="Convert any image into JPEG format.")
 
 # MISC FLAGS
@@ -366,6 +367,15 @@ elif args.env:
   table.add_row(["TG_UPLOAD_DEVICE_MODEL", "--device_model", env.get("TG_UPLOAD_DEVICE_MODEL"), "tg-upload"])
   table.add_row(["TG_UPLOAD_SYSTEM_VERSION", "--system_version", env.get("TG_UPLOAD_SYSTEM_VERSION"), f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"])
   exit(table)
+elif args.frame:
+  if not args.path:
+    exit("Error: Video file path is not provided.")
+  print("Capturing frame...")
+  with VideoFileClip(args.path) as video:
+    Path("thumb").mkdir(exist_ok=True)
+    thumb = f"thumb/THUMB_{PurePath(args.path).stem}.jpg"
+    video.save_frame(thumb, t=floor(video.duration / 2))
+  exit(f"Saved at {thumb}")
 
 elif not args.profile:
   exit("Error: No session name (--profile) passed to start client with.")
