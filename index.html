@@ -202,9 +202,9 @@ pkg install git -y
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-l,--path - Path to the file or folder to upload.
 -n,--filename - To upload data with custom name.
--i,--thumb - Path of thumbnail image (JPEG format) to be attached with given file.
+-i,--thumb - Path of thumbnail image to be attached with given file. Pass 'auto' to attach random frame of video as thumbnail.
 -z,--caption - Caption text to be attached with file(s), markdown &amp; HTML formatting allowed.
---duration - Duration of sent media in seconds.
+--duration - Duration of audio/video in seconds. Pass '-1' for automatic detection.
 --capjson - Caption name (in caption.json) to attach with given file(s).
 </code></pre></div></div>
 
@@ -226,8 +226,8 @@ pkg install git -y
 -b,--spoiler - Send media with spoiler animation.
 --parse_mode - Set custom formatting mode for caption.
 -d,--delete_on_done - Delete the given file after task completion.
--w,--width - Set custom width for video.
--e,--height - Set custom height for video.
+-w,--width - Set custom width for video, by default to original video width.
+-e,--height - Set custom height for video, by default to original video height.
 -a,--artist - Set artist name of given audio file.
 -t,--title - Set title of given audio file
 -s,--silent - Send files silently to given chat.
@@ -268,6 +268,7 @@ pkg install git -y
 --split_file - Split file in given bytes, accepts only size &amp; requires path using path flag.
 --combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
 --convert - Convert any image into JPEG format.
+--frame - Captue a frame from a video file at given time &amp; save as .jpg file, accepts only time (in seconds) &amp; video file path using path flag.
 </code></pre></div></div>
 
 <p><a name="flag-7"></a></p>
@@ -630,6 +631,9 @@ pkg install git -y
 <ul>
   <li><code class="language-plaintext highlighter-rouge">{file_name}</code> - Name of file without its format.</li>
   <li><code class="language-plaintext highlighter-rouge">{file_format}</code> - Format of given file including ‘.’.</li>
+  <li><code class="language-plaintext highlighter-rouge">{height}</code> - Height of video file. <em>(–as_video only)</em></li>
+  <li><code class="language-plaintext highlighter-rouge">{width}</code> - Width of video file. <em>(–as_video only)</em></li>
+  <li><code class="language-plaintext highlighter-rouge">{duration}</code> - Duration of video or audio file in seconds. <em>(–as_audio &amp; –as_video only)</em></li>
   <li><code class="language-plaintext highlighter-rouge">{path}</code> - Retrive particular value from path or exact path. <em>(for advanced users)</em></li>
   <li><code class="language-plaintext highlighter-rouge">{creation_time[indice]}</code> - File’s creation time.</li>
   <li><code class="language-plaintext highlighter-rouge">{modification_time[indice]}</code> - File’s last modification time.</li>
