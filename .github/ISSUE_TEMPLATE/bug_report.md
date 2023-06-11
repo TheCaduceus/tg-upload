@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+**OS & Platform**
+Which operating system and platform (if any) you are using?
+
 **Version**
 Use `-v` flag and paste its output here.
 
@@ -25,5 +28,5 @@ Attach a file or link containing full traceback.
 **Expected behaviour**
 A clear and concise description of what you expected to happen.
 
-Note: 
-Ignoring any field given in this template will cause report rejection.
+**⛔Note:**
+Ignoring any field given in this template will cause report rejection, you can use put `NA` if something is not applicable.
