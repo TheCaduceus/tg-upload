@@ -98,7 +98,7 @@ parser.add_argument("--file_info", help="Show basic file information.")
 parser.add_argument("--hash", help="Calculate & display hash of given file.")
 parser.add_argument("--split_file", type=int, help="Split file in given byte, accepts only size & requires path using path flag.")
 parser.add_argument("--combine", nargs="+", type=str, help="Restore original file using part files produced by tg-upload. Accepts one or more paths.")
-parser.add_argument("--frame", type=int, help="Captue a frame from a video file at given time & save as .jpg file, accepts only time (in seconds) & video file path using path flag.")
+parser.add_argument("--frame", type=int, help="Capture a frame from a video file at given time & save as .jpg file, accepts only time (in seconds) & video file path using path flag.")
 parser.add_argument("--convert", help="Convert any image into JPEG format.")
 
 # MISC FLAGS
@@ -374,7 +374,7 @@ elif args.frame:
   with VideoFileClip(args.path) as video:
     Path("thumb").mkdir(exist_ok=True)
     thumb = f"thumb/THUMB_{PurePath(args.path).stem}.jpg"
-    video.save_frame(thumb, t=floor(video.duration / 2))
+    video.save_frame(thumb, t=args.frame)
   exit(f"Saved at {thumb}")
 
 elif not args.profile:

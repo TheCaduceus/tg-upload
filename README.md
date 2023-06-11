@@ -225,7 +225,7 @@ Utility flags provides an easy way to directly use internal functions used by tg
 --split_file - Split file in given bytes, accepts only size & requires path using path flag.
 --combine - Restore original file using part files produced by tg-upload. Accepts one or more paths.
 --convert - Convert any image into JPEG format.
---frame - Captue a frame from a video file at given time & save as .jpg file, accepts only time (in seconds) & video file path using path flag.
+--frame - Capture a frame from a video file at given time & save as .jpg file, accepts only time (in seconds) & video file path using path flag.
 ```
 
 <a name="flag-7"></a>
@@ -430,7 +430,7 @@ Additionally, we can also limit number of decimal places to be shown in file siz
 <img src="https://user-images.githubusercontent.com/87380104/233824278-eed11926-1748-4455-8cb0-cb2cf1ebcdbd.png">
 
 </div>
-Just like a plan text, you can also apply same formatting on variables, just make sure you put all formatting tags outside of {} brackets to prevent any error.
+Just like a plan text, you can also apply same formatting on variables, make sure you put all formatting tags outside of {} brackets to prevent any error.
 
 One variable can be called multiple times in same caption and user must prevent writing any other keyword between {} otherwise tg-upload will raise KeyError indicating that given variable is not yet defined.
 
