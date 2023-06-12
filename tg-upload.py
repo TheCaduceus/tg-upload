@@ -160,7 +160,7 @@ def msg_info(message):
     filename = f"IMG_{message.id}_{message.photo.file_unique_id}.jpg"
     filesize = message.photo.file_size
   else:
-    filename = "unknown_{message.id}"
+    filename = f"unknown_{message.id}"
     filesize = 0
 
   if args.filename:
