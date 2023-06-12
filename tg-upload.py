@@ -14,7 +14,7 @@ from math import floor
 import argparse
 import hashlib
 
-tg_upload = "1.0.9"
+tg_upload = "1.1.0"
 versions = f"tg-upload: {tg_upload} \
 Python: {py_ver[0]}.{py_ver[1]}.{py_ver[2]} \
 Pyrogram: {get_dist('pyrogram').version} \
@@ -86,10 +86,10 @@ parser.add_argument("--no_update", default=env.get("TG_UPLOAD_NO_UPDATE", "False
 
 # DOWNLOAD FLAGS
 parser.add_argument("--dl", default=env.get("TG_UPLOAD_DL", "False").lower() in {"true", "t", "1"}, action="store_true", help="Enable download module of tg-upload.")
-parser.add_argument("--links", metavar="TG_UPLOAD_LINKS", nargs="+", type=str, default=env.get("TG_UPLOAD_LINKS", []), help="Telegram file links to be downloaded (separated with space).")
+parser.add_argument("--links", metavar="TG_UPLOAD_LINKS", nargs="+", type=str, default=env.get("TG_UPLOAD_LINKS", "").split(","), help="Telegram file links to be downloaded (separated with space).")
 parser.add_argument("--txt_file", metavar="TG_UPLOAD_TXT_FILE", default=env.get("TG_UPLOAD_TXT_FILE", None), help=".txt file path containing telegram file links to be downloaded (1 link / line).")
-parser.add_argument("--range", default=env.get("TG_UPLOAD_RANGE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Find and download messages in between of two given links of same chat.")
-parser.add_argument("--msg_id", metavar="TG_UPLOAD_MSG_ID", type=int, default=env.get("TG_UPLOAD_MSG_ID", None), help="Identity number of message which needs to be downloaded.")
+parser.add_argument("--range", default=env.get("TG_UPLOAD_RANGE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Find and download messages in between of two given links or message ids of same chat.")
+parser.add_argument("--msg_id", nargs="+", metavar="TG_UPLOAD_MSG_ID", type=int, default=env.get("TG_UPLOAD_MSG_ID", "").split(","), help="Identity number of messages to be downloaded.")
 parser.add_argument("--dl_dir", metavar="TG_UPLOAD_DL_DIR", default=env.get("TG_UPLOAD_DL_DIR", None), help="Change the download directory, by default 'downloads' in current working directory.")
 
 # UTILITY FLAGS
@@ -462,8 +462,11 @@ with client:
       with open(args.txt_file, 'r') as txt_file:
         args.links = txt_file.readlines()
 
-    if args.links and len(args.links) != 0:
+    if len(args.links) != 0 and args.links[0]:
       if args.range:
+        if not len(args.links) >= 2:
+          exit("Error: Using --range flag requires two different links of same chat.")
+        
         _chat_id , _message_id = validate_link(args.links[0])
         __chat_id, __message_id = validate_link(args.links[1])
 
@@ -508,24 +511,52 @@ with client:
             client.download_media(message, progress=download_progress, file_name=filename)
           except ValueError as error_code:
             print(f"\n{error_code}  - {link}")
-    elif args.chat_id and args.msg_id:
+    elif args.chat_id and len(args.msg_id) != 0 and args.msg_id[0]:
       args.chat_id = get_chatid(args.chat_id)
-      try:
-        message = client.get_messages(args.chat_id, args.msg_id)
-      except errors.exceptions.bad_request_400.ChannelInvalid:
-        exit(f"Error: No access to {args.chat_id}.")
-      except ValueError as error_code:
-        exit(f"\n{error_code} - {args.chat_id}")
-      
-      filename, filesize = msg_info(message)
-      start_time = time()
 
-      try:
-        client.download_media(message, progress=download_progress, file_name=filename)
-      except ValueError:
-        exit(f"\nError: No downloadable media found - {args.message_id}")
+      if args.range:
+        if not len(args.msg_id) >= 2:
+          exit("Error: Using --range requires two different MSG IDs of same chat.")
+        elif args.msg_id[0] == args.msg_id[1]:
+          exit("Error: MSG_IDs should be different.")
+
+        message_ids = range(args.msg_id[0], args.msg_id[1]+1) if args.msg_id[0] < args.msg_id[1] else range(args.msg__id[1], args.msg_id[0]+1)
+
+        for message_id in message_ids:
+          try:
+            message = client.get_messages(args.chat_id, message_id)
+          except ValueError:
+            print(f"\nMessage ID not found: {message_id}")
+            continue
+
+          filename, filesize = msg_info(message)
+          start_time = time()
+          
+          try:
+            client.download_media(message, progress=download_progress, file_name=filename)
+          except ValueError:
+            print(f"\nNo Media: MSG_{message_id}")
+          except Exception as error_code:
+            print(f"\n{error_code}")
+            
+      else:
+        for msg_id in args.msg_id:
+          try:
+            message = client.get_messages(args.chat_id, args.msg_id)
+          except errors.exceptions.bad_request_400.ChannelInvalid:
+            exit(f"Error: No access to {args.chat_id}.")
+          except ValueError as error_code:
+            exit(f"\n{error_code} - {args.chat_id}")
+          
+          filename, filesize = msg_info(message)
+          start_time = time()
+
+          try:
+            client.download_media(message, progress=download_progress, file_name=filename)
+          except ValueError:
+            exit(f"\nError: No downloadable media found - {msg_id}")
     else:
-      exit("Error: No link provided to download.")
+      exit("Error: No link or message id provided to download.")
   else:
     if not args.path:
       exit("Error: Path is not provided.")
