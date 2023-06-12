@@ -203,9 +203,9 @@ List of flags that are usable with tg-upload's download module, while flags with
 --dl - Enable download module of tg-upload.
 --links - Telegram file links to be downloaded (separated with space).
 --txt_file - .txt file path containing telegram file links to be downloaded (1 link / line).
---range - Find and download messages in between of two given links of same chat.
+--range - Find and download messages in between of two given links or message ids of same chat.
 --chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
---msg_id - Identity number of message which needs to be downloaded.
+--msg_id - Identity number of messages to be downloaded.
 --filename (common) - To download data with custom name.
 --replace (common) - Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.
 --prefix (common) - Add given prefix text to each filename (prefix + filename).
@@ -295,10 +295,10 @@ Flags that does not fit in above categories are listed in this category:
 |`TG_UPLOAD_NO_WARN`             |`--no_warn`             |True or False   |
 |`TG_UPLOAD_NO_UPDATE`           |`--no_update`           |True or False   |
 |`TG_UPLOAD_DL`                  |`--dl`                  |True or False   |
-|`TG_UPLOAD_LINKS`               |`--links`               |Same as flag    |
+|`TG_UPLOAD_LINKS`               |`--links`               |Separate both values using "," (comma).|
 |`TG_UPLOAD_TXT_FILE`            |`--txt_file`            |Same as flag    |
 |`TG_UPLOAD_RANGE`               |`--range`               |True or False   |
-|`TG_UPLOAD_MSG_ID`              |`--msg_id`              |Same as flag    |
+|`TG_UPLOAD_MSG_ID`              |`--msg_id`              |Separate both values using "," (comma).|
 |`TG_UPLOAD_DL_DIR`              |`--dl_dir`              |Same as flag    |
 |`TG_UPLOAD_DEVICE_MODEL`        |`--device_model`        |Same as flag    |
 |`TG_UPLOAD_SYSTEM_VERSION`      |`--system_version`      |Same as flag    |
