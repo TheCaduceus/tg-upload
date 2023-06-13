@@ -222,8 +222,11 @@ pkg install git -y
 --as_video_note - Send given file as video note.
 --split - Split files in given bytes and upload.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
+--reply_to - Send files as reply to given message id.
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
+-y,--self_destruct - Number of seconds (60 or below) after which photo/video will self destruct once seen by receiver.
+--protect - Protect uploaded files from getting forwarded &amp; saved.
 --parse_mode - Set custom formatting mode for caption.
 -d,--delete_on_done - Delete the given file after task completion.
 -w,--width - Set custom width for video, by default to original video width.
@@ -441,6 +444,11 @@ pkg install git -y
       <td style="text-align: center">Separate both values using “,” (comma).</td>
     </tr>
     <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_REPLY_TO</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--reply_to</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_DISABLE_STREAM</code></td>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--disable_stream</code></td>
       <td style="text-align: center">True or False</td>
@@ -448,6 +456,16 @@ pkg install git -y
     <tr>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SPOILER</code></td>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--spoiler</code></td>
+      <td style="text-align: center">True or False</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SELF_DESTRUCT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--self_destruct</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_PROTECT</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--protect</code></td>
       <td style="text-align: center">True or False</td>
     </tr>
     <tr>
