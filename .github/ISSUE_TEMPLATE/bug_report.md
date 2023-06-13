@@ -29,4 +29,4 @@ Attach a file or link containing full traceback.
 A clear and concise description of what you expected to happen.
 
 **⛔Note:**
-Ignoring any field given in this template will cause report rejection, you can use put `NA` if something is not applicable.
+Ignoring any field given in this template will cause report rejection, you can put `NA` if something is not applicable.

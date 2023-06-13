@@ -177,8 +177,11 @@ Behaviour flags controls the behaviour of transmission.
 --as_video_note - Send given file as video note.
 --split - Split files in given bytes and upload.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
+--reply_to - Send files as reply to given message id.
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
+-y,--self_destruct - Number of seconds (60 or below) after which photo/video will self destruct once seen by receiver.
+--protect - Protect uploaded files from getting forwarded & saved.
 --parse_mode - Set custom formatting mode for caption.
 -d,--delete_on_done - Delete the given file after task completion.
 -w,--width - Set custom width for video, by default to original video width.
@@ -279,8 +282,11 @@ Flags that does not fit in above categories are listed in this category:
 |`TG_UPLOAD_AS_VIDEO_NOTE`       |`--as_video_note`       |True or False   |
 |`TG_UPLOAD_SPLIT`               |`--split`               |Same as flag    |
 |`TG_UPLOAD_REPLACE`             |`--replace`             |Separate both values using "," (comma).|
+|`TG_UPLOAD_REPLY_TO`            |`--reply_to`            |Same as flag    |
 |`TG_UPLOAD_DISABLE_STREAM`      |`--disable_stream`      |True or False   |
 |`TG_UPLOAD_SPOILER`             |`--spoiler`             |True or False   |
+|`TG_UPLOAD_SELF_DESTRUCT`       |`--self_destruct`       |Same as flag    |
+|`TG_UPLOAD_PROTECT`             |`--protect`             |True or False   |
 |`TG_UPLOAD_PARSE_MODE`          |`--parse_mode`          |Same as flag    |
 |`TG_UPLOAD_DELETE_ON_DONE`      |`--delete_on_done`      |True or False   |
 |`TG_UPLOAD_WIDTH`               |`--width`               |Same as flag    |
