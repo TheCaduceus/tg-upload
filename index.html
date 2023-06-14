@@ -249,7 +249,7 @@ pkg install git -y
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--dl - Enable download module of tg-upload.
 --links - Telegram file links to be downloaded (separated with space).
---txt_file - .txt file path containing telegram file links to be downloaded (1 link / line).
+--txt_file - .txt file path containing Telegram file links to be downloaded (1 link / line).
 --range - Find and download messages in between of two given links or message ids of same chat.
 --chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
 --msg_id - Identity number of messages to be downloaded.
@@ -870,6 +870,14 @@ pkg install git -y
 <p><strong>8.How to get <code class="language-plaintext highlighter-rouge">chat_id</code> &amp; <code class="language-plaintext highlighter-rouge">msg_id</code> to use with tg-upload?</strong></p>
 
 <p>You can use third-party Telegram clients that let users to see more details (<a href="https://github.com/TheCaduceus/tg-upload/assets/87380104/6aa76de6-14ec-4a5f-b889-186aeb2e175b">see image</a>) of a given message like <a href="https://github.com/OctoGramApp/OctoGram">OctoGram</a>.</p>
+
+<p><strong>9.Can I send files to a particular topic inside a Telegram community?</strong></p>
+
+<p>Yes! for doing this, you just need to pass the topic identity or identity of any message inside of that topic with <code class="language-plaintext highlighter-rouge">--reply_to</code> flag.</p>
+
+<p><strong>Getting topic identity:</strong></p>
+
+<p>Copy link of any message inside the topic you want identity of and the link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/username/topic_id/msg_id</code> or in case of private chats link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/c/chat_id/topic_id/msg_id</code>.</p>
 
 <p><a name="contribution"></a></p>
 
