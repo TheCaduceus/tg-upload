@@ -14,7 +14,7 @@ from math import floor
 import argparse
 import hashlib
 
-tg_upload = "1.1.1"
+tg_upload = "1.1.2"
 versions = f"tg-upload: {tg_upload} \
 Python: {py_ver[0]}.{py_ver[1]}.{py_ver[2]} \
 Pyrogram: {get_dist('pyrogram').version} \
@@ -84,6 +84,9 @@ parser.add_argument("-r","--recursive", default=env.get("TG_UPLOAD_RECURSIVE", "
 parser.add_argument("--prefix", metavar="TG_UPLOAD_PREFIX", default=env.get("TG_UPLOAD_PREFIX", None), help="Add given prefix text to each filename (prefix + filename).")
 parser.add_argument("-g","--hash_memory_limit", metavar="TG_UPLOAD_HASH_MEMORY_LIMIT", type=int, default=int(env.get("TG_UPLOAD_HASH_MEMORY_LIMIT", 1000000)), help="Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.")
 parser.add_argument("-f","--combine_memory_limit", metavar="TG_UPLOAD_COMBINE_MEMORY_LIMIT", type=int, default=int(env.get("TG_UPLOAD_COMBINE_MEMORY_LIMIT", 1000000)), help="Limit how much memory should be used to combine files in bytes, by default to 1 MB.")
+parser.add_argument("--split_dir", metavar="TG_UPLOAD_SPLIT_DIR", default=env.get("TG_UPLOAD_SPLIT_DIR", "split"), help="Set custom directory for saving splitted files.")
+parser.add_argument("--combine_dir", metavar="TG_UPLOAD_COMBINE_DIR", default=env.get("TG_UPLOAD_COMBINE_DIR", "combine"), help="Set custom directory for saving combined files.")
+parser.add_argument("--thumb_dir", metavar="TG_UPLOAD_THUMB_DIR", default=env.get("TG_UPLOAD_THUMB_DIR", "thumb"), help="Set custom directory for saving thumbnails.")
 parser.add_argument("--no_warn", default=env.get("TG_UPLOAD_NO_WARN", "False").lower() in {"true", "t", "1"}, action="store_true", help="Don't show warning messages.")
 parser.add_argument("--no_update", default=env.get("TG_UPLOAD_NO_UPDATE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Disable checking for updates.")
 
@@ -91,9 +94,10 @@ parser.add_argument("--no_update", default=env.get("TG_UPLOAD_NO_UPDATE", "False
 parser.add_argument("--dl", default=env.get("TG_UPLOAD_DL", "False").lower() in {"true", "t", "1"}, action="store_true", help="Enable download module of tg-upload.")
 parser.add_argument("--links", metavar="TG_UPLOAD_LINKS", nargs="+", type=str, default=env.get("TG_UPLOAD_LINKS", "").split(","), help="Telegram file links to be downloaded (separated with space).")
 parser.add_argument("--txt_file", metavar="TG_UPLOAD_TXT_FILE", default=env.get("TG_UPLOAD_TXT_FILE", None), help=".txt file path containing telegram file links to be downloaded (1 link / line).")
+parser.add_argument("-j", "--auto_combine", default=env.get("TG_UPLOAD_AUTO_COMBINE", "False") in {"true","t","1"}, action="store_true", help="Automatically start combining part files after download.")
 parser.add_argument("--range", default=env.get("TG_UPLOAD_RANGE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Find and download messages in between of two given links or message ids of same chat.")
 parser.add_argument("--msg_id", nargs="+", metavar="TG_UPLOAD_MSG_ID", type=int, default=env.get("TG_UPLOAD_MSG_ID", "").split(","), help="Identity number of messages to be downloaded.")
-parser.add_argument("--dl_dir", metavar="TG_UPLOAD_DL_DIR", default=env.get("TG_UPLOAD_DL_DIR", None), help="Change the download directory, by default 'downloads' in current working directory.")
+parser.add_argument("--dl_dir", metavar="TG_UPLOAD_DL_DIR", default=env.get("TG_UPLOAD_DL_DIR", "downloads"), help="Change the download directory, by default 'downloads' in current working directory.")
 
 # UTILITY FLAGS
 parser.add_argument("--env", action="store_true", help="Display environment variables, their current value and default value in tabular format.")
@@ -107,7 +111,7 @@ parser.add_argument("--convert", help="Convert any image into JPEG format.")
 # MISC FLAGS
 parser.add_argument("--device_model", metavar="TG_UPLOAD_DEVICE_MODEL", default=env.get("TG_UPLOAD_DEVICE_MODEL", "tg-upload"), help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
 parser.add_argument("--system_version", metavar="TG_UPLOAD_SYSTEM_VERSION", default=env.get("TG_UPLOAD_SYSTEM_VERSION", f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"), help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
-parser.add_argument("-v","--version", action="version", help="Display current tg-upload version.", version=versions)
+parser.add_argument("-v","--version", action="version", help="Display current version of tg-upload and dependencies.", version=versions)
 
 args = parser.parse_args()
 
@@ -240,20 +244,39 @@ def file_info(file_path, caption_text):
   return file_size, file_sha256, file_md5, creation_time, modification_time
 
 def split_file(file_path, chunk_size, file_name):
-
+  args.split_dir = PurePath(args.split_dir)
   file_size = Path(file_path).stat().st_size
   num_chunks = file_size // chunk_size + \
     (1 if file_size % chunk_size != 0 else 0)
-  Path("tmp").mkdir(exist_ok=True)
+  Path(args.split_dir).mkdir(exist_ok=True)
   with open(file_path, 'rb') as f:
     for i in range(num_chunks):
       chunk_file_name = f"{file_name}.part{i}"
-      chunk_file_path = f"tmp/{chunk_file_name}"
+      chunk_file_path = f"{args.split_dir}/{chunk_file_name}"
       with open(chunk_file_path, 'wb') as cf:
         cf.write(f.read(chunk_size))
       progress = (i + 1) / num_chunks * 100
       print(f"\rSPLIT: [{file_name}] - {progress:.2f}%", end="")
       yield chunk_file_path, chunk_file_name
+
+def combine_file():
+  output_file_name = args.filename or Path(args.combine[0]).stem
+  Path(args.combine_dir).mkdir(exist_ok=True)
+  with open(f"{PurePath(args.combine_dir)}/{output_file_name}", 'wb') as f:
+    file_size = sum(Path(file_path).stat().st_size for file_path in args.combine)
+    bytes_written = 0
+    for file_path in args.combine:
+      with open(file_path, 'rb') as cf:
+        while True:
+          chunk = cf.read(args.combine_memory_limit)
+          if not chunk:
+            break
+          f.write(chunk)
+          bytes_written += len(chunk)
+          progress = (bytes_written / file_size) * 100
+          print(f"\rCOMBINE: [{output_file_name}] - {progress:.2f}%", end="")
+      if args.delete_on_done:
+        Path(file_path).unlink()
 
 def download_progress(current,total):
 	elapsed_time = time() - start_time
@@ -275,23 +298,8 @@ def get_chatid(raw_id):
     return raw_id
 
 if args.combine:
-  output_file_name = args.filename or Path(args.combine[0]).stem
-  with open(output_file_name, 'wb') as f:
-    file_size = sum(Path(file_path).stat().st_size for file_path in args.combine)
-    bytes_written = 0
-    for file_path in args.combine:
-      with open(file_path, 'rb') as cf:
-        while True:
-          chunk = cf.read(args.combine_memory_limit)
-          if not chunk:
-            break
-          f.write(chunk)
-          bytes_written += len(chunk)
-          progress = (bytes_written / file_size) * 100
-          print(f"\rCOMBINE: [{output_file_name}] - {progress:.2f}%", end="")
-      if args.delete_on_done:
-        Path(file_path).unlink() 
-  exit()
+  exit(combine_file())
+
 elif args.hash:
   _, file_sha256, file_md5,_,_ = file_info(args.hash,"{file_sha256},{file_md5}")
   print(f"\nFile Name:\n{Path(args.hash).name}\nSHA256:\n{file_sha256}\nMD5:\n{file_md5}")
@@ -362,11 +370,15 @@ elif args.env:
   table.add_row(["TG_UPLOAD_PREFIX", "--prefix", env.get("TG_UPLOAD_PREFIX"), None])
   table.add_row(["TG_UPLOAD_HASH_MEMORY_LIMIT", "--hash_memory_limit", env.get("TG_UPLOAD_HASH_MEMORY_LIMIT"), 1000000])
   table.add_row(["TG_UPLOAD_COMBINE_MEMORY_LIMIT", "--combine_memory_limit", env.get("TG_UPLOAD_COMBINE_MEMORY_LIMIT"), 1000000])
+  table.add_row(["TG_UPLOAD_SPLIT_DIR", "--split_dir", env.get("TG_UPLOAD_SPLIT_DIR"), "./split"])
+  table.add_row(["TG_UPLOAD_COMBINE_DIR", "--combine_dir", env.get("TG_UPLOAD_COMBINE_DIR"), "./combine"])
+  table.add_row(["TG_UPLOAD_THUMB_DIR", "--thumb_dir", env.get("TG_UPLOAD_THUMB_DIR"), "./thumb"])
   table.add_row(["TG_UPLOAD_NO_WARN", "--no_warn", env.get("TG_UPLOAD_NO_WARN"), False])
   table.add_row(["TG_UPLOAD_NO_UPDATE", "--no_update", env.get("TG_UPLOAD_NO_UPDATE"), False])
   table.add_row(["TG_UPLOAD_DL", "--dl", env.get("TG_UPLOAD_DL"), False])
   table.add_row(["TG_UPLOAD_LINKS", "--links", env.get("TG_UPLOAD_LINKS"), None])
   table.add_row(["TG_UPLOAD_TXT_FILE", "--txt_file", env.get("TG_UPLOAD_TXT_FILE"), None])
+  table.add_row(["TG_UPLOAD_AUTO_COMBINE", "--auto_combine", env.get("TG_UPLOAD_AUTO_COMBINE"), False])
   table.add_row(["TG_UPLOAD_RANGE", "--range", env.get("TG_UPLOAD_RANGE"), False])
   table.add_row(["TG_UPLOAD_MSG_ID", "--msg_id", env.get("TG_UPLOAD_MSG_ID"), None])
   table.add_row(["TG_UPLOAD_DL_DIR", "--dl_dir", env.get("TG_UPLOAD_DL_DIR"), None])
@@ -378,11 +390,10 @@ elif args.frame:
     exit("Error: Video file path is not provided.")
   print("Capturing frame...")
   with VideoFileClip(args.path) as video:
-    Path("thumb").mkdir(exist_ok=True)
+    Path(args.thumb_dir).mkdir(exist_ok=True)
     thumb = f"thumb/THUMB_{PurePath(args.path).stem}.jpg"
     video.save_frame(thumb, t=args.frame)
   exit(f"Saved at {thumb}")
-
 elif not args.profile:
   exit("Error: No session name (--profile) passed to start client with.")
 
@@ -399,9 +410,7 @@ else:
   proxy_json = None
 
 if args.api_id and args.api_hash:
-  if args.phone and args.bot:
-    exit("Error: Both phone number and bot token cannot be passed at the same time.")
-  elif not args.phone and not args.bot:
+  if not args.phone and not args.bot:
     if not Path(f"{args.profile}.session").exists():
       raise ValueError ("Given profile is not yet initialized! provide phone number or bot token to initialize.")
 elif not args.api_id or not args.api_hash:
@@ -498,6 +507,22 @@ with client:
             print(f"\nNo Media: MSG_{message_id}")
           except Exception as error_code:
             print(f"\n{error_code}")
+        
+        if args.auto_combine:
+          part_files = Path().glob(f"{PurePath(args.dl_dir)}/*.part0")
+          for part_file in part_files:
+            filename = part_file.stem
+            if Path(f"{args.combine_dir}/{filename}").exists():
+              continue
+            args.combine = [part_file]
+            for x in range(1,1000):
+              if Path(f"{args.split_dir}/{filename}.part{x}").is_file():
+                args.combine.append(f"{args.split_dir}/{filename}.part{x}")
+              else:
+                break
+            if len(args.combine) > 1:
+              combine_file()
+
       else:
         for link in args.links:
           chat_id, message_id = validate_link(link)
@@ -517,6 +542,21 @@ with client:
             client.download_media(message, progress=download_progress, file_name=filename)
           except ValueError as error_code:
             print(f"\n{error_code}  - {link}")
+
+        if args.auto_combine:
+          part_files = Path().glob(f"{PurePath(args.dl_dir)}/*.part0")
+          for part_file in part_files:
+            filename = part_file.stem
+            if Path(f"{args.combine_dir}/{filename}").exists():
+              continue
+            args.combine = [part_file]
+            for x in range(1,1000):
+              if Path(f"{args.split_dir}/{filename}.part{x}").is_file():
+                args.combine.append(f"{args.split_dir}/{filename}.part{x}")
+              else:
+                break
+            if len(args.combine) > 1:
+              combine_file()
     elif args.chat_id and len(args.msg_id) != 0 and args.msg_id[0]:
       args.chat_id = get_chatid(args.chat_id)
 
@@ -544,11 +584,26 @@ with client:
             print(f"\nNo Media: MSG_{message_id}")
           except Exception as error_code:
             print(f"\n{error_code}")
-            
+
+        if args.auto_combine:
+          part_files = Path().glob(f"{PurePath(args.dl_dir)}/*.part0")
+          for part_file in part_files:
+            filename = part_file.stem
+            if Path(f"{args.combine_dir}/{filename}").exists():
+              continue
+            args.combine = [part_file]
+            for x in range(1,1000):
+              if Path(f"{args.split_dir}/{filename}.part{x}").is_file():
+                args.combine.append(f"{args.split_dir}/{filename}.part{x}")
+              else:
+                break
+            if len(args.combine) > 1:
+              combine_file()
+
       else:
         for msg_id in args.msg_id:
           try:
-            message = client.get_messages(args.chat_id, args.msg_id)
+            message = client.get_messages(args.chat_id, msg_id)
           except errors.exceptions.bad_request_400.ChannelInvalid:
             exit(f"Error: No access to {args.chat_id}.")
           except ValueError as error_code:
@@ -561,6 +616,21 @@ with client:
             client.download_media(message, progress=download_progress, file_name=filename)
           except ValueError:
             exit(f"\nError: No downloadable media found - {msg_id}")
+
+        if args.auto_combine:
+          part_files = Path().glob(f"{PurePath(args.dl_dir)}/*.part0")
+          for part_file in part_files:
+            filename = part_file.stem
+            if Path(f"{args.combine_dir}/{filename}").exists():
+              continue
+            args.combine = [part_file]
+            for x in range(1,1000):
+              if Path(f"{args.split_dir}/{filename}.part{x}").is_file():
+                args.combine.append(f"{args.split_dir}/{filename}.part{x}")
+              else:
+                break
+            if len(args.combine) > 1:
+              combine_file()
     else:
       exit("Error: No link or message id provided to download.")
   else:
@@ -649,7 +719,7 @@ with client:
             filename = filename.replace(args.replace[0], args.replace[1])
           file_size, file_sha256, file_md5, creation_time, modification_time = file_info(args.path, caption)
           with VideoFileClip(args.path) as video:
-            Path("thumb").mkdir(exist_ok=True)
+            Path(args.thumb_dir).mkdir(exist_ok=True)
             if args.thumb == 'auto':
               args.thumb = f"thumb/THUMB_{PurePath(args.path).stem}.jpg"
               video.save_frame(args.thumb, t=floor(video.duration / 2))
@@ -679,7 +749,7 @@ with client:
                 filename = filename.replace(args.replace[0], args.replace[1])
               file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
               with VideoFileClip(_path) as video:
-                Path("thumb").mkdir(exist_ok=True)
+                Path(args.thumb_dir).mkdir(exist_ok=True)
                 if args.thumb == 'auto':
                   args.thumb = f"thumb/THUMB_{PurePath(_path).stem}.jpg"
                   video.save_frame(args.thumb, t=floor(video.duration / 2))
@@ -793,7 +863,7 @@ with client:
           if args.replace:
             filename = filename.replace(args.replace[0], args.replace[1])
           with VideoFileClip(args.path) as video:
-            Path("thumb").mkdir(exist_ok=True)
+            Path(args.thumb_dir).mkdir(exist_ok=True)
             if args.thumb == 'auto':
               args.thumb = f"thumb/THUMB_{PurePath(args.path).stem}.jpg"
               video.save_frame(args.thumb, t=floor(video.duration / 2))
@@ -818,7 +888,7 @@ with client:
               if args.replace:
                 filename = filename.replace(args.replace[0], args.replace[1])
               with VideoFileClip(_path) as video:
-                Path("thumb").mkdir(exist_ok=True)
+                Path(args.thumb_dir).mkdir(exist_ok=True)
                 if args.thumb == 'auto':
                   args.thumb = f"thumb/THUMB_{PurePath(_path).stem}.jpg"
                   video.save_frame(args.thumb, t=floor(video.duration / 2))
