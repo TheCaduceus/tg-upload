@@ -238,6 +238,9 @@ pkg install git -y
 --prefix - Add given prefix text to each filename (prefix + filename).
 --hash_memory_limit - Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.
 --combine_memory_limit - Limit how much memory should be used to combine files in bytes, by default to 1 MB.
+--split_dir - Set custom directory for saving splitted files.
+--combine_dir - Set custom directory for saving combined files.
+--thumb_dir - Set custom directory for saving thumbnails.
 --no_warn - Don't show warning messages.
 --no_update - Disable checking for updates.
 </code></pre></div></div>
@@ -250,6 +253,7 @@ pkg install git -y
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--dl - Enable download module of tg-upload.
 --links - Telegram file links to be downloaded (separated with space).
 --txt_file - .txt file path containing Telegram file links to be downloaded (1 link / line).
+-j,--auto_combine - Automatically start combining part files after download.
 --range - Find and download messages in between of two given links or message ids of same chat.
 --chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
 --msg_id - Identity number of messages to be downloaded.
@@ -524,6 +528,21 @@ pkg install git -y
       <td style="text-align: center">Same as flag</td>
     </tr>
     <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_SPLIT_DIR</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--split_dir</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_COMBINE_DIR</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--combine_dir</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_THUMB_DIR</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--thumb_dir</code></td>
+      <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_NO_WARN</code></td>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--no_warn</code></td>
       <td style="text-align: center">True or False</td>
@@ -547,6 +566,11 @@ pkg install git -y
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_TXT_FILE</code></td>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--txt_file</code></td>
       <td style="text-align: center">Same as flag</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_AUTO_COMBINE</code></td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">--auto_combine</code></td>
+      <td style="text-align: center">True or False</td>
     </tr>
     <tr>
       <td style="text-align: center"><code class="language-plaintext highlighter-rouge">TG_UPLOAD_RANGE</code></td>
@@ -615,17 +639,17 @@ pkg install git -y
 
 <p>Download files:</p>
 
-<p>1.<em>From private/public chats:</em></p>
+<p><em>1.From private/public chats:</em></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --dl --links LINK...  --OTHER OPTIONAL FLAGS
 </code></pre></div></div>
 
-<p>2.<em>From Saved Messages:</em></p>
+<p><em>2.From Saved Messages:</em></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --dl --msg_id VALUE --OTHER OPTIONAL FLAGS
 </code></pre></div></div>
 
-<p>3.<em>From personal chats or by manually providing <code class="language-plaintext highlighter-rouge">chat_id</code> &amp; <code class="language-plaintext highlighter-rouge">msg_id</code>:</em></p>
+<p><em>3.From personal chats or by manually providing <code class="language-plaintext highlighter-rouge">chat_id</code> &amp; <code class="language-plaintext highlighter-rouge">msg_id</code>:</em></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --dl --chat_id phone/username/id --msg_id VALUE --OTHER OPTIONAL FLAGS
 </code></pre></div></div>
