@@ -205,7 +205,7 @@ List of flags that are usable with tg-upload's download module, while flags with
 ```
 --dl - Enable download module of tg-upload.
 --links - Telegram file links to be downloaded (separated with space).
---txt_file - .txt file path containing telegram file links to be downloaded (1 link / line).
+--txt_file - .txt file path containing Telegram file links to be downloaded (1 link / line).
 --range - Find and download messages in between of two given links or message ids of same chat.
 --chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
 --msg_id - Identity number of messages to be downloaded.
@@ -597,6 +597,14 @@ py tg-upload.py --profile xyz --logout
 **8.How to get `chat_id` & `msg_id` to use with tg-upload?**
 
 You can use third-party Telegram clients that let users to see more details (<a href="https://github.com/TheCaduceus/tg-upload/assets/87380104/6aa76de6-14ec-4a5f-b889-186aeb2e175b">see image</a>) of a given message like [OctoGram](https://github.com/OctoGramApp/OctoGram).
+
+**9.Can I send files to a particular topic inside a Telegram community?**
+
+Yes! for doing this, you just need to pass the topic identity or identity of any message inside of that topic with `--reply_to` flag.
+
+**Getting topic identity:**
+
+Copy link of any message inside the topic you want identity of and the link will be in this format `https://t.me/username/topic_id/msg_id` or in case of private chats link will be in this format `https://t.me/c/chat_id/topic_id/msg_id`.
 
 <a name="contribution"></a>
 
