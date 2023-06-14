@@ -193,6 +193,9 @@ Behaviour flags controls the behaviour of transmission.
 --prefix - Add given prefix text to each filename (prefix + filename).
 --hash_memory_limit - Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.
 --combine_memory_limit - Limit how much memory should be used to combine files in bytes, by default to 1 MB.
+--split_dir - Set custom directory for saving splitted files.
+--combine_dir - Set custom directory for saving combined files.
+--thumb_dir - Set custom directory for saving thumbnails.
 --no_warn - Don't show warning messages.
 --no_update - Disable checking for updates.
 ```
@@ -206,6 +209,7 @@ List of flags that are usable with tg-upload's download module, while flags with
 --dl - Enable download module of tg-upload.
 --links - Telegram file links to be downloaded (separated with space).
 --txt_file - .txt file path containing Telegram file links to be downloaded (1 link / line).
+-j,--auto_combine - Automatically start combining part files after download.
 --range - Find and download messages in between of two given links or message ids of same chat.
 --chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
 --msg_id - Identity number of messages to be downloaded.
@@ -298,11 +302,15 @@ Flags that does not fit in above categories are listed in this category:
 |`TG_UPLOAD_PREFIX`              |`--prefix`              |Same as flag    |
 |`TG_UPLOAD_HASH_MEMORY_LIMIT`   |`--hash_memory_limit`   |Same as flag    |
 |`TG_UPLOAD_COMBINE_MEMORY_LIMIT`|`--combine_memory_limit`|Same as flag    |
+|`TG_UPLOAD_SPLIT_DIR`           |`--split_dir`           |Same as flag    |
+|`TG_UPLOAD_COMBINE_DIR`         |`--combine_dir`         |Same as flag    |
+|`TG_UPLOAD_THUMB_DIR`           |`--thumb_dir`           |Same as flag    |
 |`TG_UPLOAD_NO_WARN`             |`--no_warn`             |True or False   |
 |`TG_UPLOAD_NO_UPDATE`           |`--no_update`           |True or False   |
 |`TG_UPLOAD_DL`                  |`--dl`                  |True or False   |
 |`TG_UPLOAD_LINKS`               |`--links`               |Separate both values using "," (comma).|
 |`TG_UPLOAD_TXT_FILE`            |`--txt_file`            |Same as flag    |
+|`TG_UPLOAD_AUTO_COMBINE`        |`--auto_combine`        |True or False   |
 |`TG_UPLOAD_RANGE`               |`--range`               |True or False   |
 |`TG_UPLOAD_MSG_ID`              |`--msg_id`              |Separate both values using "," (comma).|
 |`TG_UPLOAD_DL_DIR`              |`--dl_dir`              |Same as flag    |
@@ -351,19 +359,19 @@ py tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 
 Download files:
 
-1.*From private/public chats:*
+*1.From private/public chats:*
 
 ```
 py tg-upload.py --profile VALUE --dl --links LINK...  --OTHER OPTIONAL FLAGS
 ```
 
-2.*From Saved Messages:*
+*2.From Saved Messages:*
 
 ```
 py tg-upload.py --profile VALUE --dl --msg_id VALUE --OTHER OPTIONAL FLAGS
 ```
 
-3.*From personal chats or by manually providing `chat_id` & `msg_id`:*
+*3.From personal chats or by manually providing `chat_id` & `msg_id`:*
 
 ```
 py tg-upload.py --profile VALUE --dl --chat_id phone/username/id --msg_id VALUE --OTHER OPTIONAL FLAGS
