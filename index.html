@@ -903,6 +903,12 @@ pkg install git -y
 
 <p>Copy link of any message inside the topic you want identity of and the link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/username/topic_id/msg_id</code> or in case of private chats link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/c/chat_id/topic_id/msg_id</code>.</p>
 
+<p>10.Is <code class="language-plaintext highlighter-rouge">--replace</code> flag case-sensitive? can it also manipulate file format?</p>
+
+<p>Be aware that the replace flag is case-sensitive and has full access to the filename, including its format. This means that it can manipulate the file format and even your filename prefix. During download, you should use replace more carefully because if the file is a part file containing <code class="language-plaintext highlighter-rouge">.partX</code> (an extension allotted by tg-upload) where <code class="language-plaintext highlighter-rouge">X</code> is any number starting from 0, then replace can even manipulate it.</p>
+
+<p>However, it is not going to damage your file content. If you have replaced some unexpected words, you can always rename your file.</p>
+
 <p><a name="contribution"></a></p>
 
 <h2 id="️-contribution">⚒️ Contribution</h2>
