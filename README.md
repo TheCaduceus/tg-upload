@@ -614,6 +614,12 @@ Yes! for doing this, you just need to pass the topic identity or identity of any
 
 Copy link of any message inside the topic you want identity of and the link will be in this format `https://t.me/username/topic_id/msg_id` or in case of private chats link will be in this format `https://t.me/c/chat_id/topic_id/msg_id`.
 
+10.Is `--replace` flag case-sensitive? can it also manipulate file format?
+
+Be aware that the replace flag is case-sensitive and has full access to the filename, including its format. This means that it can manipulate the file format and even your filename prefix. During download, you should use replace more carefully because if the file is a part file containing `.partX` (an extension allotted by tg-upload) where `X` is any number starting from 0, then replace can even manipulate it.
+
+However, it is not going to damage your file content. If you have replaced some unexpected words, you can always rename your file.
+
 <a name="contribution"></a>
 
 ## ⚒️ Contribution
