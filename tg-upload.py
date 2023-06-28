@@ -14,7 +14,7 @@ from math import floor
 import argparse
 import hashlib
 
-tg_upload = "1.1.2"
+tg_upload = "1.1.3"
 versions = f"tg-upload: {tg_upload} \
 Python: {py_ver[0]}.{py_ver[1]}.{py_ver[2]} \
 Pyrogram: {get_dist('pyrogram').version} \
@@ -27,24 +27,24 @@ moviepy {get_dist('moviepy').version} \
 json_endpoint = "https://cdn.thecaduceus.eu.org/tg-upload/release.json"
 
 parser = argparse.ArgumentParser(
-  prog="tg-upload.py",
-  usage="To perform any task listed below, you will need to create or use a new/existing session.\nEach new/existing session can be accessed by its name provided using the --profile flag.\n\nYou don't need to provide API_ID, API_HASH, phone number or bot token etc to perform any task again & again!\nOnce you successfully login & created a session then you just need to provide its name using --profile flag and you will be logged in without any authentication flow (until you terminate the session using Telegram).",
-  description="An open-source Python program to upload/download files/folder to/from Telegram effortlessly.",
+  prog="tg-upload",
+  usage="https://thecaduceus.eu.org/tg-upload",
+  description="An open-source Python program or a CLI Tool to upload/download files/folder to/from Telegram effortlessly.",
   epilog="An open-source program developed by Dr.Caduceus (GitHub.com/TheCaduceus)"
   )
 
 # CONNECTIVITY FLAGS
-parser.add_argument("--ipv6", default=env.get("TG_UPLOAD_IPV6", "False").lower() in {"true", "t", "1"}, action="store_true", help="Connect Telegram using device's IPv6. By default IPv4")
-parser.add_argument("--proxy", metavar="TG_UPLOAD_PROXY", default=env.get("TG_UPLOAD_PROXY", None), help="Proxy name (in proxy.json) to use for connecting Telegram.")
+parser.add_argument("--ipv6", default=env.get("TG_UPLOAD_IPV6", "False").lower() in {"true", "t", "1"}, action="store_true", help="Connect to Telegram using your device's IPv6, by default IPv4.")
+parser.add_argument("--proxy", metavar="TG_UPLOAD_PROXY", default=env.get("TG_UPLOAD_PROXY", None), help="The name of the proxy (in proxy.json) to use for connecting to Telegram.")
 
 # LOGIN FLAGS
-parser.add_argument("-p","--profile", metavar="TG_UPLOAD_PROFILE", default=env.get("TG_UPLOAD_PROFILE", None), help="Name of your new/existing session.")
+parser.add_argument("-p","--profile", metavar="TG_UPLOAD_PROFILE", default=env.get("TG_UPLOAD_PROFILE", None), help="The name of your new or existing session.")
 parser.add_argument("--info", default=env.get("TG_UPLOAD_INFO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Show your Telegram account details as JSON.")
-parser.add_argument("--api_id", metavar="TG_UPLOAD_API_ID", default=int(env.get("TG_UPLOAD_API_ID", 12345)), type=int, help="Telegram API ID required to create new session.")
-parser.add_argument("--api_hash", metavar="TG_UPLOAD_API_HASH", default=env.get("TG_UPLOAD_API_HASH", None), help="Telegram API HASH required to create new session.")
-parser.add_argument("--phone", metavar="TG_UPLOAD_PHONE", default=env.get("TG_UPLOAD_PHONE", None), help="Phone number (international format) required to login as user.")
+parser.add_argument("--api_id", metavar="TG_UPLOAD_API_ID", default=int(env.get("TG_UPLOAD_API_ID", 12345)), type=int, help="Telegram API ID, required to create new session.")
+parser.add_argument("--api_hash", metavar="TG_UPLOAD_API_HASH", default=env.get("TG_UPLOAD_API_HASH", None), help="Telegram API HASH, required to create new session.")
+parser.add_argument("--phone", metavar="TG_UPLOAD_PHONE", default=env.get("TG_UPLOAD_PHONE", None), help="Phone number (in international format), required to login as user.")
 parser.add_argument("--hide_pswd", default=env.get("TG_UPLOAD_HIDE_PSWD", "False").lower() in {"true", "t", "1"}, action="store_true", help="Hide 2FA password using getpass.")
-parser.add_argument("--bot", metavar="TG_UPLOAD_BOT_TOKEN", default=env.get("TG_UPLOAD_BOT_TOKEN", None), help="Telegram bot token required to login as bot.")
+parser.add_argument("--bot", metavar="TG_UPLOAD_BOT_TOKEN", default=env.get("TG_UPLOAD_BOT_TOKEN", None), help="Telegram bot token, required to login as bot.")
 parser.add_argument("--logout", default=env.get("TG_UPLOAD_LOGOUT", "False").lower() in {"true", "t", "1"}, action="store_true", help="Revoke current session and delete session file.")
 parser.add_argument("--login_string", metavar="TG_UPLOAD_SESSION_STRING", default=env.get("TG_UPLOAD_SESSION_STRING", None), help="Session string to login without auth & creating a session file.")
 parser.add_argument("--export_string", default=env.get("TG_UPLOAD_EXPORT_STRING", "False").lower() in {"true", "t", "1"}, action="store_true", help="Generate & display session string using existing session file.")
@@ -55,12 +55,12 @@ parser.add_argument("--login_only", default=env.get("TG_UPLOAD_LOGIN_ONLY", "Fal
 parser.add_argument("-l","--path", metavar="TG_UPLOAD_PATH", default=env.get("TG_UPLOAD_PATH", None), help="Path to the file or folder to upload.")
 parser.add_argument("-n","--filename", metavar="TG_UPLOAD_FILENAME", default=env.get("TG_UPLOAD_FILENAME", None), help="To upload/download data with custom name.")
 parser.add_argument("-i","--thumb", metavar="TG_UPLOAD_THUMB", default=env.get("TG_UPLOAD_THUMB", None), help="Path of thumbnail image to be attached with given file. Pass 'auto' for random frame or particular frame time (in seconds) to attach it with video as thumbnail.")
-parser.add_argument("-z","--caption", metavar="TG_UPLOAD_CAPTION", default=env.get("TG_UPLOAD_CAPTION", ""), help="Caption text to be attached with file(s), markdown & HTML formatting allowed.")
+parser.add_argument("-z","--caption", metavar="TG_UPLOAD_CAPTION", default=env.get("TG_UPLOAD_CAPTION", ""), help="Caption text to be attached with file, markdown & HTML formatting allowed.")
 parser.add_argument("--duration", metavar="TG_UPLOAD_DURATION", default=int(env.get("TG_UPLOAD_DURATION", 0)), type=int, help="Duration of audio/video in seconds. Pass '-1' for automatic detection.")
-parser.add_argument("--capjson", metavar="TG_UPLOAD_CAPJSON", default=env.get("TG_UPLOAD_CAPJSON", None), help="Caption name (in caption.json) to attach with given file(s).")
+parser.add_argument("--capjson", metavar="TG_UPLOAD_CAPJSON", default=env.get("TG_UPLOAD_CAPJSON", None), help="Caption name (in caption.json) to attach with given file.")
 
 # BEHAVIOUR FLAGS
-parser.add_argument("-c","--chat_id", metavar="TG_UPLOAD_CHAT_ID", default=env.get("TG_UPLOAD_CHAT_ID", "me") , help="Identity of chat to send/download the file to/from? can be username, phone number (international format) or Identity number, by default to Saved Messages.")
+parser.add_argument("-c","--chat_id", metavar="TG_UPLOAD_CHAT_ID", default=env.get("TG_UPLOAD_CHAT_ID", "me") , help="The identity of the chat to upload or download the file to/from can be the username, phone number (in international format), or ID number. By default, Saved Messages.")
 parser.add_argument("--as_photo", default=env.get("TG_UPLOAD_AS_PHOTO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as picture.")
 parser.add_argument("--as_video", default=env.get("TG_UPLOAD_AS_VIDEO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as video.")
 parser.add_argument("--as_audio", default=env.get("TG_UPLOAD_AS_AUDIO", "False").lower() in {"true", "t", "1"}, action="store_true", help="Send given file as audio.")
@@ -87,7 +87,7 @@ parser.add_argument("-f","--combine_memory_limit", metavar="TG_UPLOAD_COMBINE_ME
 parser.add_argument("--split_dir", metavar="TG_UPLOAD_SPLIT_DIR", default=env.get("TG_UPLOAD_SPLIT_DIR", "split"), help="Set custom directory for saving splitted files.")
 parser.add_argument("--combine_dir", metavar="TG_UPLOAD_COMBINE_DIR", default=env.get("TG_UPLOAD_COMBINE_DIR", "combine"), help="Set custom directory for saving combined files.")
 parser.add_argument("--thumb_dir", metavar="TG_UPLOAD_THUMB_DIR", default=env.get("TG_UPLOAD_THUMB_DIR", "thumb"), help="Set custom directory for saving thumbnails.")
-parser.add_argument("--no_warn", default=env.get("TG_UPLOAD_NO_WARN", "False").lower() in {"true", "t", "1"}, action="store_true", help="Don't show warning messages.")
+parser.add_argument("--no_warn", default=env.get("TG_UPLOAD_NO_WARN", "False").lower() in {"true", "t", "1"}, action="store_true", help="Don't show warning messages. (DEPRECATED)")
 parser.add_argument("--no_update", default=env.get("TG_UPLOAD_NO_UPDATE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Disable checking for updates.")
 
 # DOWNLOAD FLAGS
@@ -95,8 +95,8 @@ parser.add_argument("--dl", default=env.get("TG_UPLOAD_DL", "False").lower() in 
 parser.add_argument("--links", metavar="TG_UPLOAD_LINKS", nargs="+", type=str, default=env.get("TG_UPLOAD_LINKS", "").split(","), help="Telegram file links to be downloaded (separated with space).")
 parser.add_argument("--txt_file", metavar="TG_UPLOAD_TXT_FILE", default=env.get("TG_UPLOAD_TXT_FILE", None), help=".txt file path containing telegram file links to be downloaded (1 link / line).")
 parser.add_argument("-j", "--auto_combine", default=env.get("TG_UPLOAD_AUTO_COMBINE", "False") in {"true","t","1"}, action="store_true", help="Automatically start combining part files after download.")
-parser.add_argument("--range", default=env.get("TG_UPLOAD_RANGE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Find and download messages in between of two given links or message ids of same chat.")
-parser.add_argument("--msg_id", nargs="+", metavar="TG_UPLOAD_MSG_ID", type=int, default=env.get("TG_UPLOAD_MSG_ID", "").split(","), help="Identity number of messages to be downloaded.")
+parser.add_argument("--range", default=env.get("TG_UPLOAD_RANGE", "False").lower() in {"true", "t", "1"}, action="store_true", help="Find and download messages in between of two given links or message IDs of same chat.")
+parser.add_argument("--msg_id", nargs="+", metavar="TG_UPLOAD_MSG_ID", type=int, default=env.get("TG_UPLOAD_MSG_ID", "").split(","), help="Identity number of messages to be downloaded (separated with space).")
 parser.add_argument("--dl_dir", metavar="TG_UPLOAD_DL_DIR", default=env.get("TG_UPLOAD_DL_DIR", "downloads"), help="Change the download directory, by default 'downloads' in current working directory.")
 
 # UTILITY FLAGS
@@ -109,8 +109,8 @@ parser.add_argument("--frame", type=int, help="Capture a frame from a video file
 parser.add_argument("--convert", help="Convert any image into JPEG format.")
 
 # MISC FLAGS
-parser.add_argument("--device_model", metavar="TG_UPLOAD_DEVICE_MODEL", default=env.get("TG_UPLOAD_DEVICE_MODEL", "tg-upload"), help="Overwrite device model before starting client, by default 'tg-upload', can be anything like your name.")
-parser.add_argument("--system_version", metavar="TG_UPLOAD_SYSTEM_VERSION", default=env.get("TG_UPLOAD_SYSTEM_VERSION", f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"), help="Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.")
+parser.add_argument("--device_model", metavar="TG_UPLOAD_DEVICE_MODEL", default=env.get("TG_UPLOAD_DEVICE_MODEL", "tg-upload"), help="Overwrite device model before starting client, by default 'tg-upload'.")
+parser.add_argument("--system_version", metavar="TG_UPLOAD_SYSTEM_VERSION", default=env.get("TG_UPLOAD_SYSTEM_VERSION", f"{py_ver[0]}.{py_ver[1]}.{py_ver[2]}"), help="Overwrite system version before starting client, by default installed python version.")
 parser.add_argument("-v","--version", action="version", help="Display current version of tg-upload and dependencies.", version=versions)
 
 args = parser.parse_args()
