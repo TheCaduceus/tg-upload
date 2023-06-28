@@ -1,10 +1,10 @@
 <div align="center">
 <h1>📦tg-upload</h1>
-<b>An open-source Python program or a CLI Tool to upload/download files/folder to/from Telegram effortlessly.</b>
+<b>An open-source Python program or a CLI Tool to upload/download files/folders to/from Telegram effortlessly.</b>
 </div><br>
 
 <div align="center">
-<i>tg-upload was born when there was no dedicated CLI tool or existing tools were outdated and much slower with limited functionalities. Now, it is used by thousands of users worldwide, according to GitHub Insight Report.</i>
+<i>Transform your Telegram account into personal cloud storage with tg-upload.</i>
 </div>
 
 ## **📑 INDEX**
@@ -47,7 +47,7 @@
 <a name="installation"></a>
 
 ## ⚙️ Installation
-Git installation is optional if you prefer downloading stable releases zips of tg-upload using [releases](https://github.com/TheCaduceus/tg-upload/releases) section.
+Git installation is optional if you prefer downloading tg-upload as zip file using the [releases](https://github.com/TheCaduceus/tg-upload/releases) section.
 <a name="i-1"></a>
 
 **1.Install Python & Git:**
@@ -63,7 +63,7 @@ For Linux:
 ```
 sudo apt-get update && sudo apt-get install -y python3.11 git pip
 ```
-For MacOS:
+For macOS:
 ```
 brew install python@3.11 git
 ```
@@ -77,14 +77,14 @@ pkg install git -y
 
 **2.Download tg-upload:**
 
-- For stable releases, download zip from [here](https://github.com/TheCaduceus/tg-upload/releases) and unzip. (Recommended)
+- Download as zip from [here](https://github.com/TheCaduceus/tg-upload/releases).
 
-- To download beta releases, use git:
+- Use Git:
 ```
 git clone https://github.com/TheCaduceus/tg-upload.git
 ```
 
-> Starting from release [v1.0.1](https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.1), tg-upload not support Termux anymore due to absence of some required dependencies. You may try older [release](https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.0) to enjoy basic functionalities offered by tg-upload. Hence, any issue related with Termux will be rejected without any further investigation.
+> Starting from release [v1.0.1](https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.1), tg-upload no longer supports Termux due to the absence of some required dependencies. You may try an older [release](https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.0) to enjoy the basic functionalities offered by tg-upload. Hence, any issue related to Termux will be rejected without any further investigation.
 
 **3.Change Directory:**
 
@@ -96,7 +96,7 @@ cd tg-upload
 
 **4.Install requirements:**
 
-If your device already have required dependencies installed, then verify if their version and the version mentioned in 'requirements.txt' are same otherwise upgrade them. You can see their version by using tg-upload's `-v` flag.
+If your device already has the required dependencies installed, verify if their version matches the version mentioned in 'requirements.txt'. Otherwise, upgrade them. You can see their version by using the tg-upload's `-v` flag.
 
 ```
 pip install -r requirements.txt
@@ -111,35 +111,35 @@ python tg-upload.py -h
 <a name="options"></a>
 
 ## 🚩 Options
-**tg-upload provides multiple options known as flags to control overall behaviour of the program, flags are categorized as follows:**
+**tg-upload provides multiple options known as flags to control the overall behaviour of the program. These flags are categorized as follows:**
 
 <a name="flag-1"></a>
 
 **1.CONNECTIVITY FLAGS:**
 
-Connectivity flags controls how the program should establish connection to Telegram servers, thus letting users use proxies and IPV6.
+Connectivity flags control how the program should establish a connection to Telegram servers, thus allowing users to use proxies and IPV6.
 
 How to configure proxies? [[Learn here](#htu-5)]
 
 ```
---ipv6 - Connect Telegram using device's IPv6. By default IPv4.
---proxy - Proxy name (in proxy.json) to use for connecting Telegram.
+--ipv6 - Connect to Telegram using your device’s IPv6, by default IPv4.
+--proxy - The name of the proxy (in proxy.json) to use for connecting to Telegram.
 ```
 
 <a name="flag-2"></a>
 
 **2.LOGIN FLAGS:**
 
-Login flags are responsible for controling behaviour of the program during authentication flow.
+Login flags are responsible for controlling the behaviour of the program during the authentication flow.
 
 ```
--p,--profile - Name of your new/existing session.
+-p,--profile - The name of your new or existing session.
 --info - Show your Telegram account details as JSON.
---api_id - Telegram API ID required to create new session.
---api_hash - Telegram API HASH required to create new session.
---phone - Phone number (international format) required to login as user.
+--api_id - Telegram API ID, required to create new session.
+--api_hash - Telegram API HASH, required to create new session.
+--phone - Phone number (in international format), required to login as user.
 --hide_pswd - Hide 2FA password using getpass.
---bot - Telegram bot token required to login as bot.
+--bot - Telegram bot token, required to login as bot.
 --logout - Revoke current session and delete session file.
 --login_string - Session string to login without auth & creating session file.
 --export_string - Generate & display session string using existing session file.
@@ -151,52 +151,52 @@ Login flags are responsible for controling behaviour of the program during authe
 
 **3.FILE FLAGS:**
 
-File flags are used to provide information about file/folder.
+File flags are used to provide information about files/folders.
 
 ```
 -l,--path - Path to the file or folder to upload.
 -n,--filename - To upload data with custom name.
--i,--thumb - Path of thumbnail image to be attached with given file. Pass 'auto' for random frame or particular frame time (in seconds) to attach it with video as thumbnail.
--z,--caption - Caption text to be attached with file(s), markdown & HTML formatting allowed.
---duration - Duration of audio/video in seconds. Pass '-1' for automatic detection.
---capjson - Caption name (in caption.json) to attach with given file(s).
+-i,--thumb - Path of thumbnail image to be attached with given file. Pass "auto" for random frame or particular frame time (in seconds) to attach it with video as thumbnail.
+-z,--caption - Caption text to be attached with file, markdown & HTML formatting allowed.
+--duration - Duration of audio/video in seconds. Pass "-1" for automatic detection.
+--capjson - Caption name (in caption.json) to attach with given file.
 ```
 
 <a name="flag-4"></a>
 
 **4.BEHAVIOUR FLAGS:**
 
-Behaviour flags controls the behaviour of transmission.
+Behaviour flags control the transmission’s behaviour.
 
 ```
--c,--chat_id - Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.
+-c,--chat_id - The identity of the chat to upload the file to can be the username, phone number (in international format), or ID number. By default, Saved Messages.
 --as_photo - Send given file as picture.
 --as_video - Send given file as video.
 --as_audio - Send given file as audio.
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
---split - Split files in given bytes and upload.
+--split - Split file in given bytes and upload.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
---reply_to - Send files as reply to given message id.
+--reply_to - Send file as reply to given message id.
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
 -y,--self_destruct - Number of seconds (60 or below) after which photo/video will self destruct once seen by receiver.
---protect - Protect uploaded files from getting forwarded & saved.
+--protect - Protect uploaded file from getting forwarded & saved.
 --parse_mode - Set custom formatting mode for caption.
 -d,--delete_on_done - Delete the given file after task completion.
 -w,--width - Set custom width for video, by default to original video width.
 -e,--height - Set custom height for video, by default to original video height.
 -a,--artist - Set artist name of given audio file.
--t,--title - Set title of given audio file
+-t,--title - Set title of given audio file.
 -s,--silent - Send files silently to given chat.
 -r,--recursive - Upload files recursively if path is a folder.
---prefix - Add given prefix text to each filename (prefix + filename).
+--prefix - Add given prefix text to filename (prefix + filename).
 --hash_memory_limit - Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.
 --combine_memory_limit - Limit how much memory should be used to combine files in bytes, by default to 1 MB.
 --split_dir - Set custom directory for saving splitted files.
 --combine_dir - Set custom directory for saving combined files.
 --thumb_dir - Set custom directory for saving thumbnails.
---no_warn - Don't show warning messages.
+--no_warn - Don't show warning messages. (DEPRECATED)
 --no_update - Disable checking for updates.
 ```
 <a name="flag-5"></a>
@@ -210,20 +210,20 @@ List of flags that are usable with tg-upload's download module, while flags with
 --links - Telegram file links to be downloaded (separated with space).
 --txt_file - .txt file path containing Telegram file links to be downloaded (1 link / line).
 -j,--auto_combine - Automatically start combining part files after download.
---range - Find and download messages in between of two given links or message ids of same chat.
---chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
---msg_id - Identity number of messages to be downloaded.
+--range - Find and download messages in between of two given links or message IDs of same chat.
+--chat_id (common) - The identity of the chat to download the file from can be the username, phone number (in international format), or ID number. By default, Saved Messages.
+--msg_id - Identity number of messages to be downloaded (separated with space).
 --filename (common) - To download data with custom name.
---replace (common) - Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.
---prefix (common) - Add given prefix text to each filename (prefix + filename).
---dl_dir - Change the download directory, by default 'downloads' in current working directory.
+--replace (common) - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
+--prefix (common) - Add given prefix text to filename (prefix + filename).
+--dl_dir - Change the download directory, by default "downloads" in current working directory.
 ```
 
 <a name="flag-6"></a>
 
 **6.UTILITY FLAGS:**
 
-Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (`--profile`) to call them.
+Utility flags provide an easy way to directly use internal functions used by tg-upload without starting the main client. Therefore, there is no need to create or use an existing session (`--profile`) to use these flags.
 
 ```
 --env - Display environment variables, their current value and default value in tabular format.
@@ -239,12 +239,12 @@ Utility flags provides an easy way to directly use internal functions used by tg
 
 **7.MISC FLAGS:**
 
-Flags that does not fit in above categories are listed in this category:
+Flags that do not fit in the above categories are listed in this category:
 
 ```
 -h, --help - To get help message as well as availabe options.
---device_model - Overwrite device model before starting client, by default 'tg-upload', can be anything like your name or 'My Device'.
---system_version - Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.
+--device_model - Overwrite device model before starting client, by default "tg-upload".
+--system_version - Overwrite system version before starting client, by default installed python version.
 -v,--version - Display current tg-upload & dependencies version.
 ```
 
@@ -254,7 +254,7 @@ Flags that does not fit in above categories are listed in this category:
 
 ## 📝 ENV Variables
 
-**Tired of passing values each time using flags? Set flag values in system environment, each flag has its own unique system variable name from which it retrive value once detected. Below is the table showing variable name, flag it is associated with and value it expects.**
+**Tired of passing values each time using flags? Set flag values in system environment, each flag has its own unique system variable name from which it retrieves the value once detected. The table below shows the variable name, flag it is associated with, and the value it expects.**
 
 |Variable                        |Flag                    |Value           |
 |:------------------------------:|:----------------------:|:--------------:|
@@ -317,7 +317,7 @@ Flags that does not fit in above categories are listed in this category:
 |`TG_UPLOAD_DEVICE_MODEL`        |`--device_model`        |Same as flag    |
 |`TG_UPLOAD_SYSTEM_VERSION`      |`--system_version`      |Same as flag    |
 
-User can set as many variables as it want in any order and can temporary overwrite variable's value by passing the new value using its associated flag.
+Users can set as many variables as they want in any order and can temporarily overwrite a variable’s value by passing the new value using its associated flag.
 
 ## 🕹️ How to use?
 For running python commands we can either use 'python' or 'py', in below examples we will use 'py'.
@@ -326,24 +326,24 @@ For running python commands we can either use 'python' or 'py', in below example
 
 **1.Create a Telegram app:**
 
-Go to [My Telegram](https://my.telegram.org/apps) and create an app and get its **API_ID** & **API_HASH** and save it somewhere securely and treat them as your bank password.
+Go to [My Telegram](https://my.telegram.org/apps), create an app, and get its **API_ID** & **API_HASH**. Save them somewhere secure and treat them as you would your bank password.
 
 <a name="htu-2"></a>
 
 **2.Login in tg-upload:**
 
-tg-upload supports login as user (using phone number or session string) or bot (using bot token or session string), you must pass the value of your **API_ID** (`--api_id`) & **API_HASH** (`--api_hash`) and a unique name for your session (`--profile`), to login as user you must pass your phone number (`--phone`) or to login as bot pass bot token (`--bot`).
+tg-upload supports logging in as a user (using a phone number or session string) or bot (using a bot token or session string). You must pass the value of your **API_ID** (`--api_id`) & **API_HASH** (`--api_hash`) and a unique name for your session (`--profile`). To log in as a user, you must pass your phone number (--phone), or to log in as a bot, pass the bot token (--bot).
 
 ```
 py tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
 ```
-now from next time whenever you need to perform any task, you just need to pass the profile name (`--profile`) which you used to create your session and you will be logged in without any authentication flow (until you terminate the session from Telegram app).
+From now on, whenever you need to perform any task, you just need to pass the profile name (--profile) that you used to create your session. You will be logged in without any authentication flow until you terminate the session from the Telegram app.
 
 <a name="htu-3"></a>
 
 **3.Get Started:**
 
-Hooray! now you are all set to use tg-upload. You can try out some sample commands that will help you to get started quickly:
+Hooray! Now you’re all set to use tg-upload. You can try out some sample commands that will help you get started quickly:
 
 Get help & options:
 
@@ -351,7 +351,7 @@ Get help & options:
 py tg-upload.py -h
 ```
 
-Upload files/folder:
+Upload files/folders:
 
 ```
 py tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
@@ -390,7 +390,7 @@ py tg-upload.py -v
 
 **4.Dynamic Caption:**
 
-tg-upload provides variables that user can place in file's caption to make it dynamic, this variables are automtically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:
+tg-upload provides variables that users can place in a file’s caption to make it dynamic. These variables are automatically replaced with their expected values. Users must place the variable name between {} to define it as a variable in the string. Here is the list of variables that tg-upload offers:
 
 <a name="htu4.1.1"></a>
 
@@ -411,7 +411,7 @@ tg-upload provides variables that user can place in file's caption to make it dy
 
 <a name="htu4.1.2"></a>
 
-File's source variable `{path}` is both a variable and a function, calling it directly will simply return the full path of file while calling it with a given method will return value associated with that method, below are the methods that you can call with path:
+File's source variable `{path}` is both a variable and a function. Calling it directly will simply return the full path of the file, while calling it with a given method will return the value associated with that method. Below are the methods that you can call with path:
 * `{path}` - Return exact path of file.
 * `{path.parts}` - A tuple giving access to the path’s various components. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parts)]
 * `{path.drive}` - A string representing the drive letter or name, if any. [[example](https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.drive)]
@@ -428,7 +428,7 @@ For more detailed methods, click [here](https://docs.python.org/3/library/pathli
 
 <a name="htu4.1.3"></a>
 
-File's creation/modification time variables `{creation_time}` and `{modification_time}` stores multiple values like year, month, day, hour, minute, second of creation/modification and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:
+The file’s creation/modification time variables `{creation_time}` and `{modification_time}` store multiple values like year, month, day, hour, minute, and second of creation/modification. They all have their own index value inside the variable and should be passed with the variable to get a specific value. If the creation time is unknown, then the last modification time will be passed or vice versa. It also depends on your operating system:
 * `0` - Year of creation/modification.
 * `1` - Month of creation/modification.
 * `2` - Day of creation/modification.
@@ -438,34 +438,34 @@ File's creation/modification time variables `{creation_time}` and `{modification
 
 <a name="htu4.1.4"></a>
 
-Additionally, we can also limit number of decimal places to be shown in file size, like to limit number of decimals places to 2 we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
+Additionally, we can also limit the number of decimal places to be shown in the file size. For example, to limit the number of decimal places to 2, we need to pass `:.2f` with a variable like `{file_size_mb:.2f}`.
 <div align="center">
 
 <img src="https://user-images.githubusercontent.com/87380104/233824278-eed11926-1748-4455-8cb0-cb2cf1ebcdbd.png">
 
 </div>
-Just like a plan text, you can also apply same formatting on variables, make sure you put all formatting tags outside of {} brackets to prevent any error.
+Just like plain text, you can also apply the same formatting on variables. Make sure you put all formatting tags outside of {} brackets to prevent any error.
 
-One variable can be called multiple times in same caption and user must prevent writing any other keyword between {} otherwise tg-upload will raise KeyError indicating that given variable is not yet defined.
+One variable can be called multiple times in the same caption, and users must prevent writing any other keyword between {} brackets; otherwise, tg-upload will raise a KeyError indicating that the given variable is not yet defined.
 
 <a name="htu-4.2"></a>
 
 **5.Formatting Modes:**
 
-Formatting and making caption attractive is cool! but sometime filename or output of any variable can mess our caption by injecting same tags which are used to format our plan text 💀, to tackle this error! tg-upload provide option to switch between different formatting modes to prevent misinterpretation of some tags in our caption:
+Formatting and making captions attractive is cool! But sometimes the filename or output of any variable can mess up our caption by injecting the same tags that are used to format our plain text. To tackle this error, tg-upload provides an option to switch between different formatting modes to prevent the misinterpretation of some tags in our caption.
 
 * `DEFAULT` - Interpret both markdown & HTML tags in caption.
 * `MARKDOWN` - Interpret only markdown tags and ignore HTML tags in caption.
 * `HTML` - Interpret only HTML tags and ignore markdown tags in caption.
 * `DISABLED` - Interpret nothing, keep caption as it is.
 
-If you are using `--caption` flag then you can switch mode using `--parse_mode` flag else just change 'mode' key value in 'caption.json' in case of `--capjson`.
+If you are using the `--caption` flag, then you can switch modes using the `--parse_mode` flag. Otherwise, just change the ‘mode’ key value in ‘caption.json’ in case of `--capjson`.
 
 <a name="htu-4.3"></a>
 
 **6.Caption Templates:**
 
-We can make & save our static & dynamic caption format in 'caption.json' with a name (required) and description (optional) so we don't have to write it again.
+We can make and save our static and dynamic caption format in ‘caption.json’ with a name (required) and description (optional) so we don’t have to write it again.
 
 1.Open 'caption.json' file and edit it as following:
 
@@ -482,13 +482,13 @@ We can make & save our static & dynamic caption format in 'caption.json' with a 
 
 2.When needed, just mention the caption template name using `--capjson` flag.
 
-Just like `--caption` flag, caption template also supports formatting using HTML or markdown. I already provided some general caption templates to make your work easy! :)
+Just like the `--caption` flag, the caption template also supports formatting using HTML or markdown. I have already provided some general caption templates to make your work easy! :)
 
 <a name="htu-5"></a>
 
-**Using Proxy**
+**7.Using Proxy**
 
-Using proxy is completely optional step and can be used to bypass ban imposed by local authorities or for increasing transfer speed:
+Using a proxy is a completely optional step and can be used to bypass bans imposed by local authorities or for increasing transfer speed.
 
 1.Rename 'proxy-sample.json' to 'proxy.json'
 
@@ -526,7 +526,7 @@ Using proxy is completely optional step and can be used to bypass ban imposed by
 
 - 4GB for all users & bots.
 
-To upload larger files, use `--split` flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use `--combine` flag and tg-upload will restore original file for you (remember to provide part file paths in ordered form 0,1,2,3...).
+To upload larger files, use the `--split` flag and tg-upload will automatically split all files into the given size. To restore the original file out of part files, simply use the `--combine` flag and tg-upload will restore the original file for you (remember to provide part file paths in ordered form 0,1,2,3…).
 
 <a name="l-2"></a>
 
@@ -536,7 +536,7 @@ To upload larger files, use `--split` flag and tg-upload will automatically spli
 - Size should be 200 KB or below.
 - Width & height should not be more than 320 pixels.
 
-Starting from v1.0.5, tg-upload will automatically convert any other image format into JPEG format and you can also use `--convert` flag to do it manually and without starting the main client.
+Starting from v1.0.5, tg-upload will automatically convert any other image format into JPEG format. You can also use the `--convert` flag to do it manually and without starting the main client.
 
 <a name="l-3"></a>
 
@@ -554,23 +554,23 @@ Such network related issues are most likely a result of a temporarily slow or in
 
 **2.Can split or combine flags cause file corruption?**
 
-No, split & combine flags NEVER causes file corruption until its user side mistake like not providing .part file paths in correct format (0,1,2,3...). tg-upload follows commonly used & trusted technique to split or combine data.
+No, the split and combine flags NEVER cause file corruption unless it’s a user-side mistake like not providing .part file paths in the correct format (0,1,2,3…). tg-upload follows commonly used and trusted techniques to split or combine data.
 
 **3.Files are still usable/accessible in their splitted form?**
 
-Yes, some file extensions like .txt, .csv, .json etc are still usable in their splitted forms while some file extensions like .mkv, .exe, .mp3 etc are NOT usable until we combine them back.
+Yes, some file extensions like .txt, .csv, .json etc. are still usable in their split forms while some file extensions like .mkv, .exe, .mp3 etc. are NOT usable until we combine them back.
 
 **4.For me upload/download speed is slow?**
 
-In many cases, users expect speed in mbps while tg-upload shows upload/download speed in MB/s where MB/s > mbps and this is where users get confused.
+In many cases, users expect speed in Mbps while tg-upload shows upload/download speed in MB/s where MB/s > Mbps and this is where users get confused.
 
-In fact, tg-upload have nothing to do with upload/download speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check code to understand it in more better way.
+In fact, tg-upload has nothing to do with upload/download speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check the code to understand it in a better way.
 
-For increasing download speed, you must subscribe to Telegram premium to remove the speed limit imposed by Telegram for freemium users.
+To increase download speed, you must subscribe to Telegram premium to remove the speed limit imposed by Telegram for freemium users.
 
 **5.How tg-upload able to upload/download larger files (upto 2GB & 4GB) using bot profiles while Bot API limit it to just 50MB & 20MB?**
 
-Its simple! tg-upload never make use of Bot API server which works as intermediate server to communicate with Telegram's MTProto while tg-upload directly uses MTProto API making it even more faster.
+It’s simple! tg-upload never makes use of the Bot API server which works as an intermediate server to communicate with Telegram’s MTProto. Instead, tg-upload directly uses the MTProto API, making it even faster.
 
 **i.Generally:🐢**
 
@@ -586,15 +586,15 @@ Yes, there are mainly two ways to do the same:
 
 **i.Generate & use session string:**
 
-tg-upload supports generation of session string and login through it, to generate session string you can use `--export_string` flag with `--profile` flag to mention profile of which session string should be generated. Also, upon using session string tg-upload never creates new .session file.
+tg-upload supports the generation of a session string and login through it. To generate a session string, you can use the `--export_string` flag with the `--profile` flag to mention the profile for which the session string should be generated. Also, upon using a session string, tg-upload never creates a new .session file.
 
 **ii.Carry .session files:**
 
-For every profile, tg-upload generates .session file which is the main file that helps to login into your Telegram account without following auth flow. Place the .session file in tg-upload's working directory.
+For every profile, tg-upload generates a .session file which is the main file that helps you log in to your Telegram account without following the auth flow. Place the .session file in tg-upload’s working directory.
 
 **7.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?**
 
-tg-upload's `--logout` flag is here to help! just mention the session name using `--profile` flag and pass the `--logout` flag. This will directly revoke the specified session and will omit it from your Telegram Account's active sessions list.
+Use the --logout flag of tg-upload to revoke the specified session and omit it from your Telegram Account’s active sessions list. Simply mention the session name using the --profile flag and pass the --logout flag.
 
 ```
 py tg-upload.py --profile xyz --logout
@@ -608,13 +608,13 @@ You can use third-party Telegram clients that let users to see more details (<a 
 
 **9.Can I send files to a particular topic inside a Telegram community?**
 
-Yes! for doing this, you just need to pass the topic identity or identity of any message inside of that topic with `--reply_to` flag.
+To do this, you just need to pass the topic identity or identity of any message inside of that topic with the --reply_to flag.
 
 **Getting topic identity:**
 
 Copy link of any message inside the topic you want identity of and the link will be in this format `https://t.me/username/topic_id/msg_id` or in case of private chats link will be in this format `https://t.me/c/chat_id/topic_id/msg_id`.
 
-**10.Is `--replace` flag case-sensitive? can it also manipulate file format?**
+10.Is `--replace` flag case-sensitive? can it also manipulate file format?
 
 Be aware that the replace flag is case-sensitive and has full access to the filename, including its format. This means that it can manipulate the file format and even your filename prefix. During download, you should use replace more carefully because if the file is a part file containing `.partX` (an extension allotted by tg-upload) where `X` is any number starting from 0, then replace can even manipulate it.
 
@@ -624,7 +624,7 @@ However, it is not going to damage your file content. If you have replaced some 
 
 ## ⚒️ Contribution
 
-Feel free to create a PR (to dev branch) if you have any valueable changes like adding new features or fixing bugs and not only including (but not limited to):
+Feel free to create a PR (to dev branch) if you have any valuable changes like adding new features or fixing bugs and not only limited to:
 
 - Changing print statements' string.
 - Refactoring code using AI tools.
@@ -647,4 +647,5 @@ Feel free to create a PR (to dev branch) if you have any valueable changes like 
 
 ## ❤️ Credits & Thanks
 
-[**Dr.Caduceus**](https://t.me/TheCaduceusHere): Owner & developer of tg-upload.
+[**Dr.Caduceus**](https://github.com/TheCaduceus): Owner & developer of tg-upload.<br>
+[**Bing AI**](https://bing.com/chat): For ~~documentaion~~ documentation improvements.
