@@ -29,12 +29,12 @@
 
       <div align="center">
 <h1>📦tg-upload</h1>
-<b>An open-source Python program or a CLI Tool to upload/download files/folder to/from Telegram effortlessly.</b>
+<b>An open-source Python program or a CLI Tool to upload/download files/folders to/from Telegram effortlessly.</b>
 </div>
 <p><br /></p>
 
 <div align="center">
-<i>tg-upload was born when there was no dedicated CLI tool or existing tools were outdated and much slower with limited functionalities. Now, it is used by thousands of users worldwide, according to GitHub Insight Report.</i>
+<i>Transform your Telegram account into personal cloud storage with tg-upload.</i>
 </div>
 
 <h2 id="-index"><strong>📑 INDEX</strong></h2>
@@ -97,7 +97,7 @@
 <p><a name="installation"></a></p>
 
 <h2 id="️-installation">⚙️ Installation</h2>
-<p>Git installation is optional if you prefer downloading stable releases zips of tg-upload using <a href="https://github.com/TheCaduceus/tg-upload/releases">releases</a> section.
+<p>Git installation is optional if you prefer downloading tg-upload as zip file using the <a href="https://github.com/TheCaduceus/tg-upload/releases">releases</a> section.
 <a name="i-1"></a></p>
 
 <p><strong>1.Install Python &amp; Git:</strong></p>
@@ -111,7 +111,7 @@ winget install Git.Git
 <p>For Linux:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get update &amp;&amp; sudo apt-get install -y python3.11 git pip
 </code></pre></div></div>
-<p>For MacOS:</p>
+<p>For macOS:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install python@3.11 git
 </code></pre></div></div>
 <p>For Termux:</p>
@@ -125,17 +125,17 @@ pkg install git -y
 
 <ul>
   <li>
-    <p>For stable releases, download zip from <a href="https://github.com/TheCaduceus/tg-upload/releases">here</a> and unzip. (Recommended)</p>
+    <p>Download as zip from <a href="https://github.com/TheCaduceus/tg-upload/releases">here</a>.</p>
   </li>
   <li>
-    <p>To download beta releases, use git:</p>
+    <p>Use Git:</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheCaduceus/tg-upload.git
 </code></pre></div>    </div>
   </li>
 </ul>
 
 <blockquote>
-  <p>Starting from release <a href="https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.1">v1.0.1</a>, tg-upload not support Termux anymore due to absence of some required dependencies. You may try older <a href="https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.0">release</a> to enjoy basic functionalities offered by tg-upload. Hence, any issue related with Termux will be rejected without any further investigation.</p>
+  <p>Starting from release <a href="https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.1">v1.0.1</a>, tg-upload no longer supports Termux due to the absence of some required dependencies. You may try an older <a href="https://github.com/TheCaduceus/tg-upload/releases/tag/v1.0.0">release</a> to enjoy the basic functionalities offered by tg-upload. Hence, any issue related to Termux will be rejected without any further investigation.</p>
 </blockquote>
 
 <p><strong>3.Change Directory:</strong></p>
@@ -147,7 +147,7 @@ pkg install git -y
 
 <p><strong>4.Install requirements:</strong></p>
 
-<p>If your device already have required dependencies installed, then verify if their version and the version mentioned in ‘requirements.txt’ are same otherwise upgrade them. You can see their version by using tg-upload’s <code class="language-plaintext highlighter-rouge">-v</code> flag.</p>
+<p>If your device already has the required dependencies installed, verify if their version matches the version mentioned in ‘requirements.txt’. Otherwise, upgrade them. You can see their version by using the tg-upload’s <code class="language-plaintext highlighter-rouge">-v</code> flag.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install -r requirements.txt
 </code></pre></div></div>
@@ -160,33 +160,33 @@ pkg install git -y
 <p><a name="options"></a></p>
 
 <h2 id="-options">🚩 Options</h2>
-<p><strong>tg-upload provides multiple options known as flags to control overall behaviour of the program, flags are categorized as follows:</strong></p>
+<p><strong>tg-upload provides multiple options known as flags to control the overall behaviour of the program. These flags are categorized as follows:</strong></p>
 
 <p><a name="flag-1"></a></p>
 
 <p><strong>1.CONNECTIVITY FLAGS:</strong></p>
 
-<p>Connectivity flags controls how the program should establish connection to Telegram servers, thus letting users use proxies and IPV6.</p>
+<p>Connectivity flags control how the program should establish a connection to Telegram servers, thus allowing users to use proxies and IPV6.</p>
 
 <p>How to configure proxies? [<a href="#htu-5">Learn here</a>]</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--ipv6 - Connect Telegram using device's IPv6. By default IPv4.
---proxy - Proxy name (in proxy.json) to use for connecting Telegram.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--ipv6 - Connect to Telegram using your device’s IPv6, by default IPv4.
+--proxy - The name of the proxy (in proxy.json) to use for connecting to Telegram.
 </code></pre></div></div>
 
 <p><a name="flag-2"></a></p>
 
 <p><strong>2.LOGIN FLAGS:</strong></p>
 
-<p>Login flags are responsible for controling behaviour of the program during authentication flow.</p>
+<p>Login flags are responsible for controlling the behaviour of the program during the authentication flow.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-p,--profile - Name of your new/existing session.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-p,--profile - The name of your new or existing session.
 --info - Show your Telegram account details as JSON.
---api_id - Telegram API ID required to create new session.
---api_hash - Telegram API HASH required to create new session.
---phone - Phone number (international format) required to login as user.
+--api_id - Telegram API ID, required to create new session.
+--api_hash - Telegram API HASH, required to create new session.
+--phone - Phone number (in international format), required to login as user.
 --hide_pswd - Hide 2FA password using getpass.
---bot - Telegram bot token required to login as bot.
+--bot - Telegram bot token, required to login as bot.
 --logout - Revoke current session and delete session file.
 --login_string - Session string to login without auth &amp; creating session file.
 --export_string - Generate &amp; display session string using existing session file.
@@ -198,50 +198,50 @@ pkg install git -y
 
 <p><strong>3.FILE FLAGS:</strong></p>
 
-<p>File flags are used to provide information about file/folder.</p>
+<p>File flags are used to provide information about files/folders.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-l,--path - Path to the file or folder to upload.
 -n,--filename - To upload data with custom name.
--i,--thumb - Path of thumbnail image to be attached with given file. Pass 'auto' for random frame or particular frame time (in seconds) to attach it with video as thumbnail.
--z,--caption - Caption text to be attached with file(s), markdown &amp; HTML formatting allowed.
---duration - Duration of audio/video in seconds. Pass '-1' for automatic detection.
---capjson - Caption name (in caption.json) to attach with given file(s).
+-i,--thumb - Path of thumbnail image to be attached with given file. Pass "auto" for random frame or particular frame time (in seconds) to attach it with video as thumbnail.
+-z,--caption - Caption text to be attached with file, markdown &amp; HTML formatting allowed.
+--duration - Duration of audio/video in seconds. Pass "-1" for automatic detection.
+--capjson - Caption name (in caption.json) to attach with given file.
 </code></pre></div></div>
 
 <p><a name="flag-4"></a></p>
 
 <p><strong>4.BEHAVIOUR FLAGS:</strong></p>
 
-<p>Behaviour flags controls the behaviour of transmission.</p>
+<p>Behaviour flags control the transmission’s behaviour.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-c,--chat_id - Identity of chat to send the file to? can be username, phone number (international format) or ID number. By default to Saved Messages.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-c,--chat_id - The identity of the chat to upload the file to can be the username, phone number (in international format), or ID number. By default, Saved Messages.
 --as_photo - Send given file as picture.
 --as_video - Send given file as video.
 --as_audio - Send given file as audio.
 --as_voice - Send given file as voice.
 --as_video_note - Send given file as video note.
---split - Split files in given bytes and upload.
+--split - Split file in given bytes and upload.
 --replace - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
---reply_to - Send files as reply to given message id.
+--reply_to - Send file as reply to given message id.
 --disable_stream - Disable streaming for given video.
 -b,--spoiler - Send media with spoiler animation.
 -y,--self_destruct - Number of seconds (60 or below) after which photo/video will self destruct once seen by receiver.
---protect - Protect uploaded files from getting forwarded &amp; saved.
+--protect - Protect uploaded file from getting forwarded &amp; saved.
 --parse_mode - Set custom formatting mode for caption.
 -d,--delete_on_done - Delete the given file after task completion.
 -w,--width - Set custom width for video, by default to original video width.
 -e,--height - Set custom height for video, by default to original video height.
 -a,--artist - Set artist name of given audio file.
--t,--title - Set title of given audio file
+-t,--title - Set title of given audio file.
 -s,--silent - Send files silently to given chat.
 -r,--recursive - Upload files recursively if path is a folder.
---prefix - Add given prefix text to each filename (prefix + filename).
+--prefix - Add given prefix text to filename (prefix + filename).
 --hash_memory_limit - Limit how much memory should be used to calculate hash in bytes, by default to 1 MB.
 --combine_memory_limit - Limit how much memory should be used to combine files in bytes, by default to 1 MB.
 --split_dir - Set custom directory for saving splitted files.
 --combine_dir - Set custom directory for saving combined files.
 --thumb_dir - Set custom directory for saving thumbnails.
---no_warn - Don't show warning messages.
+--no_warn - Don't show warning messages. (DEPRECATED)
 --no_update - Disable checking for updates.
 </code></pre></div></div>
 <p><a name="flag-5"></a></p>
@@ -254,20 +254,20 @@ pkg install git -y
 --links - Telegram file links to be downloaded (separated with space).
 --txt_file - .txt file path containing Telegram file links to be downloaded (1 link / line).
 -j,--auto_combine - Automatically start combining part files after download.
---range - Find and download messages in between of two given links or message ids of same chat.
---chat_id (common) - Identity of chat to download the file from? can be username, phone number (international format) or ID number, by default to Saved Messages.
---msg_id - Identity number of messages to be downloaded.
+--range - Find and download messages in between of two given links or message IDs of same chat.
+--chat_id (common) - The identity of the chat to download the file from can be the username, phone number (in international format), or ID number. By default, Saved Messages.
+--msg_id - Identity number of messages to be downloaded (separated with space).
 --filename (common) - To download data with custom name.
---replace (common) - Replace given character or keyword in filename. Requires two arguments including 'text to replace' 'text to replace from'.
---prefix (common) - Add given prefix text to each filename (prefix + filename).
---dl_dir - Change the download directory, by default 'downloads' in current working directory.
+--replace (common) - Replace given character or keyword in filename. Requires two arguments including "text to replace" "text to replace from".
+--prefix (common) - Add given prefix text to filename (prefix + filename).
+--dl_dir - Change the download directory, by default "downloads" in current working directory.
 </code></pre></div></div>
 
 <p><a name="flag-6"></a></p>
 
 <p><strong>6.UTILITY FLAGS:</strong></p>
 
-<p>Utility flags provides an easy way to directly use internal functions used by tg-upload without starting main client, hence there is no need to create or use existing session (<code class="language-plaintext highlighter-rouge">--profile</code>) to call them.</p>
+<p>Utility flags provide an easy way to directly use internal functions used by tg-upload without starting the main client. Therefore, there is no need to create or use an existing session (<code class="language-plaintext highlighter-rouge">--profile</code>) to use these flags.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--env - Display environment variables, their current value and default value in tabular format.
 --file_info - Show basic file information.
@@ -282,11 +282,11 @@ pkg install git -y
 
 <p><strong>7.MISC FLAGS:</strong></p>
 
-<p>Flags that does not fit in above categories are listed in this category:</p>
+<p>Flags that do not fit in the above categories are listed in this category:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-h, --help - To get help message as well as availabe options.
---device_model - Overwrite device model before starting client, by default 'tg-upload', can be anything like your name or 'My Device'.
---system_version - Overwrite system version before starting client, by default installed python version, can be anything like 'Windows 11'.
+--device_model - Overwrite device model before starting client, by default "tg-upload".
+--system_version - Overwrite system version before starting client, by default installed python version.
 -v,--version - Display current tg-upload &amp; dependencies version.
 </code></pre></div></div>
 
@@ -296,7 +296,7 @@ pkg install git -y
 
 <h2 id="-env-variables">📝 ENV Variables</h2>
 
-<p><strong>Tired of passing values each time using flags? Set flag values in system environment, each flag has its own unique system variable name from which it retrive value once detected. Below is the table showing variable name, flag it is associated with and value it expects.</strong></p>
+<p><strong>Tired of passing values each time using flags? Set flag values in system environment, each flag has its own unique system variable name from which it retrieves the value once detected. The table below shows the variable name, flag it is associated with, and the value it expects.</strong></p>
 
 <table>
   <thead>
@@ -600,7 +600,7 @@ pkg install git -y
   </tbody>
 </table>
 
-<p>User can set as many variables as it want in any order and can temporary overwrite variable’s value by passing the new value using its associated flag.</p>
+<p>Users can set as many variables as they want in any order and can temporarily overwrite a variable’s value by passing the new value using its associated flag.</p>
 
 <h2 id="️-how-to-use">🕹️ How to use?</h2>
 <p>For running python commands we can either use ‘python’ or ‘py’, in below examples we will use ‘py’.</p>
@@ -609,30 +609,30 @@ pkg install git -y
 
 <p><strong>1.Create a Telegram app:</strong></p>
 
-<p>Go to <a href="https://my.telegram.org/apps">My Telegram</a> and create an app and get its <strong>API_ID</strong> &amp; <strong>API_HASH</strong> and save it somewhere securely and treat them as your bank password.</p>
+<p>Go to <a href="https://my.telegram.org/apps">My Telegram</a>, create an app, and get its <strong>API_ID</strong> &amp; <strong>API_HASH</strong>. Save them somewhere secure and treat them as you would your bank password.</p>
 
 <p><a name="htu-2"></a></p>
 
 <p><strong>2.Login in tg-upload:</strong></p>
 
-<p>tg-upload supports login as user (using phone number or session string) or bot (using bot token or session string), you must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>), to login as user you must pass your phone number (<code class="language-plaintext highlighter-rouge">--phone</code>) or to login as bot pass bot token (<code class="language-plaintext highlighter-rouge">--bot</code>).</p>
+<p>tg-upload supports logging in as a user (using a phone number or session string) or bot (using a bot token or session string). You must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>). To log in as a user, you must pass your phone number (–phone), or to log in as a bot, pass the bot token (–bot).</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
 </code></pre></div></div>
-<p>now from next time whenever you need to perform any task, you just need to pass the profile name (<code class="language-plaintext highlighter-rouge">--profile</code>) which you used to create your session and you will be logged in without any authentication flow (until you terminate the session from Telegram app).</p>
+<p>From now on, whenever you need to perform any task, you just need to pass the profile name (–profile) that you used to create your session. You will be logged in without any authentication flow until you terminate the session from the Telegram app.</p>
 
 <p><a name="htu-3"></a></p>
 
 <p><strong>3.Get Started:</strong></p>
 
-<p>Hooray! now you are all set to use tg-upload. You can try out some sample commands that will help you to get started quickly:</p>
+<p>Hooray! Now you’re all set to use tg-upload. You can try out some sample commands that will help you get started quickly:</p>
 
 <p>Get help &amp; options:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py -h
 </code></pre></div></div>
 
-<p>Upload files/folder:</p>
+<p>Upload files/folders:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --path VALUE --OTHER OPTIONAL FLAGS
 </code></pre></div></div>
@@ -666,7 +666,7 @@ pkg install git -y
 
 <p><strong>4.Dynamic Caption:</strong></p>
 
-<p>tg-upload provides variables that user can place in file’s caption to make it dynamic, this variables are automtically replaced with their expected values. User must place variable name between {} to define it as a variable in string, here is the list of variables that tg-upload offers:</p>
+<p>tg-upload provides variables that users can place in a file’s caption to make it dynamic. These variables are automatically replaced with their expected values. Users must place the variable name between {} to define it as a variable in the string. Here is the list of variables that tg-upload offers:</p>
 
 <p><a name="htu4.1.1"></a></p>
 
@@ -689,7 +689,7 @@ pkg install git -y
 
 <p><a name="htu4.1.2"></a></p>
 
-<p>File’s source variable <code class="language-plaintext highlighter-rouge">{path}</code> is both a variable and a function, calling it directly will simply return the full path of file while calling it with a given method will return value associated with that method, below are the methods that you can call with path:</p>
+<p>File’s source variable <code class="language-plaintext highlighter-rouge">{path}</code> is both a variable and a function. Calling it directly will simply return the full path of the file, while calling it with a given method will return the value associated with that method. Below are the methods that you can call with path:</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">{path}</code> - Return exact path of file.</li>
   <li><code class="language-plaintext highlighter-rouge">{path.parts}</code> - A tuple giving access to the path’s various components. [<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.parts">example</a>]</li>
@@ -708,7 +708,7 @@ pkg install git -y
 
 <p><a name="htu4.1.3"></a></p>
 
-<p>File’s creation/modification time variables <code class="language-plaintext highlighter-rouge">{creation_time}</code> and <code class="language-plaintext highlighter-rouge">{modification_time}</code> stores multiple values like year, month, day, hour, minute, second of creation/modification and they all have their own index value inside the variable and it should be passed with variable to get specific value, if creation time is unknown then last modification time will be passed or vice-versa and it also depends upon your operating-system:</p>
+<p>The file’s creation/modification time variables <code class="language-plaintext highlighter-rouge">{creation_time}</code> and <code class="language-plaintext highlighter-rouge">{modification_time}</code> store multiple values like year, month, day, hour, minute, and second of creation/modification. They all have their own index value inside the variable and should be passed with the variable to get a specific value. If the creation time is unknown, then the last modification time will be passed or vice versa. It also depends on your operating system:</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">0</code> - Year of creation/modification.</li>
   <li><code class="language-plaintext highlighter-rouge">1</code> - Month of creation/modification.</li>
@@ -720,21 +720,21 @@ pkg install git -y
 
 <p><a name="htu4.1.4"></a></p>
 
-<p>Additionally, we can also limit number of decimal places to be shown in file size, like to limit number of decimals places to 2 we need to pass <code class="language-plaintext highlighter-rouge">:.2f</code> with a variable like <code class="language-plaintext highlighter-rouge">{file_size_mb:.2f}</code>.</p>
+<p>Additionally, we can also limit the number of decimal places to be shown in the file size. For example, to limit the number of decimal places to 2, we need to pass <code class="language-plaintext highlighter-rouge">:.2f</code> with a variable like <code class="language-plaintext highlighter-rouge">{file_size_mb:.2f}</code>.</p>
 <div align="center">
 
 <img src="https://user-images.githubusercontent.com/87380104/233824278-eed11926-1748-4455-8cb0-cb2cf1ebcdbd.png" />
 
 </div>
-<p>Just like a plan text, you can also apply same formatting on variables, make sure you put all formatting tags outside of {} brackets to prevent any error.</p>
+<p>Just like plain text, you can also apply the same formatting on variables. Make sure you put all formatting tags outside of {} brackets to prevent any error.</p>
 
-<p>One variable can be called multiple times in same caption and user must prevent writing any other keyword between {} otherwise tg-upload will raise KeyError indicating that given variable is not yet defined.</p>
+<p>One variable can be called multiple times in the same caption, and users must prevent writing any other keyword between {} brackets; otherwise, tg-upload will raise a KeyError indicating that the given variable is not yet defined.</p>
 
 <p><a name="htu-4.2"></a></p>
 
 <p><strong>5.Formatting Modes:</strong></p>
 
-<p>Formatting and making caption attractive is cool! but sometime filename or output of any variable can mess our caption by injecting same tags which are used to format our plan text 💀, to tackle this error! tg-upload provide option to switch between different formatting modes to prevent misinterpretation of some tags in our caption:</p>
+<p>Formatting and making captions attractive is cool! But sometimes the filename or output of any variable can mess up our caption by injecting the same tags that are used to format our plain text. To tackle this error, tg-upload provides an option to switch between different formatting modes to prevent the misinterpretation of some tags in our caption.</p>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">DEFAULT</code> - Interpret both markdown &amp; HTML tags in caption.</li>
@@ -743,13 +743,13 @@ pkg install git -y
   <li><code class="language-plaintext highlighter-rouge">DISABLED</code> - Interpret nothing, keep caption as it is.</li>
 </ul>
 
-<p>If you are using <code class="language-plaintext highlighter-rouge">--caption</code> flag then you can switch mode using <code class="language-plaintext highlighter-rouge">--parse_mode</code> flag else just change ‘mode’ key value in ‘caption.json’ in case of <code class="language-plaintext highlighter-rouge">--capjson</code>.</p>
+<p>If you are using the <code class="language-plaintext highlighter-rouge">--caption</code> flag, then you can switch modes using the <code class="language-plaintext highlighter-rouge">--parse_mode</code> flag. Otherwise, just change the ‘mode’ key value in ‘caption.json’ in case of <code class="language-plaintext highlighter-rouge">--capjson</code>.</p>
 
 <p><a name="htu-4.3"></a></p>
 
 <p><strong>6.Caption Templates:</strong></p>
 
-<p>We can make &amp; save our static &amp; dynamic caption format in ‘caption.json’ with a name (required) and description (optional) so we don’t have to write it again.</p>
+<p>We can make and save our static and dynamic caption format in ‘caption.json’ with a name (required) and description (optional) so we don’t have to write it again.</p>
 
 <p>1.Open ‘caption.json’ file and edit it as following:</p>
 
@@ -765,13 +765,13 @@ pkg install git -y
 
 <p>2.When needed, just mention the caption template name using <code class="language-plaintext highlighter-rouge">--capjson</code> flag.</p>
 
-<p>Just like <code class="language-plaintext highlighter-rouge">--caption</code> flag, caption template also supports formatting using HTML or markdown. I already provided some general caption templates to make your work easy! :)</p>
+<p>Just like the <code class="language-plaintext highlighter-rouge">--caption</code> flag, the caption template also supports formatting using HTML or markdown. I have already provided some general caption templates to make your work easy! :)</p>
 
 <p><a name="htu-5"></a></p>
 
-<p><strong>Using Proxy</strong></p>
+<p><strong>7.Using Proxy</strong></p>
 
-<p>Using proxy is completely optional step and can be used to bypass ban imposed by local authorities or for increasing transfer speed:</p>
+<p>Using a proxy is a completely optional step and can be used to bypass bans imposed by local authorities or for increasing transfer speed.</p>
 
 <p>1.Rename ‘proxy-sample.json’ to ‘proxy.json’</p>
 
@@ -812,7 +812,7 @@ pkg install git -y
   <li>4GB for all users &amp; bots.</li>
 </ul>
 
-<p>To upload larger files, use <code class="language-plaintext highlighter-rouge">--split</code> flag and tg-upload will automatically split all files in given size, to restore original file out of part files, simply use <code class="language-plaintext highlighter-rouge">--combine</code> flag and tg-upload will restore original file for you (remember to provide part file paths in ordered form 0,1,2,3…).</p>
+<p>To upload larger files, use the <code class="language-plaintext highlighter-rouge">--split</code> flag and tg-upload will automatically split all files into the given size. To restore the original file out of part files, simply use the <code class="language-plaintext highlighter-rouge">--combine</code> flag and tg-upload will restore the original file for you (remember to provide part file paths in ordered form 0,1,2,3…).</p>
 
 <p><a name="l-2"></a></p>
 
@@ -824,7 +824,7 @@ pkg install git -y
   <li>Width &amp; height should not be more than 320 pixels.</li>
 </ul>
 
-<p>Starting from v1.0.5, tg-upload will automatically convert any other image format into JPEG format and you can also use <code class="language-plaintext highlighter-rouge">--convert</code> flag to do it manually and without starting the main client.</p>
+<p>Starting from v1.0.5, tg-upload will automatically convert any other image format into JPEG format. You can also use the <code class="language-plaintext highlighter-rouge">--convert</code> flag to do it manually and without starting the main client.</p>
 
 <p><a name="l-3"></a></p>
 
@@ -844,23 +844,23 @@ pkg install git -y
 
 <p><strong>2.Can split or combine flags cause file corruption?</strong></p>
 
-<p>No, split &amp; combine flags NEVER causes file corruption until its user side mistake like not providing .part file paths in correct format (0,1,2,3…). tg-upload follows commonly used &amp; trusted technique to split or combine data.</p>
+<p>No, the split and combine flags NEVER cause file corruption unless it’s a user-side mistake like not providing .part file paths in the correct format (0,1,2,3…). tg-upload follows commonly used and trusted techniques to split or combine data.</p>
 
 <p><strong>3.Files are still usable/accessible in their splitted form?</strong></p>
 
-<p>Yes, some file extensions like .txt, .csv, .json etc are still usable in their splitted forms while some file extensions like .mkv, .exe, .mp3 etc are NOT usable until we combine them back.</p>
+<p>Yes, some file extensions like .txt, .csv, .json etc. are still usable in their split forms while some file extensions like .mkv, .exe, .mp3 etc. are NOT usable until we combine them back.</p>
 
 <p><strong>4.For me upload/download speed is slow?</strong></p>
 
-<p>In many cases, users expect speed in mbps while tg-upload shows upload/download speed in MB/s where MB/s &gt; mbps and this is where users get confused.</p>
+<p>In many cases, users expect speed in Mbps while tg-upload shows upload/download speed in MB/s where MB/s &gt; Mbps and this is where users get confused.</p>
 
-<p>In fact, tg-upload have nothing to do with upload/download speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check code to understand it in more better way.</p>
+<p>In fact, tg-upload has nothing to do with upload/download speed and it totally depends upon Telegram servers (generally 5-7 MB/s) and your internet connection including proxy. Check the code to understand it in a better way.</p>
 
-<p>For increasing download speed, you must subscribe to Telegram premium to remove the speed limit imposed by Telegram for freemium users.</p>
+<p>To increase download speed, you must subscribe to Telegram premium to remove the speed limit imposed by Telegram for freemium users.</p>
 
 <p><strong>5.How tg-upload able to upload/download larger files (upto 2GB &amp; 4GB) using bot profiles while Bot API limit it to just 50MB &amp; 20MB?</strong></p>
 
-<p>Its simple! tg-upload never make use of Bot API server which works as intermediate server to communicate with Telegram’s MTProto while tg-upload directly uses MTProto API making it even more faster.</p>
+<p>It’s simple! tg-upload never makes use of the Bot API server which works as an intermediate server to communicate with Telegram’s MTProto. Instead, tg-upload directly uses the MTProto API, making it even faster.</p>
 
 <p><strong>i.Generally:🐢</strong></p>
 
@@ -876,15 +876,15 @@ pkg install git -y
 
 <p><strong>i.Generate &amp; use session string:</strong></p>
 
-<p>tg-upload supports generation of session string and login through it, to generate session string you can use <code class="language-plaintext highlighter-rouge">--export_string</code> flag with <code class="language-plaintext highlighter-rouge">--profile</code> flag to mention profile of which session string should be generated. Also, upon using session string tg-upload never creates new .session file.</p>
+<p>tg-upload supports the generation of a session string and login through it. To generate a session string, you can use the <code class="language-plaintext highlighter-rouge">--export_string</code> flag with the <code class="language-plaintext highlighter-rouge">--profile</code> flag to mention the profile for which the session string should be generated. Also, upon using a session string, tg-upload never creates a new .session file.</p>
 
 <p><strong>ii.Carry .session files:</strong></p>
 
-<p>For every profile, tg-upload generates .session file which is the main file that helps to login into your Telegram account without following auth flow. Place the .session file in tg-upload’s working directory.</p>
+<p>For every profile, tg-upload generates a .session file which is the main file that helps you log in to your Telegram account without following the auth flow. Place the .session file in tg-upload’s working directory.</p>
 
 <p><strong>7.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?</strong></p>
 
-<p>tg-upload’s <code class="language-plaintext highlighter-rouge">--logout</code> flag is here to help! just mention the session name using <code class="language-plaintext highlighter-rouge">--profile</code> flag and pass the <code class="language-plaintext highlighter-rouge">--logout</code> flag. This will directly revoke the specified session and will omit it from your Telegram Account’s active sessions list.</p>
+<p>Use the –logout flag of tg-upload to revoke the specified session and omit it from your Telegram Account’s active sessions list. Simply mention the session name using the –profile flag and pass the –logout flag.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile xyz --logout
 </code></pre></div></div>
@@ -897,13 +897,13 @@ pkg install git -y
 
 <p><strong>9.Can I send files to a particular topic inside a Telegram community?</strong></p>
 
-<p>Yes! for doing this, you just need to pass the topic identity or identity of any message inside of that topic with <code class="language-plaintext highlighter-rouge">--reply_to</code> flag.</p>
+<p>To do this, you just need to pass the topic identity or identity of any message inside of that topic with the –reply_to flag.</p>
 
 <p><strong>Getting topic identity:</strong></p>
 
 <p>Copy link of any message inside the topic you want identity of and the link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/username/topic_id/msg_id</code> or in case of private chats link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/c/chat_id/topic_id/msg_id</code>.</p>
 
-<p><strong>10.Is <code class="language-plaintext highlighter-rouge">--replace</code> flag case-sensitive? can it also manipulate file format?</strong></p>
+<p>10.Is <code class="language-plaintext highlighter-rouge">--replace</code> flag case-sensitive? can it also manipulate file format?</p>
 
 <p>Be aware that the replace flag is case-sensitive and has full access to the filename, including its format. This means that it can manipulate the file format and even your filename prefix. During download, you should use replace more carefully because if the file is a part file containing <code class="language-plaintext highlighter-rouge">.partX</code> (an extension allotted by tg-upload) where <code class="language-plaintext highlighter-rouge">X</code> is any number starting from 0, then replace can even manipulate it.</p>
 
@@ -913,7 +913,7 @@ pkg install git -y
 
 <h2 id="️-contribution">⚒️ Contribution</h2>
 
-<p>Feel free to create a PR (to dev branch) if you have any valueable changes like adding new features or fixing bugs and not only including (but not limited to):</p>
+<p>Feel free to create a PR (to dev branch) if you have any valuable changes like adding new features or fixing bugs and not only limited to:</p>
 
 <ul>
   <li>Changing print statements’ string.</li>
@@ -940,7 +940,8 @@ pkg install git -y
 
 <h2 id="️-credits--thanks">❤️ Credits &amp; Thanks</h2>
 
-<p><a href="https://t.me/TheCaduceusHere"><strong>Dr.Caduceus</strong></a>: Owner &amp; developer of tg-upload.</p>
+<p><a href="https://github.com/TheCaduceus"><strong>Dr.Caduceus</strong></a>: Owner &amp; developer of tg-upload.<br />
+<a href="https://bing.com/chat"><strong>Bing AI</strong></a>: For <del>documentaion</del> documentation improvements.</p>
       
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
