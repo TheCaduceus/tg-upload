@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Bug Report
 about: Report a bug.
 title: "[BUG]"
 labels: bug
@@ -19,13 +19,16 @@ Write the exact command you used with secrets removed (if any).
 **Using Proxy?**
 True or False
 
-**Describe the bug**
+**Telegram Profile Type:**
+User / Bot
+
+**Describe the Bug:**
 A clear and concise description of what the bug is.
 
 **Traceback**
 Attach a file or link containing full traceback.
 
-**Expected behaviour**
+**Expected Behaviour**
 A clear and concise description of what you expected to happen.
 
 **⛔Note:**
