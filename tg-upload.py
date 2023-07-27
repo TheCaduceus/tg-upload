@@ -14,7 +14,7 @@ from math import floor
 import argparse
 import hashlib
 
-tg_upload = "1.1.3"
+tg_upload = "1.1.4"
 versions = f"tg-upload: {tg_upload} \
 Python: {py_ver[0]}.{py_ver[1]}.{py_ver[2]} \
 Pyrogram: {get_dist('pyrogram').version} \
@@ -748,7 +748,7 @@ with client:
               if args.replace:
                 filename = filename.replace(args.replace[0], args.replace[1])
               file_size, file_sha256, file_md5, creation_time, modification_time = file_info(_path, caption)
-              with VideoFileClip(_path) as video:
+              with VideoFileClip(str(_path)) as video:
                 Path(args.thumb_dir).mkdir(exist_ok=True)
                 if args.thumb == 'auto':
                   args.thumb = f"thumb/THUMB_{PurePath(_path).stem}.jpg"
