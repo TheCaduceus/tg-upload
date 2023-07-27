@@ -52,8 +52,6 @@ Git installation is optional if you prefer downloading tg-upload as zip file usi
 
 **1.Install Python & Git:**
 
-Prefer Python 3.11 for faster execution speed.
-
 For Windows:
 ```
 winget install Python.Python.3.11
@@ -594,7 +592,7 @@ For every profile, tg-upload generates a .session file which is the main file th
 
 **7.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?**
 
-Use the --logout flag of tg-upload to revoke the specified session and omit it from your Telegram Account’s active sessions list. Simply mention the session name using the --profile flag and pass the --logout flag.
+Use the `--logout` flag of tg-upload to revoke the specified session and omit it from your Telegram Account’s active sessions list. Simply mention the session name using the `--profile` flag and pass the `--logout` flag.
 
 ```
 py tg-upload.py --profile xyz --logout
@@ -608,13 +606,13 @@ You can use third-party Telegram clients that let users to see more details (<a 
 
 **9.Can I send files to a particular topic inside a Telegram community?**
 
-To do this, you just need to pass the topic identity or identity of any message inside of that topic with the --reply_to flag.
+To do this, you just need to pass the topic identity or identity of any message inside of that topic with the `--reply_to` flag.
 
 **Getting topic identity:**
 
 Copy link of any message inside the topic you want identity of and the link will be in this format `https://t.me/username/topic_id/msg_id` or in case of private chats link will be in this format `https://t.me/c/chat_id/topic_id/msg_id`.
 
-10.Is `--replace` flag case-sensitive? can it also manipulate file format?
+**10.Is `--replace` flag case-sensitive? can it also manipulate file format?**
 
 Be aware that the replace flag is case-sensitive and has full access to the filename, including its format. This means that it can manipulate the file format and even your filename prefix. During download, you should use replace more carefully because if the file is a part file containing `.partX` (an extension allotted by tg-upload) where `X` is any number starting from 0, then replace can even manipulate it.
 
