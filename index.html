@@ -102,8 +102,6 @@
 
 <p><strong>1.Install Python &amp; Git:</strong></p>
 
-<p>Prefer Python 3.11 for faster execution speed.</p>
-
 <p>For Windows:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>winget install Python.Python.3.11
 winget install Git.Git
@@ -884,7 +882,7 @@ pkg install git -y
 
 <p><strong>7.Feels like my .session file or session string is leaked! how I can revoke it to prevent unauthorized usage?</strong></p>
 
-<p>Use the –logout flag of tg-upload to revoke the specified session and omit it from your Telegram Account’s active sessions list. Simply mention the session name using the –profile flag and pass the –logout flag.</p>
+<p>Use the <code class="language-plaintext highlighter-rouge">--logout</code> flag of tg-upload to revoke the specified session and omit it from your Telegram Account’s active sessions list. Simply mention the session name using the <code class="language-plaintext highlighter-rouge">--profile</code> flag and pass the <code class="language-plaintext highlighter-rouge">--logout</code> flag.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile xyz --logout
 </code></pre></div></div>
@@ -897,13 +895,13 @@ pkg install git -y
 
 <p><strong>9.Can I send files to a particular topic inside a Telegram community?</strong></p>
 
-<p>To do this, you just need to pass the topic identity or identity of any message inside of that topic with the –reply_to flag.</p>
+<p>To do this, you just need to pass the topic identity or identity of any message inside of that topic with the <code class="language-plaintext highlighter-rouge">--reply_to</code> flag.</p>
 
 <p><strong>Getting topic identity:</strong></p>
 
 <p>Copy link of any message inside the topic you want identity of and the link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/username/topic_id/msg_id</code> or in case of private chats link will be in this format <code class="language-plaintext highlighter-rouge">https://t.me/c/chat_id/topic_id/msg_id</code>.</p>
 
-<p>10.Is <code class="language-plaintext highlighter-rouge">--replace</code> flag case-sensitive? can it also manipulate file format?</p>
+<p><strong>10.Is <code class="language-plaintext highlighter-rouge">--replace</code> flag case-sensitive? can it also manipulate file format?</strong></p>
 
 <p>Be aware that the replace flag is case-sensitive and has full access to the filename, including its format. This means that it can manipulate the file format and even your filename prefix. During download, you should use replace more carefully because if the file is a part file containing <code class="language-plaintext highlighter-rouge">.partX</code> (an extension allotted by tg-upload) where <code class="language-plaintext highlighter-rouge">X</code> is any number starting from 0, then replace can even manipulate it.</p>
 
