@@ -613,11 +613,11 @@ pkg install git -y
 
 <p><strong>2.Login in tg-upload:</strong></p>
 
-<p>tg-upload supports logging in as a user (using a phone number or session string) or bot (using a bot token or session string). You must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>). To log in as a user, you must pass your phone number (–phone), or to log in as a bot, pass the bot token (–bot).</p>
+<p>tg-upload supports logging in as a user (using a phone number or session string) or bot (using a bot token or session string). You must pass the value of your <strong>API_ID</strong> (<code class="language-plaintext highlighter-rouge">--api_id</code>) &amp; <strong>API_HASH</strong> (<code class="language-plaintext highlighter-rouge">--api_hash</code>) and a unique name for your session (<code class="language-plaintext highlighter-rouge">--profile</code>). To log in as a user, you must pass your phone number (<code class="language-plaintext highlighter-rouge">--phone</code>), or to log in as a bot, pass the bot token (<code class="language-plaintext highlighter-rouge">--bot</code>).</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>py tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
 </code></pre></div></div>
-<p>From now on, whenever you need to perform any task, you just need to pass the profile name (–profile) that you used to create your session. You will be logged in without any authentication flow until you terminate the session from the Telegram app.</p>
+<p>From now on, whenever you need to perform any task, you just need to pass the profile name (<code class="language-plaintext highlighter-rouge">--profile</code>) that you used to create your session. You will be logged in without any authentication flow until you terminate the session from the Telegram app.</p>
 
 <p><a name="htu-3"></a></p>
 
