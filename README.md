@@ -330,12 +330,12 @@ Go to [My Telegram](https://my.telegram.org/apps), create an app, and get its **
 
 **2.Login in tg-upload:**
 
-tg-upload supports logging in as a user (using a phone number or session string) or bot (using a bot token or session string). You must pass the value of your **API_ID** (`--api_id`) & **API_HASH** (`--api_hash`) and a unique name for your session (`--profile`). To log in as a user, you must pass your phone number (--phone), or to log in as a bot, pass the bot token (--bot).
+tg-upload supports logging in as a user (using a phone number or session string) or bot (using a bot token or session string). You must pass the value of your **API_ID** (`--api_id`) & **API_HASH** (`--api_hash`) and a unique name for your session (`--profile`). To log in as a user, you must pass your phone number (`--phone`), or to log in as a bot, pass the bot token (`--bot`).
 
 ```
 py tg-upload.py --profile VALUE --api_id VALUE --api_hash VALUE --phone VALUE --login_only
 ```
-From now on, whenever you need to perform any task, you just need to pass the profile name (--profile) that you used to create your session. You will be logged in without any authentication flow until you terminate the session from the Telegram app.
+From now on, whenever you need to perform any task, you just need to pass the profile name (`--profile`) that you used to create your session. You will be logged in without any authentication flow until you terminate the session from the Telegram app.
 
 <a name="htu-3"></a>
 
