@@ -14,7 +14,7 @@ from math import floor
 import argparse
 import hashlib
 
-tg_upload = "1.1.4"
+tg_upload = "1.1.5"
 versions = f"tg-upload: {tg_upload} \
 Python: {py_ver[0]}.{py_ver[1]}.{py_ver[2]} \
 Pyrogram: {get_dist('pyrogram').version} \
@@ -641,7 +641,7 @@ with client:
 
     if not args.as_video and args.thumb == 'auto':
       args.thumb = None
-    elif args.thumb and PurePath(args.thumb).suffix not in ['.jpg','jpeg'] and args.thumb != 'auto':
+    elif not args.as_video and args.thumb and PurePath(args.thumb).suffix not in ['.jpg','jpeg'] and args.thumb != 'auto':
       thumbname = PurePath(args.thumb).stem
       jpg_path = f"{thumbname}.jpg"
       print(f"CONVERT: {PurePath(args.thumb).name} -> {jpg_path}")
@@ -751,11 +751,11 @@ with client:
               with VideoFileClip(str(_path)) as video:
                 Path(args.thumb_dir).mkdir(exist_ok=True)
                 if args.thumb == 'auto':
-                  args.thumb = f"thumb/THUMB_{PurePath(_path).stem}.jpg"
-                  video.save_frame(args.thumb, t=floor(video.duration / 2))
+                  thumb_path = f"thumb/THUMB_{PurePath(_path).stem}.jpg"
+                  video.save_frame(thumb_path, t=floor(video.duration / 2))
                 elif args.thumb != None and args.thumb.isdigit():
                   video.save_frame(f"thumb/THUMB_{PurePath(_path).stem}.jpg", t=int(args.thumb))
-                  args.thumb = f"thumb/THUMB_{PurePath(_path).stem}.jpg"
+                  thumb_path = f"thumb/THUMB_{PurePath(_path).stem}.jpg"
                 if not args.height:
                   args.height = video.h
                 if not args.width:
@@ -763,7 +763,7 @@ with client:
                 if args.duration == -1:
                   args.duration = floor(video.duration)
               start_time = time()
-              client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, width=args.width, height=args.height, duration=args.duration, path = PurePath(_path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=args.thumb, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent, ttl_seconds=args.self_destruct, protect_content=args.protect, reply_to_message_id=args.reply_to)
+              client.send_video(chat_id, _path, progress=upload_progress, duration=args.duration, parse_mode=parse_mode, caption=caption.format(file_name = PurePath(filename).stem, file_format = PurePath(filename).suffix, file_size_b = file_size, file_size_kb = file_size / 1024, file_size_mb = file_size / (1024 * 1024), file_size_gb = file_size / (1024 * 1024 * 1024), file_sha256 = file_sha256, file_md5 = file_md5, creation_time = creation_time, modification_time = modification_time, width=args.width, height=args.height, duration=args.duration, path = PurePath(_path)), has_spoiler=args.spoiler, width=int(args.width), height=int(args.height), thumb=thumb_path, file_name=filename, supports_streaming=args.disable_stream, disable_notification=args.silent, ttl_seconds=args.self_destruct, protect_content=args.protect, reply_to_message_id=args.reply_to)
               Path(_path).unlink(missing_ok=True) if args.delete_on_done else None
             except Exception as error_code:
               print(f"\nAn error occured!\n{error_code}")
