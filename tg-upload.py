@@ -400,7 +400,7 @@ elif not args.profile:
 if args.proxy:
   if not Path("proxy.json").exists():
     raise FileNotFoundError("Not found: proxy.json [file].")
-  with open("proxy.json", "r") as proxy:
+  with open("proxy.json", "r", encoding="utf-8") as proxy:
     try:
       proxy_json = json_load(proxy)[args.proxy]
       print(f"Connecting to {args.proxy}...")
@@ -653,7 +653,7 @@ with client:
     if args.capjson:
       if not Path("caption.json").exists():
         raise FileNotFoundError("Not found: caption.json [file].")
-      with open("caption.json", "r") as caption_json:
+      with open("caption.json", "r", encoding="utf-8") as caption_json:
         try:
           _caption = json_load(caption_json)[args.capjson]
         except KeyError:
